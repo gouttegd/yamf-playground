@@ -27,5 +27,5 @@ public class Instrument {
     private List<Date> dates;
     private List<RelatedIdentifier> relatedIdentifiers;
     private List<AlternateIdentifier> alternateIdentifiers;
-    private HashMap<String,Object> extensions;
+    private HashMap<String, Object> extensions;
 }

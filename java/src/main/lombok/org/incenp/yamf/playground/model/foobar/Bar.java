@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @SuperBuilder(toBuilder = true)
 @Data
 public class Bar {
-	private String barName;
-	private String barType;
+    private String barName;
+    private String barType;
 }

@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @SuperBuilder(toBuilder = true)
 @Data
 public class FooInstrument extends Instrument {
-	private Foo foo;
+    private Foo foo;
 }
