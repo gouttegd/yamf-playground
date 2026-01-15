@@ -1,0 +1,24 @@
+id: https://example.com/foo
+name: pidinst-foo-extension
+imports:
+  - base
+prefixes:
+  fooext: https://example.com/foo/
+default_range: string
+
+classes:
+  FooMixin:
+    attributes:
+      foo:
+        range: Foo
+
+  Foo:
+    attributes:
+      fooName:
+        required: true
+      fooType:
+
+  FooInstrument:
+    is_a: Instrument
+    mixins:
+      - FooMixin

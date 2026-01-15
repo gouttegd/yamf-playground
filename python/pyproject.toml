@@ -1,0 +1,23 @@
+[project]
+name = "incenp.yamf-playground"
+version = "0.1.0"
+description = "Playground for YAML support in Python"
+license = "GPL-3.0-or-later"
+authors = [
+    {name="Damien Goutte-Gattat", email="damien@gerbi-gmb.de"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "click",
+    "pydantic"
+]
+
+[project.scripts]
+yamf = "incenp.yamf.playground.cli:yamf"
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "incenp.yamf.playground"

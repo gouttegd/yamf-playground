@@ -1,0 +1,77 @@
+{
+  "identifier": {
+    "identifierType": "ABC",
+	"identifier": "123"
+  },
+  "schemaVersion": "1.0",
+  "landingPage": "https://example.com/landing/page",
+  "name": "Alice",
+  "owners": [
+    {
+	  "ownerName": "The Owner",
+	  "ownerContact": "owner@example.com",
+	  "ownerIdentifier": {
+	    "ownerIdentifierType": "DEF",
+		"ownerIdentifier": "456"
+	  }
+	}
+  ],
+  "manufacturers": [
+    {
+	  "manufacturerName": "The Manufacturer",
+	  "manufacturerIdentifier": {
+	    "manufacturerIdentifierType": "GHI",
+		"manufacturerIdentifier": "789"
+	  }
+	}
+  ],
+  "model": {
+    "modelName": "The Model Name",
+	"modelIdentifier": {
+	  "modelIdentifierType": "JKL",
+	  "modelIdentifier": "123"
+	}
+  },
+  "description": "The Description",
+  "instrumentTypes": [
+    {
+	  "instrumentTypeName": "The name of the type of instrument",
+	  "instrumentTypeIdentifier": {
+	    "instrumentTypeIdentifierType": "MNO",
+		"instrumentTypeIdentifier": "456"
+	  }
+	}
+  ],
+  "measuredVariables": [
+    "a measured variable"
+  ],
+  "dates": [
+    {
+	  "theDate": "2026-01-08",
+	  "dateType": "Commissioned"
+	}
+  ],
+  "relatedIdentifiers": [
+    {
+	  "relatedIdentifierType": "DOI",
+	  "relatedIdentifier": "9999.100",
+	  "relationType": "IsDescribedBy",
+	  "relatedIdentifierName": "DescribedBy identifier"
+	}
+  ],
+  "alternateIdentifiers": [
+    {
+      "alternateIdentifierType": "SerialNumber",
+	  "alternateIdentifier": "S123",
+	  "alternateIdentifierName": "Serial number alternate identifier"
+	}
+  ],
+  "foo": {
+    "fooName": "The name of the Foo",
+	  "fooType": "The type of the Foo"
+  },
+  "bar": {
+    "barName": "The name of the Bar",
+	  "barType": "The type of the Bar"
+  }
+}
