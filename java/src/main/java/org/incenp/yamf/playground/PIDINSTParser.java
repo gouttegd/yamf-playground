@@ -69,7 +69,7 @@ public class PIDINSTParser {
         HashMap<String, Object> extensions = new HashMap<>();
         for ( String key : rawMeta.keySet() ) {
             if ( key.contains(".") ) {
-                extensions.put(key, extensions);
+                extensions.put(key, rawMeta.get(key));
             }
         }
         ins.setExtensions(extensions);
@@ -113,5 +113,30 @@ public class PIDINSTParser {
         @SuppressWarnings("unchecked")
         Map<String, Object> rawMap = mapper.readValue(reader, Map.class);
         return rawMap;
+    }
+
+    public <T> T getExtension(Instrument ins, String namespace, String name, Class<T> extensionClass) {
+        Map<String, Object> extensionRoot = ins.getExtensions();
+        if ( namespace != null ) { // Nested model
+            Object rawExtensionRoot = extensionRoot.get(namespace);
+            if ( rawExtensionRoot != null ) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> tmp = (Map<String, Object>) rawExtensionRoot;
+                extensionRoot = tmp;
+            } else {
+                return null;
+            }
+        }
+
+        Object rawExtension = extensionRoot.get(name);
+        if ( rawExtension != null ) {
+            try {
+                T extension = mapper.convertValue(rawExtension, extensionClass);
+                return extension;
+            } catch ( IllegalArgumentException e ) {
+            }
+        }
+
+        return null;
     }
 }

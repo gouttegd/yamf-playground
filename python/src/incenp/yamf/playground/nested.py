@@ -2,8 +2,8 @@ import json
 from typing import Any
 
 from .base import Instrument
-from .foo import FooInstrument
-from .bar import BarInstrument
+from .foo import FooInstrument, Foo
+from .bar import BarInstrument, Bar
 from .foobar import FooBarInstrument
 
 def read_base(p: str) -> Instrument:
@@ -26,3 +26,15 @@ def _read_any(p, t, namespaces):
             for k, v in raw_map.pop(namespace).items():
                 raw_map[k] = v
     return t.parse_obj(raw_map)
+
+def get_foo(ins: Instrument) -> Foo:
+    if hasattr(ins, "com.example.foo"):
+        foo_base = getattr(ins, "com.example.foo")
+        if "foo" in foo_base:
+            return Foo.parse_obj(foo_base["foo"])
+
+def get_bar(ins: Instrument) -> Bar:
+    if hasattr(ins, "org.example.bar"):
+        bar_base = getattr(ins, "org.example.bar")
+        if "bar" in bar_base:
+            return Bar.parse_obj(bar_base["bar"])

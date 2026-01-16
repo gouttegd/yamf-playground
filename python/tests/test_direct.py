@@ -1,6 +1,6 @@
 import unittest
 
-from incenp.yamf.playground.direct import read_bar, read_base, read_foo, read_foobar
+from incenp.yamf.playground.direct import read_bar, read_base, read_foo, read_foobar, get_bar, get_foo
 
 class TestDirect(unittest.TestCase):
     """Test reading data from files that use the "direct" method for embedding extra metadata."""
@@ -43,3 +43,17 @@ class TestDirect(unittest.TestCase):
         self.assertEqual("The Model Name", ins.model.modelName)
         self.assertEqual("The name of the Foo", ins.foo.fooName)
         self.assertEqual("The name of the Bar", ins.bar.barName)
+
+    def test_composed(self):
+        """Test composition model."""
+
+        ins = read_base("../samples/test-extended-direct.json")
+        self.assertEqual("The Model Name", ins.model.modelName)
+
+        # Explicit support of Foo
+        fooExtension = get_foo(ins)
+        self.assertEqual("The name of the Foo", fooExtension.fooName)
+
+        # Explicit support of Bar
+        barExtension = get_bar(ins)
+        self.assertEqual("The name of the Bar", barExtension.barName)

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.incenp.yamf.playground.model.Instrument;
+import org.incenp.yamf.playground.model.bar.Bar;
+import org.incenp.yamf.playground.model.foo.Foo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -64,5 +66,41 @@ public class TestBaseParser {
 
         Assertions.assertTrue(ins.getExtensions().containsKey("com.example.foo"));
         Assertions.assertTrue(ins.getExtensions().containsKey("org.example.bar"));
+    }
+
+    @Test
+    void testGetComposedExtensions() throws IOException {
+        File f = new File("../samples/test-base.json");
+        PIDINSTParser p = new PIDINSTParser();
+        Instrument ins = p.parse(f);
+
+        Assertions.assertNull(p.getExtension(ins, null, "foo", Foo.class));
+        Assertions.assertNull(p.getExtension(ins, null, "bar", Bar.class));
+
+        f = new File("../samples/test-extended-direct.json");
+        ins = p.parse(f);
+
+        Foo fooExtension = p.getExtension(ins, null, "foo", Foo.class);
+        Assertions.assertNotNull(fooExtension);
+        Assertions.assertEquals("The name of the Foo", fooExtension.getFooName());
+
+        Bar barExtension = p.getExtension(ins, null, "bar", Bar.class);
+        Assertions.assertNotNull(barExtension);
+        Assertions.assertEquals("The name of the Bar", barExtension.getBarName());
+    }
+
+    @Test
+    void testGetComposedExtensionsFromNested() throws IOException {
+        File f = new File("../samples/test-extended-nested.json");
+        PIDINSTParser p = new PIDINSTParser();
+        Instrument ins = p.parseNested(f);
+
+        Foo fooExtension = p.getExtension(ins, "com.example.foo", "foo", Foo.class);
+        Assertions.assertNotNull(fooExtension);
+        Assertions.assertEquals("The name of the Foo", fooExtension.getFooName());
+
+        Bar barExtension = p.getExtension(ins, "org.example.bar", "bar", Bar.class);
+        Assertions.assertNotNull(barExtension);
+        Assertions.assertEquals("The name of the Bar", barExtension.getBarName());
     }
 }
