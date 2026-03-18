@@ -1,0 +1,474 @@
+id: https://example.org/ome
+name: Playground for a LinkML version of the OME model
+prefixes:
+  linkml: https://w3id.org/linkml/
+  ome: https://example.org/ome/
+default_prefix: ome
+imports:
+  - linkml:types
+default_range: string
+
+classes:
+
+  ManufacturerSpec:
+    mixin: true
+    attributes:
+      lot_number:
+      manufacturer:
+      model:
+      serial_number:
+
+  Microscope:
+    mixins:
+      - ManufacturerSpec
+    attributes:
+      type:
+        range: MicroscopeType
+
+  MicroscopeComponent:
+    mixins:
+      - ManufacturerSpec
+    attributes:
+      component_type:
+        designates_type: true
+  
+  Detector:
+    is_a: MicroscopeComponent
+    attributes:
+      gain:
+        range: float
+      voltage:
+        range: float
+      voltage_unit:
+        range: ElectricPotentialUnit
+      offset:
+        range: float
+      zoom:
+        range: float
+      amplification_gain:
+        range: float
+      id:
+        range: TODO DetectorID
+      type:
+        range: DetectorType
+
+  Objective:
+    is_a: MicroscopeComponent
+    attributes:
+      id:
+        range: TODO ObjectiveID
+      correction:
+        range: CorrectionType
+      immersion:
+        range: ImmersionType
+      lens_na:
+        range: float
+      nominal_magnification:
+        range: float
+      calibrated_magnification:
+        range: float
+      working_distance:
+        range: float
+      working_distance_unit:
+        range: LengthUnit
+      iris:
+        range: boolean
+
+  FilterSet:
+    is_a: MicroscopeComponent
+    attributes:
+      id:
+        range: TODO FilterSetID
+      emission_filters:
+        range: Filter
+        multivalued: true
+      dichroic:
+        range: TODO reference to a dichroic
+      excitation_filters:
+        range: Filter
+        multivalued: true
+      
+
+  Filter:
+    is_a: MicroscopeComponent
+    attributes:
+      id:
+        range: TODO FilterID
+      type:
+        range: FilterType
+      filter_wheel:
+      transmittance_range:
+        range: TransmittanceRange
+
+  Dichroic:
+    is_a: MicroscopeComponent
+    attributes:
+      id:
+        range: TODO DichroicID
+
+  Instrument:
+    attributes:
+      id:
+        range: TODO InstrumentID
+      microscope:
+        range: Microscope
+        inlined: true
+      light_source:
+        range: LightSource
+        inlined: true
+      components:
+        range: MicroscopeComponent
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  LightSource:
+    mixins:
+      - ManufacturerSpec
+    attributes:
+      id:
+        range: TODO LightSourceID
+      power:
+        range: float
+      power_unit:
+        range: TODO PowerUnit
+      light_source_type:
+        designates_type: true
+
+  ArcLightSource:
+    is_a: LightSource
+    attributes:
+      type:
+        range: ArcLightSourceType
+
+  FilamentLightSource:
+    is_a: LightSource
+    attributes:
+      type:
+        range: FilamentLightSourceType
+
+  LaserLightSource:
+    is_a: LightSource
+    attributes:
+      type:
+        range: LaserLightSourceType
+      medium:
+        range: LaserMedium
+      wavelength:
+        range: float
+        minimum_value: 0.0
+      wavelength_unit:
+        range: LengthUnit
+      frequency_multiplication:
+        range: integer
+        minimum_value: 0
+      tuneable:
+        range: boolean
+      pulse:
+        range: LaserPulseType
+      pockel_cell:
+        range: boolean
+      repetition_rate:
+        range: float
+      repetition_unit:
+        range: FrequencyUnit
+      pump:
+        range: TODO LightSourceID
+  
+  LightEmittingDiodeLightSource:
+    is_a: LightSource
+
+  GenericExcitationSource:
+    # FIXME: Obviously this type had been designed as a way to have some kind of
+    # built-in support for as-yet-unknown types of light source. Not sure we would
+    # need it in the new OME/LiMi model, as we should be able to use the generic
+    # extension mechanism (which is the entire point of the new model!) instead.
+    # That extension mechanism should automatically apply to _all_ types in the
+    # model, without having to explicitly define a GenericSomething.
+    is_a: LightSource
+    attributes:
+      map:
+        range: MapEntry
+        multivalued: true
+        inlined: true
+        inlined_as_list: false
+
+  MapEntry:
+    attributes:
+      key:
+        key: true
+      value:
+
+  TransmittanceRange:
+    attributes:
+      cutin:
+        range: float
+        # FIXME: LinkML seemingly does not support exclusive boundaries,
+        # so we can't mandate that the value must be strictly superior.
+        # See: https://github.com/linkml/linkml/issues/1648
+        minimum_value: 0.0
+      cutin_unit:
+        range: LengthUnit
+      cutout:
+        range: float
+        minimum_value: 0.0
+      cutout_unit:
+        range: LengthUnit
+      cutin_tolerance:
+        range: float
+        minimum_value: 0.0
+      cutin_tolerance_Unit:
+        range: LengthUnit
+      cutout_tolerance:
+        range: float
+        minimum_value: 0.0
+      cutout_tolerance_unit:
+        range: LengthUnit
+      transmittance:
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+
+enums:
+  MicroscopeType:
+    permissible_values:
+      Upright:
+      Inverted:
+      Dissection:
+      Electrophysiology:
+      Other:
+
+  DetectorType:
+    permissible_values:
+      CCD:
+      IntensifiedCCD:
+      AnalogVideo:
+      PMT:
+      Photodiode:
+      Spectroscopy:
+      LifetimeImaging:
+      CorrelationSpectroscopy:
+      FTIR:
+      EMCCD:
+      APD:
+      CMOS:
+      EBCCD:
+      Other:
+
+  ElectricPotentialUnit:
+    permissible_values:
+      YV:
+      ZV:
+      EV:
+      PV:
+      TV:
+      GV:
+      MV:
+      kV:
+      hV:
+      daV:
+      V:
+      dV:
+      cV:
+      mV:
+      µV:
+      nV:
+      pV:
+      fV:
+      aV:
+      zV:
+      yV:
+
+  CorrectionType:
+    permissible_values:
+      UV:
+      PlanApo:
+      PlanFluor:
+      SuperFluor:
+      VioletCorrected:
+      Achro:
+      Achromat:
+      Fluor:
+      Fl:
+      Fluar:
+      Neofluar:
+      Fluotar:
+      Apo:
+      PlanNeofluar:
+      Other:
+
+  ImmersionType:
+    permissible_values:
+      Oil:
+      Water:
+      WaterDipping:
+      Air:
+      Multi:
+      Glycerol:
+      Other:
+
+  LengthUnit:
+    permissible_values:
+      Ym:
+      Zm:
+      Em:
+      Pm:
+      Tm:
+      Gm:
+      Mm:
+      km:
+      hm:
+      ham:
+      m:
+      dm:
+      cm:
+      mm:
+      µm:
+      nm:
+      pm:
+      fm:
+      am:
+      zm:
+      ym:
+      Å:
+      thou:
+      li:
+      ln:
+      ft:
+      yd:
+      ml:
+      ua:
+      ly:
+      pc:
+      pt:
+      pixel:
+      reference frame:
+
+  FilterType:
+    permissible_values:
+      Dichroic:
+      LongPass:
+      ShortPass:
+      BandPass:
+      MultiPass:
+      NeutralDensity:
+      Tuneable:
+      Other:
+
+  PowerUnit:
+    permissible_values:
+      YW:
+      ZW:
+      EW:
+      PW:
+      TW:
+      GW:
+      MW:
+      kW:
+      hW:
+      daW:
+      W:
+      dW:
+      cW:
+      mW:
+      μW:
+      nW:
+      pW:
+      fW:
+      aW:
+      zW:
+      yW:
+
+  FrequencyUnit:
+    permissible_values:
+      YHz:
+      ZHz:
+      EHz:
+      PHz:
+      THz:
+      GHz:
+      MHz:
+      kHz:
+      hHz:
+      daHz:
+      Hz:
+      dHz:
+      cHz:
+      mHz:
+      μHz:
+      nHz:
+      pHz:
+      fHz:
+      aHz:
+      zHz:
+      yHz:
+
+  ArcLightSourceType:
+    permissible_values:
+      Hg:
+      Xe:
+      HgXe:
+      Other:
+
+  FilamentLightSourceType:
+    permissible_values:
+      Incandescent:
+      Halogen:
+      Other:
+  
+  LaserLightSourceType:
+    permissible_values:
+      Excimer:
+      Gas:
+      MetalVapor:
+      SolidState:
+      Dye:
+      Semiconductor:
+      FreeElectron:
+      Other:
+
+  LaserMedium:
+    permissible_values:
+      Cu:
+      Ag:
+      ArFl:
+      ArCl:
+      KrFl:
+      KrCl:
+      XeFl:
+      XeCl:
+      XeBr:
+      N:
+      Ar:
+      Kr:
+      Xe:
+      HeNe:
+      HeCd:
+      CO:
+      CO2:
+      H2O:
+      HFl:
+      NdGlass:
+      NdYAG:
+      ErGlass:
+      ErYAG:
+      HoYLF:
+      HoYAG:
+      Ruby:
+      TiSapphire:
+      Alexandrite:
+      Rhodamine6G:
+      CoumarinC30:
+      GaAs:
+      GaAlAs:
+      EMinus:
+      Other:
+
+  LaserPulseType:
+    permissible_values:
+      CW:
+      Single:
+      QSwitched:
+      Repetitive:
+      ModeLocked:
+      Other:
