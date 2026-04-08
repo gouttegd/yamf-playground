@@ -1,0 +1,190 @@
+id: https://example.org/pidinst
+name: pidinst
+description: Playground for a LinkML version of the PIDINST model
+prefixes:
+  linkml: https://w3id.org/linkml/
+  pidinst: https://example.org/pidinst/
+default_prefix: pidinst
+imports:
+  - linkml:types
+default_range: string
+
+classes:
+
+  IsIdentifiableEntity:
+    mixin: true
+    attributes:
+      name:
+        required: true
+      identifier:
+      identifier_type:
+    rules:
+      - description: >-
+          If the identifier is present, then the identifier_type must be
+          present as well.
+      - preconditions:
+          slot_conditions:
+            identifier:
+              required: true
+        postconditions:
+          slot_conditions:
+            identifier_type:
+              required: true
+
+  Instrument:
+    mixins:
+      - IsIdentifiableEntity
+    attributes:
+      schema_version:
+        description: >-
+          Version number of the PIDINST model used in this record.
+        range: PidinstVersion
+        required: true
+      landing_page:
+        description: >-
+          A landing page that the identifier resolves to.
+        range: uri
+        required: true
+      owners:
+        range: Owner
+        multivalued: true
+      manufacturers:
+        range: Manufacturer
+        multivalued: true
+      model:
+        range: Model
+      description:
+      types:
+        range: InstrumentType
+        multivalued: true
+      measured_variables:
+        multivalued: true
+      dates:
+        range: Date
+        multivalued: true
+      related_identifiers:
+        range: RelatedIdentifier
+        multivalued: true
+      alternate_identifiers:
+        range: AlternateIdentifier
+        multivalued: true
+    slot_usage:
+      identifier:
+        # In this class the identifier slot is a real identifier
+        identifier: true
+
+  Owner:
+    description: >-
+      An institution responsible for the management of the instrument.
+      This may include the legal owner, the operator, or an institute
+      providing access to the instrument.
+    mixins:
+      - IsIdentifiableEntity
+    attributes:
+      contact:
+        description: >-
+          Contact address of the owner.
+
+  Manufacturer:
+    mixins:
+      - IsIdentifiableEntity
+
+  Model:
+    mixins:
+      - IsIdentifiableEntity
+
+  InstrumentType:
+    mixins:
+      - IsIdentifiableEntity
+
+  Date:
+    description: >-
+      A date relevant to the instrument.
+    attributes:
+      date:
+        range: date
+        required: true
+      type:
+        range: DateType
+        required: true
+
+  RelatedIdentifier:
+    description: >-
+      An identifier for a resource related to the instrument.
+    attributes:
+      identifier:
+        required: true
+      name:
+      type:
+        range: RelatedIdentifierType
+        required: true
+      relation:
+        range: RelationType
+        required: true
+
+  AlternateIdentifier:
+    description: >-
+      Identifier other than the PIDINST pertaining to the same
+      instrument instance. This should be used if the instrument has a
+      serial number. Other possible uses include an owner’s inventory
+      number or an entry in some instrument database.
+    attributes:
+      identifier:
+        required: true
+      type:
+        range: AlternateIdentifierType
+        required: true
+      name:
+
+enums:
+
+  PidinstVersion:
+    permissible_values:
+      "1.0":
+
+  DateType:
+    permissible_values:
+      Commissioned:
+      DeComissioned:
+
+  RelatedIdentifierType:
+    permissible_values:
+      ARK:
+      arXiv:
+      bibcode:
+      DOI:
+      EAN13:
+      EISSN:
+      Handle:
+      IGSN:
+      ISBN:
+      ISSN:
+      ISTC:
+      LISSN:
+      PMID:
+      PURL:
+      RAiD:
+      RRID:
+      UPC:
+      URL:
+      URN:
+      w3id:
+
+  RelationType:
+    permissible_values:
+      IsDescribedBy:
+      IsNewVersionOf:
+      IsPreviousVersionOf:
+      HasComponent:
+      IsComponentOf:
+      References:
+      HasMetadata:
+      WasUsedIn:
+      IsIdenticalTo:
+      IsAttachedTo:
+
+  AlternateIdentifierType:
+    permissible_values:
+      SerialNumber:
+      InventoryNumber:
+      Other:
