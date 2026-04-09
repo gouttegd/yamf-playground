@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,15 @@ public class PIDINSTParser {
      * @throws LinkMLRuntimeException If the file contains invalid data.
      */
     public <T extends Instrument> T parse(File f, Class<T> t) throws IOException, LinkMLRuntimeException {
-        return parseNested(f, t, null);
+        // Automatically detect supported nested extensions
+        List<String> extensionNamespaces = new ArrayList<>();
+        for ( Field field : t.getDeclaredFields() ) {
+            ExtensionNamespace annot = field.getType().getAnnotation(ExtensionNamespace.class);
+            if ( annot != null ) {
+                extensionNamespaces.add(annot.value());
+            }
+        }
+        return parseNested(f, t, extensionNamespaces);
     }
 
     /**
@@ -93,7 +103,7 @@ public class PIDINSTParser {
      *                       be <code>null</code> if a non-nested extension model is
      *                       used.
      * @param name           The name of the root key for the extension object.
-     * @param extensionClass The type of the extension object.
+     * @param extensionClass The name of the root key for the extension object..
      * @return The extracted extension, or <code>null</code> if the instance object
      *         does not contain data pertaining to that extension or if the data is
      *         invalid.
@@ -124,5 +134,30 @@ public class PIDINSTParser {
 
         }
         return null;
+    }
+
+    /**
+     * Extracts an extension object from a LinkML generic extension slot, with
+     * automatic detection of the extension namespace.
+     * <p>
+     * This method is similar to
+     * {@link #getExtension(Instrument, String, String, Class)}, but it uses Java
+     * annotation to automatically detect what is the expected namespace of the
+     * extension, if the nested model of extension is used.
+     * 
+     * @param <T>            The type of the extension object to extract.
+     * @param ins            The instance object from which to extract the
+     *                       extension.
+     * @param name           The name of the root key for the extension object.
+     * @param extensionClass The name of the root key for the extension object.
+     * @return The extracted extension, or <code>null</code> if the instance object
+     *         does not contain data pertaining to that extension or if the data is
+     *         invalid.
+     */
+    public <T> T getExtension(Instrument ins, String name, Class<T> extensionClass) {
+        ExtensionNamespace annot = extensionClass.getAnnotation(ExtensionNamespace.class);
+        String namespace = annot != null ? annot.value() : null;
+
+        return getExtension(ins, namespace, name, extensionClass);
     }
 }

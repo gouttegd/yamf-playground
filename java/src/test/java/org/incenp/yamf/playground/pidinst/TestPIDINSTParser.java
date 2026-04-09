@@ -2,7 +2,6 @@ package org.incenp.yamf.playground.pidinst;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.yamf.playground.pidinst.model.Foo;
@@ -94,7 +93,7 @@ public class TestPIDINSTParser {
     void testParseFooNestedExtendedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
         PIDINSTParser p = new PIDINSTParser();
-        FooInstrument ins = p.parseNested(f, FooInstrument.class, List.of("com.example.foo"));
+        FooInstrument ins = p.parse(f, FooInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
         Assertions.assertNotNull(ins.getFoo());
@@ -131,7 +130,7 @@ public class TestPIDINSTParser {
         Instrument ins = p.parse(f, Instrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
-        Foo ext = p.getExtension(ins, "com.example.foo", "foo", Foo.class);
+        Foo ext = p.getExtension(ins, "foo", Foo.class);
         Assertions.assertNotNull(ext);
         Assertions.assertEquals("The name of the Foo", ext.getName());
     }
