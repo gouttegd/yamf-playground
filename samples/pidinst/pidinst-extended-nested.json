@@ -1,0 +1,71 @@
+{
+  "identifier": "123",
+  "identifier_type": "ABC",
+  "schema_version": "1.0",
+  "landing_page": "https://example.com/landing/page",
+  "name": "Alice",
+  "owners": [
+    {
+      "name": "The Owner",
+      "contact": "owner@example.com",
+       "identifier": "456",
+      "identifier_type": "DEF"
+    }
+  ],
+  "manufacturers": [
+    {
+      "name": "The Manufacturer",
+      "identifier": "789",
+      "identifier_type": "GHI"
+    }
+  ],
+  "model": {
+    "name": "The Model Name",
+    "identifier": "123",
+    "identifier_type": "JKL"
+  },
+  "description": "The Description",
+  "types": [
+    {
+        "name": "The name of the type of instrument",
+        "identifier": "456",
+        "identifier_type": "MNO"
+    }
+  ],
+  "measured_variables": [
+    "a measured variable"
+  ],
+  "dates": [
+    {
+      "date": "2026-01-08",
+      "type": "Commissioned"
+    }
+  ],
+  "related_identifiers": [
+    {
+        "identifier": "9999.100",
+        "name": "DescribedBy identifier",
+        "type": "DOI",
+        "relation": "IsDescribedBy"
+    }
+  ],
+  "alternate_identifiers": [
+    {
+        "identifier": "S123",
+        "type": "SerialNumber",
+        "name": "Serial number alternate identifier"
+    }
+  ],
+  "com.example.foo": {
+    "foo": {
+      "name": "The name of the Foo",
+      "type": "The type of the Foo"
+    }
+  },
+  "org.example.bar": {
+    "bar": {
+      "name": "The name of the Bar",
+      "type": "The type of the Bar"
+    }
+  }
+}
