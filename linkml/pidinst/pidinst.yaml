@@ -72,6 +72,8 @@ classes:
       identifier:
         # In this class the identifier slot is a real identifier
         identifier: true
+    extra_slots:
+      allowed: true
 
   Owner:
     description: >-
