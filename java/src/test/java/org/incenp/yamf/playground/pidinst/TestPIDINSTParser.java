@@ -3,12 +3,17 @@ package org.incenp.yamf.playground.pidinst;
 import java.io.File;
 import java.io.IOException;
 
+import org.incenp.linkml.core.ConverterContext;
 import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.yamf.playground.pidinst.model.Foo;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
 import org.incenp.yamf.playground.pidinst.model.Instrument;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class TestPIDINSTParser {
 
@@ -22,6 +27,8 @@ public class TestPIDINSTParser {
         Instrument ins = p.parse(f, Instrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
+
+        roundtrip(Instrument.class, ins, null);
     }
 
     /*
@@ -37,6 +44,8 @@ public class TestPIDINSTParser {
 
         Assertions.assertTrue(ins.getExtraSlots().containsKey("foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("bar"));
+
+        roundtrip(Instrument.class, ins, null);
     }
 
     /*
@@ -53,6 +62,8 @@ public class TestPIDINSTParser {
 
         Assertions.assertTrue(ins.getExtraSlots().containsKey("com.example.foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("org.example.bar"));
+
+        roundtrip(Instrument.class, ins, null);
     }
 
     /*
@@ -66,6 +77,8 @@ public class TestPIDINSTParser {
 
         Assertions.assertEquals("Alice", ins.getName());
         Assertions.assertNull(ins.getFoo());
+
+        roundtrip(FooInstrument.class, ins, null);
     }
 
     /*
@@ -83,6 +96,8 @@ public class TestPIDINSTParser {
 
         Assertions.assertFalse(ins.getExtraSlots().containsKey("foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("bar"));
+
+        roundtrip(FooInstrument.class, ins, null);
     }
 
     /*
@@ -101,6 +116,8 @@ public class TestPIDINSTParser {
 
         Assertions.assertFalse(ins.getExtraSlots().containsKey("com.example.foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("org.example.bar"));
+
+        roundtrip(FooInstrument.class, ins, new File("../samples/pidinst/pidinst-extended-nested.json.out"), true);
     }
 
     /*
@@ -133,5 +150,26 @@ public class TestPIDINSTParser {
         Foo ext = p.getExtension(ins, "foo", Foo.class);
         Assertions.assertNotNull(ext);
         Assertions.assertEquals("The name of the Foo", ext.getName());
+    }
+
+    <T extends Instrument> void roundtrip(Class<T> type, T instrument, File saveTo)
+            throws LinkMLRuntimeException, IOException, DatabindException, IOException {
+        roundtrip(type, instrument, saveTo, false);
+    }
+
+    <T extends Instrument> void roundtrip(Class<T> type, T instrument, File saveTo, boolean writeNested)
+            throws LinkMLRuntimeException, IOException, DatabindException, IOException {
+        ConverterContext ctx = new ConverterContext();
+        ctx.addConverter(new NestedExtensionConverter(FooInstrument.class, writeNested));
+
+        Object raw = ctx.getConverter(type).serialise(instrument, ctx);
+        if ( saveTo != null ) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+            mapper.writeValue(saveTo, raw);
+        }
+        T back = (T) ctx.getConverter(type).convert(raw, ctx);
+
+        Assertions.assertEquals(instrument, back);
     }
 }
