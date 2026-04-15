@@ -1,27 +1,54 @@
 id: https://example.org/pidinst
 name: pidinst
-description: Playground for a LinkML version of the PIDINST model
+title: PIDInst LinkML Schema
+description: >-
+  A tentative implementation of the PIDINST model as a LinkML schema
+  designed to be transparently extensible.
+created_by: orcid:0000-0002-6095-8718
+conforms_to: https://doi.org/10.15497/RDA00070
+
 prefixes:
   linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
   pidinst: https://example.org/pidinst/
-default_prefix: pidinst
 imports:
   - linkml:types
+default_prefix: pidinst
 default_range: string
 
 classes:
 
   IsIdentifiableEntity:
+    description: >-
+      A mixin that represents any kind of identifiable entity, and that
+      contains the slots that are shared by all classes in this schema
+      intended to represent such entities.
+      
+      The main purpose of having those slots in a shared mixin is to be
+      able to state once and for all the constraint that an
+      `identifier_type` must be present whenever an `identifier` is
+      present.
     mixin: true
     attributes:
       name:
+        description: >-
+          The human-readable name of the entity.
         required: true
       identifier:
+        description: >-
+          An identifier (not necessarily human-readable) for the entity.
+          Of note, this is not an identifier in the LinkML sense of the
+          term – this is a string that identifies the entity, but
+          without the LinkML implications with respect to uniqueness or
+          inlining.
       identifier_type:
+        description: >-
+          A value that indicates the type of identifier contained in the
+          `identifier` slot.
     rules:
       - description: >-
-          If the identifier is present, then the identifier_type must be
-          present as well.
+          If the `identifier` is present, then the `identifier_type`
+          must be present as well.
       - preconditions:
           slot_conditions:
             identifier:
@@ -32,52 +59,109 @@ classes:
               required: true
 
   Instrument:
+    description: >-
+      A research instrument. This is the main class of the PIDInst
+      model.
     mixins:
       - IsIdentifiableEntity
     attributes:
       schema_version:
         description: >-
-          Version number of the PIDINST model used in this record.
+          The version of the PIDInst model this record conforms to.
+        conforms_to: PIDInst model property ID 2
         range: PidinstVersion
         required: true
       landing_page:
         description: >-
           A landing page that the identifier resolves to.
+        conforms_to: PIDInst model property ID 3
         range: uri
         required: true
       owners:
+        description: >-
+          The institution(s) responsible for the management of the
+          instrument. This may include the legal owner, the operator, or
+          an institute providing access to the instrument.
+        conforms_to: PIDINST model property ID 5
         range: Owner
         multivalued: true
       manufacturers:
+        description: >-
+          The instrument’s manufacturer(s) or developer. Thiis may also
+          be the owner for custom built instruments.
+        conforms_to: PIDINST model property ID 6
         range: Manufacturer
         multivalued: true
       model:
+        description: >-
+          The model or type of device, as attributed by the manufacturer.
+        conforms_to: PIDINST model property ID 7
         range: Model
       description:
+        description: >-
+          A technical description of the device and its capabilities.
+        conforms_to: PIDINST model property ID 8
       types:
+        description: >-
+          The type(s) the instrument can be classified into.
+        conforms_to: PIDINST model property ID 9
         range: InstrumentType
         multivalued: true
       measured_variables:
+        description: >-
+          The variable(s) that this instrument measures or observes.
+        conforms_to: PIDINST model property ID 10
         multivalued: true
       dates:
+        description: >-
+          Dates that are relevant to the instrument.
+        conforms_to: PIDINST model property ID 11
         range: Date
         multivalued: true
       related_identifiers:
+        description: >-
+          Identifiers of resources that are related to the instrument.
+
+          Not to be confused with `alternate_identifiers`, which is
+          intended for other identifiers for the very same instrument.
+        conforms_to: PIDINST model property ID 12
         range: RelatedIdentifier
         multivalued: true
       alternate_identifiers:
+        description: >-
+          Identifiers (other than the PIDInst identifier itself)
+          pertaining to the same instrument instance. This should be
+          used if the instrument has a serial number. Other possible
+          uses include an owner’s inventory number or an entry in some
+          instrument database.
+
+          Not to be confused with `related_identifiers`, which is
+          intended for identifiers pointing to other resources that are
+          merely related to this instrument instance while being
+          distinct from it.
+        conforms_to: PIDINST model property ID 13
         range: AlternateIdentifier
         multivalued: true
     slot_usage:
+      name:
+        description: >-
+          The name by which the instrument instance is known.
+        conforms_to: PIDINST model property ID 4
       identifier:
-        # In this class the identifier slot is a real identifier
+        description: >-
+          A string that uniquely identifies the instrument instance.
+        conforms_to: PIDINST model property ID 1
+        # In this class the identifier slot is a real identifier in the
+        # LinkML sense of the term
         identifier: true
+      identifier_type:
+        conforms_to: PIDINST model property ID 1.1
     extra_slots:
       allowed: true
 
   Owner:
     description: >-
-      An institution responsible for the management of the instrument.
+      An institution responsible for the management of an instrument.
       This may include the legal owner, the operator, or an institute
       providing access to the instrument.
     mixins:
@@ -86,70 +170,149 @@ classes:
       contact:
         description: >-
           Contact address of the owner.
+        conforms_to: PIDINST model property ID 5.2
+    slot_usage:
+      name:
+        conforms_to: PIDINST model property 5.1
+      identifier:
+        conforms_to: PIDINST model property 5.3
+      identifier_type:
+        conforms_to: PIDINST model property 5.3.1
 
   Manufacturer:
+    description: >-
+      The manufacturer of an instrument.
     mixins:
       - IsIdentifiableEntity
+    slot_usage:
+      name:
+        conforms_to: PIDINST model property ID 6.1
+      identifier:
+        conforms_to: PIDINST model property ID 6.2
+      identifier_type:
+        conforms_to: PIDINST model property ID 6.2.1
 
   Model:
+    description: >-
+      The model of an instrument.
     mixins:
       - IsIdentifiableEntity
+    slot_usage:
+      name:
+        conforms_to: PIDINST model property ID 7.1
+      identifier:
+        conforms_to: PIDINST model property ID 7.2
+      identifier_type:
+        conforms_to: PIDINST model property ID 7.2.1
 
   InstrumentType:
+    description: >-
+      The type of an instrument.
+
+      This differs from the instrument’ model in that (1) it may not be
+      assigned by the manufacturer, and (2) a single instrument can be
+      of more than one type.
     mixins:
       - IsIdentifiableEntity
+    slot_usage:
+      name:
+        conforms_to: PIDINST model property ID 9.1
+      identifier:
+        conforms_to: PIDINST model property ID 9.2
+      identifier_type:
+        conforms_to: PIDINST model property ID 9.2.1
 
   Date:
     description: >-
-      A date relevant to the instrument.
+      A date relevant to an instrument.
     attributes:
       date:
+        description: >-
+          The date itself.
         range: date
         required: true
       type:
+        description: >-
+          The type of date, indicating how the date is relevant to the
+          instrument.
+        conforms_to: PIDINST model property ID 11.1
         range: DateType
         required: true
 
   RelatedIdentifier:
     description: >-
-      An identifier for a resource related to the instrument.
+      An identifier for a resource related to an instrument.
     attributes:
       identifier:
+        description: >-
+          The identifier itself.
         required: true
       name:
+        description: >-
+          A name for the related resource. This may be used to give an
+          hint on the content of that resource.
+        conforms_to: PIDINST model property ID 12.3
       type:
+        description: >-
+          The type of the identifier.
+
+          Note that, contrary to most other “identifier type” slots in
+          this schema, this one is _not_ free text and is instead
+          constrained to a fixed list of values.
+        conforms_to: PIDINST model property ID 12.1
         range: RelatedIdentifierType
         required: true
       relation:
+        description: >-
+          A description of the relationship between an instrument and
+          the related resource pointed to by the identifier.
+        conforms_to: PIDINST model property ID 12.2
         range: RelationType
         required: true
 
   AlternateIdentifier:
     description: >-
-      Identifier other than the PIDINST pertaining to the same
-      instrument instance. This should be used if the instrument has a
-      serial number. Other possible uses include an owner’s inventory
-      number or an entry in some instrument database.
+      A non-PIDInst identifier that can also identify an instrument
+      instance.
     attributes:
       identifier:
+        description: >-
+          The identifier itself.
         required: true
       type:
+        description:
+          The type of the alternate identifier.
+
+          Note that, contrary to most other “identifier type” slots in
+          this schema, this one is _not_ free text and is instead
+          constrained to a fixed list of values.
+        conforms_to: PIDINST model property ID 13.1
         range: AlternateIdentifierType
         required: true
       name:
+        description: >-
+          A supplementary name for the identifier type. This is mostly
+          useful if `type` is set to `Other`.
+        conforms_to: PIDINST model property ID 13.2
 
 enums:
 
   PidinstVersion:
+    description: >-
+      Available versions of the PIDInst model.
     permissible_values:
       "1.0":
 
   DateType:
+    description: >-
+      Values describing how a date is relevant to an instrument.
     permissible_values:
       Commissioned:
       DeComissioned:
 
   RelatedIdentifierType:
+    description: >-
+      Possible types of related identifiers for an instrument.
     permissible_values:
       ARK:
       arXiv:
@@ -173,6 +336,9 @@ enums:
       w3id:
 
   RelationType:
+    description: >-
+      Possible types of relation between a PIDInst instance and its
+      related identifiers.
     permissible_values:
       IsDescribedBy:
       IsNewVersionOf:
@@ -186,6 +352,8 @@ enums:
       IsAttachedTo:
 
   AlternateIdentifierType:
+    description: >-
+      Possible types of alternate identifiers for a PIDINST instance.
     permissible_values:
       SerialNumber:
       InventoryNumber:
