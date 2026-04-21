@@ -69,14 +69,14 @@ One can distinguish between
 
 * a “focalised” extension, that adds one (possibly large) piece of data
   at one place within the base model;
-* a “transveral” extension, that adds one (typically small) piece of
+* a “transversal” extension, that adds one (typically small) piece of
   data to many (maybe all) elements of the base model.
 
 The addition of a new light source type to the OME model would be an
 example of a focalised extension, as it would only affect the
 `Instrument`.
 
-A transveral extension could be, for example, an extension that adds to
+A transversal extension could be, for example, an extension that adds to
 every single class representing a hardware component (`Instrument`,
 `Objective`, `Detector`, etc.) a new field intended to store the date
 of the last maintenance operation performed on the component.
@@ -93,6 +93,105 @@ model would typically be done by the same people (or organisations) who
 created the base model in the first place, and that are responsible for
 it. An extension, on the other hand, would typically be made by a third
 party.
+
+### Extensibility and compatibility/interoperability
+Extending a model immediately raises the question of the compatibility
+between the base model and the extended model.
+
+Assuming:
+
+* a base model _M_;
+* an extension _E_ to the base model, yielding an extended model _ME_;
+* an application _A(M)_ that was developed against the base model _M_;
+* and an application _A(ME)_ that was developed against the extended
+  model _ME_;
+
+we can define the following compatibility scenarios:
+
+#### No compatibility required
+The application _A(M)_ is only ever expected to manipulate data
+conformant to the base model _M_. The application _A(ME)_ is only ever
+expected to manipulate data conformant to the extended model _ME_.
+
+This is the simplest case. It should go without saying that it is also
+the least useful one. There is no possible interoperability between
+_A(M)_ and _A(ME)_.
+
+#### Forward compatibility required
+The application _A(M)_ is only ever expected to manipulate data
+conformant to _M_. The application _A(ME)_, however, is expected to be
+able to transparently manipulate data that is conformant to either _M_
+or _ME_.
+
+This provides “unidirectional” interoperability in that _A(ME)_ can
+manipulate data produced by _A(M)_, but _A(M)_ cannot manipulate data
+produced by _A(ME)_.
+
+Of note, this does not preclude the possibility for _A(ME)_ to offer
+some kind of “export mode“ in which it explicitly produces data that is
+conformant to _M_ so that it can be manipulated by _A(M)_.
+
+#### Forward and backward compatibility required
+Compared to the previous scenario, here the application _A(M)_ is
+expected to be able to transparently manipulate data that is conformant
+to either _M_ or _ME_. (_A(ME)_ is still also expected to be able to
+transparently manipulate both.)
+
+This provides “bidirectional” interoperability in that either
+application can manipulate data produced by the other, without requiring
+the _A(ME)_ application to export its data in “compatibility mode” for
+the benefit of the _A(M)_ application.
+
+Because _A(M)_ is, by definition, not aware of the _E_ extension, what
+it can do with _ME_ data will necessarily be limited; it will most
+likely not be able to make use of the part of the data that is specific
+to the _E_ extension. However, it may offer various degrees of support:
+
+* at the very least, it MUST _preserve_ the extended data entirely (so
+  that a file initially created by _A(ME)_ that is then opened and saved
+  by _A(M)_ can be read again by _A(ME)_ with all the extended data
+  unchanged);
+* it may (should?) _expose_ the extended data to the user, so that the
+  user can make sense of the extended data for herself;
+* if (1) the _E_ extension is defined through a formal schema, and (2)
+  the schema (or at least a link to it) is embedded within the data,
+  the application can use the schema to offer slightly better support
+  for the extended data, such as validating it against the schema and/or
+  exposing it to the user with human-friendly labels (assuming the schema
+  would provide such labels).
+
+**This bidirectional interoperability is the scenario explicitly aimed
+for by the NGMF project.** It will be a balancing act between
+_extensibility_ and _interoperability_, because the more extensible the
+metadata model will be, the more difficult it will be to ensure
+bidirectional interoperability.
+
+At the extremes, we can have 0% extensibility and 100% interoperability
+(a model that disallows any kind of extension but will guarantee perfect
+interoperability), or 100% extensibility and 0% interoperability (a
+model that anyone can extend without any restriction but where, as a
+result, every implementation has its own version that is incompatible
+with all the other implementations). We want a middle ground where
+extensibility is permitted and even encouraged, but within some defined
+limits so to as to guarantee bidirectional interoperability.
+
+### Compatibility
+We can define several types of compatibility depending on the kind of
+work that the developers of an application _A(M)_ (that supports only the
+base model _M_) have to do in order to support an extension _E_.
+
+* The developers have to write code to explicitly support _E_ (thereby
+  turning _A(M)_, an application that only supports _M_, into an
+  application _A(ME)_ that supports the extended model _ME_). This is
+  the most common scenario.
+* The part of the code that depends on the model _M_ is always
+  automatically generated from the schema that formally describes _M_,
+  so all the developers of _A(M)_ have to do to support _E_ is to
+  re-generate and re-compile their code starting from the extended
+  model _ME_ rather than the base model _E_ – no “manual” adapation is
+  required. This is _compile-time compatibility_.
+* The developers do not have anything special to do (not even recompile
+  the application). This is _runtime compatibility_.
 
 ## Imaging-PHD, NGMF, and OME-Zarr
 The concrete goal of the Imaging-PHD project, seen from a high level, is
