@@ -193,6 +193,45 @@ base model _M_) have to do in order to support an extension _E_.
 * The developers do not have anything special to do (not even recompile
   the application). This is _runtime compatibility_.
 
+### Extending an extension?
+Open question: should it be possible to extend an extension?
+
+Let’s say we have a base model _M_ and an extension _E_ (yielding an
+extended model _ME_). The extension _E_ becomes so widely used that
+people start wanting to build their own extension on top of it.
+
+Should that be possible? I.e. can one define an extension _F_ that
+extends, not the base model _M_, but the (already) extended model _ME_,
+thereby creating a _MEF_ model?
+All the while preserving the required backward compatibility that is a
+core feature of NGMF, e.g.:
+
+* an application that only knows about _M_ can nonetheless process data
+  that is conformant to either _ME_ or _MEF_, while preserving the data
+  that is specific to the _E_ or _F_ extensions;
+* an application that only knows about _ME_ can nonetheless process data
+  that is conformant to _MEF_, while preserving the data that is
+  specific to the _F_ extension.
+
+I personally think this _should_ be possible, and NGMF should be
+designed to allow such a case. Ideally in such a way that there are no
+arbitrary limitation as to the “depth” of extensions.
+
+### Extension composability
+Let us consider a slightly different scenario:
+
+We have a base model _M_ and two _independent_ extensions _E_ and _G_,
+yielding two different extended models _ME_ and _MG_.
+
+In this situation:
+
+* an application that only knows about _ME_ can nonetheless process data
+  that is conformant to _MG_, while preserving the data that is specific
+  to the _G_ extension;
+* conversely, an application that only knows about _MG_ can nonetheless
+  process data that is conformant to _ME_, while preserving the data
+  that is specific to the _E_ extension.
+
 ## Imaging-PHD, NGMF, and OME-Zarr
 The concrete goal of the Imaging-PHD project, seen from a high level, is
 to have a way to store and exchange highly detailed formalized
@@ -210,3 +249,126 @@ Imaging-PHD/NGMF are linked to OME-Zarr on two points:
   within the metadata of a OME-Zarr file;
 * we will likely want to reuse at least some of the NGMF concepts for
   other parts of OME-Zarr metadata, beyond Imaging-PHD.
+
+## Basic guidelines for an extensible model
+
+### To LinkML or not to LinkML?
+Within the Imaging-PHD project, it is extremely likely that LinkML will
+be used as the schema definition language to create the formal,
+machine-exploitable version of the metadata model.
+
+In OME-Zarr context, on the other hand, we will likely merely
+_recommend_ that metadata extensions be defined with LinkML, without
+making it a hard requirement. Authors of OME-Zarr metadata extensions
+will be free to use whatever schema definition language they fancy 
+– including no schema definition language at all, for example for an
+extension that is so simple that the use of a SDL to define it could
+arguably be considered “overkill“.
+
+Of note, when LinkML is not used, it will be the responsibility of the
+extension’s authors to define the rules to represent the extension’s
+data in RDF (something that would be automatically taken care of by the
+use of LinkML).
+
+Whether the extension is defined in LinkML or not, there will be
+constraints on the design of the extension, aimed at achieving the
+balancing act mentioned above between “extensibility“ and
+“interoperability”.
+
+### No duck-typed properties
+At any time, the type of the value expected to be found in a “property”
+(a “slot”, in LinkML parlance; when the data is serialised in JSON that
+would be a “key” in a JSON dictionary) MUST be fully determined by
+either the name of the property alone or by the name of the property and
+the context where the property is found. It MUST NOT be required to
+“peek” inside the value of the property to infer its type.
+
+That is, an example like the following (coming from an early version of
+the SSSOM specification) must be avoided:
+
+> The `curie_map` slot is either a dictionary associating prefix names
+> to prefix IRIs, as follows:
+>
+> ```yaml
+> curie_map:
+>   FBbt: http://purl.obolibrary.org/obo/FBbt_
+>   UBERON: http://purl.obolibrary.org/obo/UBERON_
+> ```
+>
+> or a URL pointing to an online location where such a dictionary can
+> be found, as in:
+>
+> ```yaml
+> curie_map: http://example.org/my_curie_map.yaml
+> ```
+
+In this situation, you should instead use two distinct properties, which
+could be named for example `local_curie_map` and `remote_curie_map`,
+each with a fixed type (a dictionary for the former, a URL for the
+latter).
+
+(Of note: We expect that this particular situation, where one might want
+to either define some data locally, or refer to an external resource,
+will arise quote often. Therefore, NGMF will include a mechanism to
+explicitly support it. That mechanism remains to be fully defined.)
+
+### “Type designators“ / “internally tagged enums”
+The constraint against “duck-typed” properties does _not_ preclude the
+use of “type designator slots” (LinkML parlance) or other similar
+constructs such as Serde’s “internally tagged enums”, when one needs to
+provide the exact subtype of an object. In fact the use of such
+constructs will be _recommended_.
+
+That is, if the model defines, say, a `Component` class and several
+subclasses (each representing a different type of component), the
+`Component` class can have a “type designator slot” whose value will
+unambiguously indicate the exact type of component is present in a
+given instance data. Whenever a parser is expecting a value of type
+`Component`, it may then look at the value of the “type designator slot”
+to determine which subclass of `Component` should be instantiated.
+
+This does not violate the “no duck-typed properties” constraint
+because, even without looking at the value of the “type designator
+slot”, the parser already knows that the object it is looking at can
+only be an instance of `Component`, even if it does not know yet the
+exact subtype.
+
+### Dual local/remote references
+If it is desirable to be able to represent an object either as an
+“embedded” object or as merely a pointer to an external resource, the
+recommended way will be along the following lines:
+
+1. Ensure the class defining the object has an identifier slot.
+2. Wherever the object is required, use a non-inlined reference.
+3. Have another slot somewhere in the schema to store an inlined version
+   of the object, to be used when embedding the object is preferred.
+   Conversely, when it is preferred to use a remote resource, that slot
+   should be left empty, and the non-inlined reference in (2) should
+   point to the remote resource.
+
+## Implementation notes
+
+### Python
+Extensible classes in Python are easily achievable because ultimately,
+all instances of a class in Python have at their core a dictionary whose
+keys are the “fields” of the class.
+
+Assuming the base model _M_ defines a class `Foo` and an extension _E_
+defines a derived class `ExtendedFoo` containing additional slots, an
+implementation that is only aware of _M_ (and therefore only knows about
+the `Foo` class, not about the `ExtendedFoo` class) should easily be
+able to deserialize an instance of `ExtendedFoo` into an instance of
+`Foo`, while preserving the slots it does not know about (slots that are
+specific to `ExtendedFoo`) in its internal dictionary.
+
+### Java
+Supporting extensible classes in Java can easily be achieved by making
+sure that all classes supposed to be extensible have an internal
+`Map<String,Object>` hashtable intended to store the values of any
+unknown slot.
+
+An application that is only aware of _M_ (and therefore only knows about
+the `Foo` class) can then easily deserialise an instance of
+`ExtendedFoo`, by assigning all known properties to the corresponding
+slots of the base `Foo` class, while preserving the slots it does not
+know about in the dedicated hashtable.
