@@ -6,8 +6,8 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/AlternateIdentifierType")
-public enum AlternateIdentifierType {
+@LinkURI("https://example.org/pidinst/PIDInstAlternateIdentifierType")
+public enum PIDInstAlternateIdentifierType {
 
     SERIALNUMBER("SerialNumber"),
 
@@ -15,11 +15,11 @@ public enum AlternateIdentifierType {
 
     OTHER("Other");
 
-    private final static Map<String, AlternateIdentifierType> MAP;
+    private final static Map<String, PIDInstAlternateIdentifierType> MAP;
 
     static {
-        Map<String, AlternateIdentifierType> map = new HashMap<String, AlternateIdentifierType>();
-        for ( AlternateIdentifierType value : AlternateIdentifierType.values() ) {
+        Map<String, PIDInstAlternateIdentifierType> map = new HashMap<String, PIDInstAlternateIdentifierType>();
+        for ( PIDInstAlternateIdentifierType value : PIDInstAlternateIdentifierType.values() ) {
             map.put(value.toString(), value);
         }
 
@@ -28,7 +28,7 @@ public enum AlternateIdentifierType {
 
     private final String repr;
 
-    AlternateIdentifierType(String repr) {
+    PIDInstAlternateIdentifierType(String repr) {
         this.repr = repr;
     }
 
@@ -37,7 +37,7 @@ public enum AlternateIdentifierType {
         return repr;
     }
 
-    public static AlternateIdentifierType fromString(String v) {
+    public static PIDInstAlternateIdentifierType fromString(String v) {
         return MAP.get(v);
     }
 }

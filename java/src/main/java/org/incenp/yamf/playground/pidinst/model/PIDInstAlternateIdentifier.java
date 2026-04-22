@@ -19,23 +19,19 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/RelatedIdentifier")
-public class RelatedIdentifier {
+@LinkURI("https://example.org/pidinst/PIDInstAlternateIdentifier")
+public class PIDInstAlternateIdentifier {
 
     @Required
     @LinkURI("https://example.org/pidinst/identifier")
     private String identifier;
 
-    @LinkURI("https://example.org/pidinst/name")
-    private String name;
-
     @Required
     @LinkURI("https://example.org/pidinst/type")
-    private RelatedIdentifierType type;
+    private PIDInstAlternateIdentifierType type;
 
-    @Required
-    @LinkURI("https://example.org/pidinst/relation")
-    private RelationType relation;
+    @LinkURI("https://example.org/pidinst/name")
+    private String name;
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -43,6 +39,14 @@ public class RelatedIdentifier {
 
     public String getIdentifier() {
         return this.identifier;
+    }
+
+    public void setType(PIDInstAlternateIdentifierType type) {
+        this.type = type;
+    }
+
+    public PIDInstAlternateIdentifierType getType() {
+        return this.type;
     }
 
     public void setName(String name) {
@@ -53,34 +57,13 @@ public class RelatedIdentifier {
         return this.name;
     }
 
-    public void setType(RelatedIdentifierType type) {
-        this.type = type;
-    }
-
-    public RelatedIdentifierType getType() {
-        return this.type;
-    }
-
-    public void setRelation(RelationType relation) {
-        this.relation = relation;
-    }
-
-    public RelationType getRelation() {
-        return this.relation;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("RelatedIdentifier(");
+        sb.append("PIDInstAlternateIdentifier(");
         if ( (o = this.getIdentifier()) != null ) {
             sb.append("identifier=");
-            sb.append(o);
-            sb.append(",");
-        }
-        if ( (o = this.getName()) != null ) {
-            sb.append("name=");
             sb.append(o);
             sb.append(",");
         }
@@ -89,8 +72,8 @@ public class RelatedIdentifier {
             sb.append(o);
             sb.append(",");
         }
-        if ( (o = this.getRelation()) != null ) {
-            sb.append("relation=");
+        if ( (o = this.getName()) != null ) {
+            sb.append("name=");
             sb.append(o);
             sb.append(",");
         }
@@ -101,26 +84,23 @@ public class RelatedIdentifier {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof RelatedIdentifier) ) return false;
-        final RelatedIdentifier other = (RelatedIdentifier) o;
+        if ( !(o instanceof PIDInstAlternateIdentifier) ) return false;
+        final PIDInstAlternateIdentifier other = (PIDInstAlternateIdentifier) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$identifier = this.getIdentifier();
         final Object other$identifier = other.getIdentifier();
         if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
-        final Object this$name = this.getName();
-        final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
         if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-        final Object this$relation = this.getRelation();
-        final Object other$relation = other.getRelation();
-        if ( this$relation == null ? other$relation != null : !this$relation.equals(other$relation)) return false;
+        final Object this$name = this.getName();
+        final Object other$name = other.getName();
+        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
         return true;
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof RelatedIdentifier;
+        return other instanceof PIDInstAlternateIdentifier;
     }
 
     @Override
@@ -129,12 +109,10 @@ public class RelatedIdentifier {
         int result = 1;
         final Object $identifier = this.getIdentifier();
         result = result * PRIME + ($identifier == null ? 43 : $identifier.hashCode());
-        final Object $name = this.getName();
-        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         final Object $type = this.getType();
         result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-        final Object $relation = this.getRelation();
-        result = result * PRIME + ($relation == null ? 43 : $relation.hashCode());
+        final Object $name = this.getName();
+        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         return result;
     }
 }

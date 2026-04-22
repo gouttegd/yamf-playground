@@ -6,8 +6,8 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/RelationType")
-public enum RelationType {
+@LinkURI("https://example.org/pidinst/PIDInstRelationType")
+public enum PIDInstRelationType {
 
     ISDESCRIBEDBY("IsDescribedBy"),
 
@@ -29,11 +29,11 @@ public enum RelationType {
 
     ISATTACHEDTO("IsAttachedTo");
 
-    private final static Map<String, RelationType> MAP;
+    private final static Map<String, PIDInstRelationType> MAP;
 
     static {
-        Map<String, RelationType> map = new HashMap<String, RelationType>();
-        for ( RelationType value : RelationType.values() ) {
+        Map<String, PIDInstRelationType> map = new HashMap<String, PIDInstRelationType>();
+        for ( PIDInstRelationType value : PIDInstRelationType.values() ) {
             map.put(value.toString(), value);
         }
 
@@ -42,7 +42,7 @@ public enum RelationType {
 
     private final String repr;
 
-    RelationType(String repr) {
+    PIDInstRelationType(String repr) {
         this.repr = repr;
     }
 
@@ -51,7 +51,7 @@ public enum RelationType {
         return repr;
     }
 
-    public static RelationType fromString(String v) {
+    public static PIDInstRelationType fromString(String v) {
         return MAP.get(v);
     }
 }

@@ -19,13 +19,13 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/Instrument")
-public class Instrument {
+@LinkURI("https://example.org/pidinst/PIDInstInstrument")
+public class PIDInstInstrument {
 
     @SlotName("schema_version")
     @Required
     @LinkURI("https://example.org/pidinst/schema_version")
-    private PidinstVersion schemaVersion;
+    private PIDInstVersion schemaVersion;
 
     @SlotName("landing_page")
     @Required
@@ -33,40 +33,41 @@ public class Instrument {
     private URI landingPage;
 
     @LinkURI("https://example.org/pidinst/owners")
-    private List<Owner> owners;
+    private List<PIDInstOwner> owners;
 
     @LinkURI("https://example.org/pidinst/manufacturers")
-    private List<Manufacturer> manufacturers;
+    private List<PIDInstManufacturer> manufacturers;
 
     @LinkURI("https://example.org/pidinst/model")
-    private Model model;
+    private PIDInstModel model;
 
     @LinkURI("https://example.org/pidinst/description")
     private String description;
 
     @LinkURI("https://example.org/pidinst/types")
-    private List<InstrumentType> types;
+    private List<PIDInstInstrumentType> types;
 
     @SlotName("measured_variables")
     @LinkURI("https://example.org/pidinst/measured_variables")
     private List<String> measuredVariables;
 
     @LinkURI("https://example.org/pidinst/dates")
-    private List<Date> dates;
+    private List<PIDInstDate> dates;
 
     @SlotName("related_identifiers")
     @LinkURI("https://example.org/pidinst/related_identifiers")
-    private List<RelatedIdentifier> relatedIdentifiers;
+    private List<PIDInstRelatedIdentifier> relatedIdentifiers;
 
     @SlotName("alternate_identifiers")
     @LinkURI("https://example.org/pidinst/alternate_identifiers")
-    private List<AlternateIdentifier> alternateIdentifiers;
+    private List<PIDInstAlternateIdentifier> alternateIdentifiers;
 
     @Required
     @LinkURI("https://example.org/pidinst/name")
     private String name;
 
     @Identifier
+    @Required
     @LinkURI("https://example.org/pidinst/identifier")
     private String identifier;
 
@@ -77,11 +78,11 @@ public class Instrument {
     @ExtensionHolder
     private Map<String, Object> extraSlots;
 
-    public void setSchemaVersion(PidinstVersion schemaVersion) {
+    public void setSchemaVersion(PIDInstVersion schemaVersion) {
         this.schemaVersion = schemaVersion;
     }
 
-    public PidinstVersion getSchemaVersion() {
+    public PIDInstVersion getSchemaVersion() {
         return this.schemaVersion;
     }
 
@@ -93,41 +94,41 @@ public class Instrument {
         return this.landingPage;
     }
 
-    public void setOwners(List<Owner> owners) {
+    public void setOwners(List<PIDInstOwner> owners) {
         this.owners = owners;
     }
 
-    public List<Owner> getOwners() {
+    public List<PIDInstOwner> getOwners() {
         return this.owners;
     }
 
-    public List<Owner> getOwners(boolean set) {
+    public List<PIDInstOwner> getOwners(boolean set) {
         if ( this.owners == null && set ) {
             this.owners = new ArrayList<>();
         }
         return this.owners;
     }
 
-    public void setManufacturers(List<Manufacturer> manufacturers) {
+    public void setManufacturers(List<PIDInstManufacturer> manufacturers) {
         this.manufacturers = manufacturers;
     }
 
-    public List<Manufacturer> getManufacturers() {
+    public List<PIDInstManufacturer> getManufacturers() {
         return this.manufacturers;
     }
 
-    public List<Manufacturer> getManufacturers(boolean set) {
+    public List<PIDInstManufacturer> getManufacturers(boolean set) {
         if ( this.manufacturers == null && set ) {
             this.manufacturers = new ArrayList<>();
         }
         return this.manufacturers;
     }
 
-    public void setModel(Model model) {
+    public void setModel(PIDInstModel model) {
         this.model = model;
     }
 
-    public Model getModel() {
+    public PIDInstModel getModel() {
         return this.model;
     }
 
@@ -139,15 +140,15 @@ public class Instrument {
         return this.description;
     }
 
-    public void setTypes(List<InstrumentType> types) {
+    public void setTypes(List<PIDInstInstrumentType> types) {
         this.types = types;
     }
 
-    public List<InstrumentType> getTypes() {
+    public List<PIDInstInstrumentType> getTypes() {
         return this.types;
     }
 
-    public List<InstrumentType> getTypes(boolean set) {
+    public List<PIDInstInstrumentType> getTypes(boolean set) {
         if ( this.types == null && set ) {
             this.types = new ArrayList<>();
         }
@@ -169,45 +170,45 @@ public class Instrument {
         return this.measuredVariables;
     }
 
-    public void setDates(List<Date> dates) {
+    public void setDates(List<PIDInstDate> dates) {
         this.dates = dates;
     }
 
-    public List<Date> getDates() {
+    public List<PIDInstDate> getDates() {
         return this.dates;
     }
 
-    public List<Date> getDates(boolean set) {
+    public List<PIDInstDate> getDates(boolean set) {
         if ( this.dates == null && set ) {
             this.dates = new ArrayList<>();
         }
         return this.dates;
     }
 
-    public void setRelatedIdentifiers(List<RelatedIdentifier> relatedIdentifiers) {
+    public void setRelatedIdentifiers(List<PIDInstRelatedIdentifier> relatedIdentifiers) {
         this.relatedIdentifiers = relatedIdentifiers;
     }
 
-    public List<RelatedIdentifier> getRelatedIdentifiers() {
+    public List<PIDInstRelatedIdentifier> getRelatedIdentifiers() {
         return this.relatedIdentifiers;
     }
 
-    public List<RelatedIdentifier> getRelatedIdentifiers(boolean set) {
+    public List<PIDInstRelatedIdentifier> getRelatedIdentifiers(boolean set) {
         if ( this.relatedIdentifiers == null && set ) {
             this.relatedIdentifiers = new ArrayList<>();
         }
         return this.relatedIdentifiers;
     }
 
-    public void setAlternateIdentifiers(List<AlternateIdentifier> alternateIdentifiers) {
+    public void setAlternateIdentifiers(List<PIDInstAlternateIdentifier> alternateIdentifiers) {
         this.alternateIdentifiers = alternateIdentifiers;
     }
 
-    public List<AlternateIdentifier> getAlternateIdentifiers() {
+    public List<PIDInstAlternateIdentifier> getAlternateIdentifiers() {
         return this.alternateIdentifiers;
     }
 
-    public List<AlternateIdentifier> getAlternateIdentifiers(boolean set) {
+    public List<PIDInstAlternateIdentifier> getAlternateIdentifiers(boolean set) {
         if ( this.alternateIdentifiers == null && set ) {
             this.alternateIdentifiers = new ArrayList<>();
         }
@@ -255,14 +256,14 @@ public class Instrument {
 
     @Override
     public String toString() {
-        return "Instrument(identifier=" + this.getIdentifier() + ")";
+        return "PIDInstInstrument(identifier=" + this.getIdentifier() + ")";
     }
 
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof Instrument) ) return false;
-        final Instrument other = (Instrument) o;
+        if ( !(o instanceof PIDInstInstrument) ) return false;
+        final PIDInstInstrument other = (PIDInstInstrument) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$schemaVersion = this.getSchemaVersion();
         final Object other$schemaVersion = other.getSchemaVersion();
@@ -310,7 +311,7 @@ public class Instrument {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Instrument;
+        return other instanceof PIDInstInstrument;
     }
 
     @Override

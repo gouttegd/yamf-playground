@@ -19,8 +19,8 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/Manufacturer")
-public class Manufacturer {
+@LinkURI("https://example.org/pidinst/PIDInstManufacturer")
+public class PIDInstManufacturer {
 
     @Required
     @LinkURI("https://example.org/pidinst/name")
@@ -61,7 +61,7 @@ public class Manufacturer {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("Manufacturer(");
+        sb.append("PIDInstManufacturer(");
         if ( (o = this.getName()) != null ) {
             sb.append("name=");
             sb.append(o);
@@ -84,8 +84,8 @@ public class Manufacturer {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof Manufacturer) ) return false;
-        final Manufacturer other = (Manufacturer) o;
+        if ( !(o instanceof PIDInstManufacturer) ) return false;
+        final PIDInstManufacturer other = (PIDInstManufacturer) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
@@ -100,7 +100,7 @@ public class Manufacturer {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Manufacturer;
+        return other instanceof PIDInstManufacturer;
     }
 
     @Override

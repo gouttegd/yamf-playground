@@ -18,7 +18,7 @@ default_range: string
 
 classes:
 
-  IsIdentifiableEntity:
+  PIDInstIsIdentifiableEntity:
     description: >-
       A mixin that represents any kind of identifiable entity, and that
       contains the slots that are shared by all classes in this schema
@@ -58,18 +58,18 @@ classes:
             identifier_type:
               required: true
 
-  Instrument:
+  PIDInstInstrument:
     description: >-
       A research instrument. This is the main class of the PIDInst
       model.
     mixins:
-      - IsIdentifiableEntity
+      - PIDInstIsIdentifiableEntity
     attributes:
       schema_version:
         description: >-
           The version of the PIDInst model this record conforms to.
         conforms_to: PIDInst model property ID 2
-        range: PidinstVersion
+        range: PIDInstVersion
         required: true
       landing_page:
         description: >-
@@ -83,20 +83,20 @@ classes:
           instrument. This may include the legal owner, the operator, or
           an institute providing access to the instrument.
         conforms_to: PIDINST model property ID 5
-        range: Owner
+        range: PIDInstOwner
         multivalued: true
       manufacturers:
         description: >-
           The instrument’s manufacturer(s) or developer. Thiis may also
           be the owner for custom built instruments.
         conforms_to: PIDINST model property ID 6
-        range: Manufacturer
+        range: PIDInstManufacturer
         multivalued: true
       model:
         description: >-
           The model or type of device, as attributed by the manufacturer.
         conforms_to: PIDINST model property ID 7
-        range: Model
+        range: PIDInstModel
       description:
         description: >-
           A technical description of the device and its capabilities.
@@ -105,7 +105,7 @@ classes:
         description: >-
           The type(s) the instrument can be classified into.
         conforms_to: PIDINST model property ID 9
-        range: InstrumentType
+        range: PIDInstInstrumentType
         multivalued: true
       measured_variables:
         description: >-
@@ -116,7 +116,7 @@ classes:
         description: >-
           Dates that are relevant to the instrument.
         conforms_to: PIDINST model property ID 11
-        range: Date
+        range: PIDInstDate
         multivalued: true
       related_identifiers:
         description: >-
@@ -125,7 +125,7 @@ classes:
           Not to be confused with `alternate_identifiers`, which is
           intended for other identifiers for the very same instrument.
         conforms_to: PIDINST model property ID 12
-        range: RelatedIdentifier
+        range: PIDInstRelatedIdentifier
         multivalued: true
       alternate_identifiers:
         description: >-
@@ -140,7 +140,7 @@ classes:
           merely related to this instrument instance while being
           distinct from it.
         conforms_to: PIDINST model property ID 13
-        range: AlternateIdentifier
+        range: PIDInstAlternateIdentifier
         multivalued: true
     slot_usage:
       name:
@@ -159,13 +159,13 @@ classes:
     extra_slots:
       allowed: true
 
-  Owner:
+  PIDInstOwner:
     description: >-
       An institution responsible for the management of an instrument.
       This may include the legal owner, the operator, or an institute
       providing access to the instrument.
     mixins:
-      - IsIdentifiableEntity
+      - PIDInstIsIdentifiableEntity
     attributes:
       contact:
         description: >-
@@ -179,11 +179,11 @@ classes:
       identifier_type:
         conforms_to: PIDINST model property 5.3.1
 
-  Manufacturer:
+  PIDInstManufacturer:
     description: >-
       The manufacturer of an instrument.
     mixins:
-      - IsIdentifiableEntity
+      - PIDInstIsIdentifiableEntity
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 6.1
@@ -192,11 +192,11 @@ classes:
       identifier_type:
         conforms_to: PIDINST model property ID 6.2.1
 
-  Model:
+  PIDInstModel:
     description: >-
       The model of an instrument.
     mixins:
-      - IsIdentifiableEntity
+      - PIDInstIsIdentifiableEntity
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 7.1
@@ -205,7 +205,7 @@ classes:
       identifier_type:
         conforms_to: PIDINST model property ID 7.2.1
 
-  InstrumentType:
+  PIDInstInstrumentType:
     description: >-
       The type of an instrument.
 
@@ -213,7 +213,7 @@ classes:
       assigned by the manufacturer, and (2) a single instrument can be
       of more than one type.
     mixins:
-      - IsIdentifiableEntity
+      - PIDInstIsIdentifiableEntity
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 9.1
@@ -222,7 +222,7 @@ classes:
       identifier_type:
         conforms_to: PIDINST model property ID 9.2.1
 
-  Date:
+  PIDInstDate:
     description: >-
       A date relevant to an instrument.
     attributes:
@@ -236,10 +236,10 @@ classes:
           The type of date, indicating how the date is relevant to the
           instrument.
         conforms_to: PIDINST model property ID 11.1
-        range: DateType
+        range: PIDInstDateType
         required: true
 
-  RelatedIdentifier:
+  PIDInstRelatedIdentifier:
     description: >-
       An identifier for a resource related to an instrument.
     attributes:
@@ -260,17 +260,17 @@ classes:
           this schema, this one is _not_ free text and is instead
           constrained to a fixed list of values.
         conforms_to: PIDINST model property ID 12.1
-        range: RelatedIdentifierType
+        range: PIDInstRelatedIdentifierType
         required: true
       relation:
         description: >-
           A description of the relationship between an instrument and
           the related resource pointed to by the identifier.
         conforms_to: PIDINST model property ID 12.2
-        range: RelationType
+        range: PIDInstRelationType
         required: true
 
-  AlternateIdentifier:
+  PIDInstAlternateIdentifier:
     description: >-
       A non-PIDInst identifier that can also identify an instrument
       instance.
@@ -287,7 +287,7 @@ classes:
           this schema, this one is _not_ free text and is instead
           constrained to a fixed list of values.
         conforms_to: PIDINST model property ID 13.1
-        range: AlternateIdentifierType
+        range: PIDInstAlternateIdentifierType
         required: true
       name:
         description: >-
@@ -297,20 +297,20 @@ classes:
 
 enums:
 
-  PidinstVersion:
+  PIDInstVersion:
     description: >-
       Available versions of the PIDInst model.
     permissible_values:
       "1.0":
 
-  DateType:
+  PIDInstDateType:
     description: >-
       Values describing how a date is relevant to an instrument.
     permissible_values:
       Commissioned:
       DeComissioned:
 
-  RelatedIdentifierType:
+  PIDInstRelatedIdentifierType:
     description: >-
       Possible types of related identifiers for an instrument.
     permissible_values:
@@ -335,7 +335,7 @@ enums:
       URN:
       w3id:
 
-  RelationType:
+  PIDInstRelationType:
     description: >-
       Possible types of relation between a PIDInst instance and its
       related identifiers.
@@ -351,7 +351,7 @@ enums:
       IsIdenticalTo:
       IsAttachedTo:
 
-  AlternateIdentifierType:
+  PIDInstAlternateIdentifierType:
     description: >-
       Possible types of alternate identifiers for a PIDINST instance.
     permissible_values:

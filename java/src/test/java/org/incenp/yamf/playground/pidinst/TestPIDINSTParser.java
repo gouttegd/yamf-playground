@@ -7,7 +7,7 @@ import org.incenp.linkml.core.ConverterContext;
 import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.yamf.playground.pidinst.model.Foo;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
-import org.incenp.yamf.playground.pidinst.model.Instrument;
+import org.incenp.yamf.playground.pidinst.model.PIDInstInstrument;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,11 +24,11 @@ public class TestPIDINSTParser {
     void testParseSimpleFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-base.json");
         PIDINSTParser p = new PIDINSTParser();
-        Instrument ins = p.parse(f, Instrument.class);
+        PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
 
-        roundtrip(Instrument.class, ins, null);
+        roundtrip(PIDInstInstrument.class, ins, null);
     }
 
     /*
@@ -38,14 +38,14 @@ public class TestPIDINSTParser {
     void testParseDirectExtendedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-direct.json");
         PIDINSTParser p = new PIDINSTParser();
-        Instrument ins = p.parse(f, Instrument.class);
+        PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
 
         Assertions.assertTrue(ins.getExtraSlots().containsKey("foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("bar"));
 
-        roundtrip(Instrument.class, ins, null);
+        roundtrip(PIDInstInstrument.class, ins, null);
     }
 
     /*
@@ -56,14 +56,14 @@ public class TestPIDINSTParser {
     void testParseDirectNestedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
         PIDINSTParser p = new PIDINSTParser();
-        Instrument ins = p.parse(f, Instrument.class);
+        PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
 
         Assertions.assertTrue(ins.getExtraSlots().containsKey("com.example.foo"));
         Assertions.assertTrue(ins.getExtraSlots().containsKey("org.example.bar"));
 
-        roundtrip(Instrument.class, ins, null);
+        roundtrip(PIDInstInstrument.class, ins, null);
     }
 
     /*
@@ -128,7 +128,7 @@ public class TestPIDINSTParser {
     void testGetExtensionFromDirect() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-direct.json");
         PIDINSTParser p = new PIDINSTParser();
-        Instrument ins = p.parse(f, Instrument.class);
+        PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
         Foo ext = p.getExtension(ins, null, "foo", Foo.class);
@@ -144,7 +144,7 @@ public class TestPIDINSTParser {
     void testGetExtensionFromNested() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
         PIDINSTParser p = new PIDINSTParser();
-        Instrument ins = p.parse(f, Instrument.class);
+        PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
         Foo ext = p.getExtension(ins, "foo", Foo.class);
@@ -152,12 +152,12 @@ public class TestPIDINSTParser {
         Assertions.assertEquals("The name of the Foo", ext.getName());
     }
 
-    <T extends Instrument> void roundtrip(Class<T> type, T instrument, File saveTo)
+    <T extends PIDInstInstrument> void roundtrip(Class<T> type, T instrument, File saveTo)
             throws LinkMLRuntimeException, IOException, DatabindException, IOException {
         roundtrip(type, instrument, saveTo, false);
     }
 
-    <T extends Instrument> void roundtrip(Class<T> type, T instrument, File saveTo, boolean writeNested)
+    <T extends PIDInstInstrument> void roundtrip(Class<T> type, T instrument, File saveTo, boolean writeNested)
             throws LinkMLRuntimeException, IOException, DatabindException, IOException {
         ConverterContext ctx = new ConverterContext();
         ctx.addConverter(new NestedExtensionConverter(FooInstrument.class, writeNested));

@@ -19,8 +19,8 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/Model")
-public class Model {
+@LinkURI("https://example.org/pidinst/PIDInstModel")
+public class PIDInstModel {
 
     @Required
     @LinkURI("https://example.org/pidinst/name")
@@ -61,7 +61,7 @@ public class Model {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("Model(");
+        sb.append("PIDInstModel(");
         if ( (o = this.getName()) != null ) {
             sb.append("name=");
             sb.append(o);
@@ -84,8 +84,8 @@ public class Model {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof Model) ) return false;
-        final Model other = (Model) o;
+        if ( !(o instanceof PIDInstModel) ) return false;
+        final PIDInstModel other = (PIDInstModel) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
@@ -100,7 +100,7 @@ public class Model {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Model;
+        return other instanceof PIDInstModel;
     }
 
     @Override

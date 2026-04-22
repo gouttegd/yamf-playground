@@ -6,18 +6,18 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/DateType")
-public enum DateType {
+@LinkURI("https://example.org/pidinst/PIDInstDateType")
+public enum PIDInstDateType {
 
     COMMISSIONED("Commissioned"),
 
     DECOMISSIONED("DeComissioned");
 
-    private final static Map<String, DateType> MAP;
+    private final static Map<String, PIDInstDateType> MAP;
 
     static {
-        Map<String, DateType> map = new HashMap<String, DateType>();
-        for ( DateType value : DateType.values() ) {
+        Map<String, PIDInstDateType> map = new HashMap<String, PIDInstDateType>();
+        for ( PIDInstDateType value : PIDInstDateType.values() ) {
             map.put(value.toString(), value);
         }
 
@@ -26,7 +26,7 @@ public enum DateType {
 
     private final String repr;
 
-    DateType(String repr) {
+    PIDInstDateType(String repr) {
         this.repr = repr;
     }
 
@@ -35,7 +35,7 @@ public enum DateType {
         return repr;
     }
 
-    public static DateType fromString(String v) {
+    public static PIDInstDateType fromString(String v) {
         return MAP.get(v);
     }
 }

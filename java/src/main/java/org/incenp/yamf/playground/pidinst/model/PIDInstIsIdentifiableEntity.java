@@ -19,11 +19,8 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/Owner")
-public class Owner {
-
-    @LinkURI("https://example.org/pidinst/contact")
-    private String contact;
+@LinkURI("https://example.org/pidinst/PIDInstIsIdentifiableEntity")
+public class PIDInstIsIdentifiableEntity {
 
     @Required
     @LinkURI("https://example.org/pidinst/name")
@@ -35,14 +32,6 @@ public class Owner {
     @SlotName("identifier_type")
     @LinkURI("https://example.org/pidinst/identifier_type")
     private String identifierType;
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContact() {
-        return this.contact;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -72,12 +61,7 @@ public class Owner {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("Owner(");
-        if ( (o = this.getContact()) != null ) {
-            sb.append("contact=");
-            sb.append(o);
-            sb.append(",");
-        }
+        sb.append("PIDInstIsIdentifiableEntity(");
         if ( (o = this.getName()) != null ) {
             sb.append("name=");
             sb.append(o);
@@ -100,12 +84,9 @@ public class Owner {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof Owner) ) return false;
-        final Owner other = (Owner) o;
+        if ( !(o instanceof PIDInstIsIdentifiableEntity) ) return false;
+        final PIDInstIsIdentifiableEntity other = (PIDInstIsIdentifiableEntity) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$contact = this.getContact();
-        final Object other$contact = other.getContact();
-        if ( this$contact == null ? other$contact != null : !this$contact.equals(other$contact)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
         if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -119,15 +100,13 @@ public class Owner {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Owner;
+        return other instanceof PIDInstIsIdentifiableEntity;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $contact = this.getContact();
-        result = result * PRIME + ($contact == null ? 43 : $contact.hashCode());
         final Object $name = this.getName();
         result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         final Object $identifier = this.getIdentifier();

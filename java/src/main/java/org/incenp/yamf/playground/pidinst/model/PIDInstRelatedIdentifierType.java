@@ -6,8 +6,8 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/RelatedIdentifierType")
-public enum RelatedIdentifierType {
+@LinkURI("https://example.org/pidinst/PIDInstRelatedIdentifierType")
+public enum PIDInstRelatedIdentifierType {
 
     ARK("ARK"),
 
@@ -49,11 +49,11 @@ public enum RelatedIdentifierType {
 
     W3ID("w3id");
 
-    private final static Map<String, RelatedIdentifierType> MAP;
+    private final static Map<String, PIDInstRelatedIdentifierType> MAP;
 
     static {
-        Map<String, RelatedIdentifierType> map = new HashMap<String, RelatedIdentifierType>();
-        for ( RelatedIdentifierType value : RelatedIdentifierType.values() ) {
+        Map<String, PIDInstRelatedIdentifierType> map = new HashMap<String, PIDInstRelatedIdentifierType>();
+        for ( PIDInstRelatedIdentifierType value : PIDInstRelatedIdentifierType.values() ) {
             map.put(value.toString(), value);
         }
 
@@ -62,7 +62,7 @@ public enum RelatedIdentifierType {
 
     private final String repr;
 
-    RelatedIdentifierType(String repr) {
+    PIDInstRelatedIdentifierType(String repr) {
         this.repr = repr;
     }
 
@@ -71,7 +71,7 @@ public enum RelatedIdentifierType {
         return repr;
     }
 
-    public static RelatedIdentifierType fromString(String v) {
+    public static PIDInstRelatedIdentifierType fromString(String v) {
         return MAP.get(v);
     }
 }

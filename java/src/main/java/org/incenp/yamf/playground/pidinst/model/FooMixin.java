@@ -19,8 +19,8 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst-foo/FooInstrument")
-public class FooInstrument extends PIDInstInstrument {
+@LinkURI("https://example.org/pidinst-foo/FooMixin")
+public class FooMixin {
 
     @LinkURI("https://example.org/pidinst-foo/foo")
     private Foo foo;
@@ -35,17 +35,24 @@ public class FooInstrument extends PIDInstInstrument {
 
     @Override
     public String toString() {
-        return "FooInstrument(identifier=" + this.getIdentifier() + ")";
+        StringBuilder sb = new StringBuilder();
+        Object o;
+        sb.append("FooMixin(");
+        if ( (o = this.getFoo()) != null ) {
+            sb.append("foo=");
+            sb.append(o);
+            sb.append(",");
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof FooInstrument) ) return false;
-        final FooInstrument other = (FooInstrument) o;
+        if ( !(o instanceof FooMixin) ) return false;
+        final FooMixin other = (FooMixin) o;
         if ( !other.canEqual((Object) this)) return false;
-        if ( !super.equals(o) ) return false;
-
         final Object this$foo = this.getFoo();
         final Object other$foo = other.getFoo();
         if ( this$foo == null ? other$foo != null : !this$foo.equals(other$foo)) return false;
@@ -53,13 +60,13 @@ public class FooInstrument extends PIDInstInstrument {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof FooInstrument;
+        return other instanceof FooMixin;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
-        int result = super.hashCode();
+        int result = 1;
         final Object $foo = this.getFoo();
         result = result * PRIME + ($foo == null ? 43 : $foo.hashCode());
         return result;

@@ -49,6 +49,6 @@ classes:
       is constructed simply by (1) inheriting from the base Instrument
       class and (2) adding the `FooMixin` mixin that wraps the Foo
       extension.
-    is_a: Instrument
+    is_a: PIDInstInstrument
     mixins:
       - FooMixin

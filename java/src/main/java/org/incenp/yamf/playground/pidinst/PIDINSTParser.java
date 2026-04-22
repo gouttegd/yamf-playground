@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.sound.midi.Instrument;
+
 import org.incenp.linkml.core.ConverterContext;
 import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.linkml.ext.ObjectLoader;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
-import org.incenp.yamf.playground.pidinst.model.Instrument;
+import org.incenp.yamf.playground.pidinst.model.PIDInstInstrument;
 
 /**
  * An example of a LinkML-based parser for PIDINST data.
@@ -33,7 +35,7 @@ public class PIDINSTParser {
      * @throws IOException            If any generic I/O error occurs.
      * @throws LinkMLRuntimeException If the file contains invalid data.
      */
-    public <T extends Instrument> T parse(File f, Class<T> t) throws IOException, LinkMLRuntimeException {
+    public <T extends PIDInstInstrument> T parse(File f, Class<T> t) throws IOException, LinkMLRuntimeException {
         return loader.loadObject(f, t);
     }
 
@@ -52,7 +54,7 @@ public class PIDINSTParser {
      *         does not contain data pertaining to that extension or if the data is
      *         invalid.
      */
-    public <T> T getExtension(Instrument ins, String namespace, String name, Class<T> extensionClass) {
+    public <T> T getExtension(PIDInstInstrument ins, String namespace, String name, Class<T> extensionClass) {
         Object extension = null;
         if ( namespace != null ) { // Nested model
             extension = ins.getExtraSlots(true).get(namespace);
@@ -99,7 +101,7 @@ public class PIDINSTParser {
      *         does not contain data pertaining to that extension or if the data is
      *         invalid.
      */
-    public <T> T getExtension(Instrument ins, String name, Class<T> extensionClass) {
+    public <T> T getExtension(PIDInstInstrument ins, String name, Class<T> extensionClass) {
         ExtensionNamespace annot = extensionClass.getAnnotation(ExtensionNamespace.class);
         String namespace = annot != null ? annot.value() : null;
 

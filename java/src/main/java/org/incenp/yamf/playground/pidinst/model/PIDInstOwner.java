@@ -19,8 +19,11 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/InstrumentType")
-public class InstrumentType {
+@LinkURI("https://example.org/pidinst/PIDInstOwner")
+public class PIDInstOwner {
+
+    @LinkURI("https://example.org/pidinst/contact")
+    private String contact;
 
     @Required
     @LinkURI("https://example.org/pidinst/name")
@@ -32,6 +35,14 @@ public class InstrumentType {
     @SlotName("identifier_type")
     @LinkURI("https://example.org/pidinst/identifier_type")
     private String identifierType;
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getContact() {
+        return this.contact;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -61,7 +72,12 @@ public class InstrumentType {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("InstrumentType(");
+        sb.append("PIDInstOwner(");
+        if ( (o = this.getContact()) != null ) {
+            sb.append("contact=");
+            sb.append(o);
+            sb.append(",");
+        }
         if ( (o = this.getName()) != null ) {
             sb.append("name=");
             sb.append(o);
@@ -84,9 +100,12 @@ public class InstrumentType {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof InstrumentType) ) return false;
-        final InstrumentType other = (InstrumentType) o;
+        if ( !(o instanceof PIDInstOwner) ) return false;
+        final PIDInstOwner other = (PIDInstOwner) o;
         if ( !other.canEqual((Object) this)) return false;
+        final Object this$contact = this.getContact();
+        final Object other$contact = other.getContact();
+        if ( this$contact == null ? other$contact != null : !this$contact.equals(other$contact)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
         if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -100,13 +119,15 @@ public class InstrumentType {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof InstrumentType;
+        return other instanceof PIDInstOwner;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
+        final Object $contact = this.getContact();
+        result = result * PRIME + ($contact == null ? 43 : $contact.hashCode());
         final Object $name = this.getName();
         result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         final Object $identifier = this.getIdentifier();

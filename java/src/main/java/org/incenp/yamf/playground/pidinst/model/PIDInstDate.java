@@ -19,61 +19,45 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/AlternateIdentifier")
-public class AlternateIdentifier {
+@LinkURI("https://example.org/pidinst/PIDInstDate")
+public class PIDInstDate {
 
     @Required
-    @LinkURI("https://example.org/pidinst/identifier")
-    private String identifier;
+    @LinkURI("https://example.org/pidinst/date")
+    private LocalDate date;
 
     @Required
     @LinkURI("https://example.org/pidinst/type")
-    private AlternateIdentifierType type;
+    private PIDInstDateType type;
 
-    @LinkURI("https://example.org/pidinst/name")
-    private String name;
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getIdentifier() {
-        return this.identifier;
+    public LocalDate getDate() {
+        return this.date;
     }
 
-    public void setType(AlternateIdentifierType type) {
+    public void setType(PIDInstDateType type) {
         this.type = type;
     }
 
-    public AlternateIdentifierType getType() {
+    public PIDInstDateType getType() {
         return this.type;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("AlternateIdentifier(");
-        if ( (o = this.getIdentifier()) != null ) {
-            sb.append("identifier=");
+        sb.append("PIDInstDate(");
+        if ( (o = this.getDate()) != null ) {
+            sb.append("date=");
             sb.append(o);
             sb.append(",");
         }
         if ( (o = this.getType()) != null ) {
             sb.append("type=");
-            sb.append(o);
-            sb.append(",");
-        }
-        if ( (o = this.getName()) != null ) {
-            sb.append("name=");
             sb.append(o);
             sb.append(",");
         }
@@ -84,35 +68,30 @@ public class AlternateIdentifier {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof AlternateIdentifier) ) return false;
-        final AlternateIdentifier other = (AlternateIdentifier) o;
+        if ( !(o instanceof PIDInstDate) ) return false;
+        final PIDInstDate other = (PIDInstDate) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$identifier = this.getIdentifier();
-        final Object other$identifier = other.getIdentifier();
-        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
+        final Object this$date = this.getDate();
+        final Object other$date = other.getDate();
+        if ( this$date == null ? other$date != null : !this$date.equals(other$date)) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
         if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-        final Object this$name = this.getName();
-        final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
         return true;
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof AlternateIdentifier;
+        return other instanceof PIDInstDate;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $identifier = this.getIdentifier();
-        result = result * PRIME + ($identifier == null ? 43 : $identifier.hashCode());
+        final Object $date = this.getDate();
+        result = result * PRIME + ($date == null ? 43 : $date.hashCode());
         final Object $type = this.getType();
         result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-        final Object $name = this.getName();
-        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         return result;
     }
 }
