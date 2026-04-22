@@ -346,6 +346,64 @@ recommended way will be along the following lines:
    should be left empty, and the non-inlined reference in (2) should
    point to the remote resource.
 
+### LinkML-specific guidelines
+
+#### Use “slots” only when really needed
+There are two ways in LinkML to define the “properties” or the “fields”
+of a class: with “slots”, or with “attributes“.
+
+The difference between the two is that slots are global to the schema,
+and can therefore be reused in several classes, whereas attributes are
+local to the class in which they are defined. (This does not preclude
+several classes to have an attribute of the same name, but these will
+be completely _distinct_ attributes.)
+
+Slots are useful, but we recommend against using them until/unless they
+are necessary. They “pollute” the global namespace and may make the
+schema needlessly harder to reuse.
+
+Use (local) attributes first, and only convert an attribute to a
+(global) slot if and when it becomes clear that you will need to reuse
+the very same attribute, **with the very same meaning**, in more than
+one class.
+
+#### Make sure to use distinctive names
+All schema elements (class definitions, slot definitions, enum
+definitions, etc.) within a LinkML schema live within a single flat
+namespace. Therefore, care must be taken to always use names that
+are distinctive enough. Otherwise, this might make the schema more
+difficult to reuse outside of its original context.
+
+The easiest way to achieve that is to choose a suitable “prefix” and to
+prepend it to all schema element names.
+
+(Note that we do not mean a _CURIE-type prefix_! Such prefixes cannot be
+used as element names.)
+
+For example, a schema for the PIDINST model could use a `PIDInst`
+prefix, yielding names such as `PIDInstOwner`, `PIDInstManufacturer`,
+etc. A schema for the OME model could use a `OME` prefix, yielding names
+such as `OMEMicroscope`, `OMELightSource`, etc.
+
+#### Extending a schema
+The recommended way to extend a schema is to:
+
+1. create a new schema that _imports_ the base schema (the schema you
+   are extending);
+2. for all the classes to which you wish to add new metadata:
+    1. create a _mixin_ class containing only the new attributes;
+    2. create a class that both extends the original class from the base
+       schema and inherits from the mixin.
+
+The use of a mixin will greatly facilitate the _composition_ of
+extensions. Say that we have a base class _Foo_ and two independent
+extensions _Bar_ and _Baz_. If the additional slots added by those
+two extensions are available in two mixins (say _BarMixin_ and
+_BazMixin_), this will make it possible for a third-party wishing to
+support both extensions simultaneously to create a custom schema with
+a _CustomFoo_ class that (1) derives from the original _Foo_ class and
+(2) inherits from both the _BarMixin_ and the _BazMixin_.
+
 ## Implementation notes
 
 ### Python

@@ -45,10 +45,10 @@ classes:
 
   FooInstrument:
     description: >-
-      The Instrument class extended with the Foo extension. This class
-      is constructed simply by (1) inheriting from the base Instrument
-      class and (2) adding the `FooMixin` mixin that wraps the Foo
-      extension.
+      The PIDInstInstrument class extended with the Foo extension. This
+      class is constructed simply by (1) inheriting from the base
+      PIDInstInstrument class and (2) adding the `FooMixin` mixin that
+      wraps the Foo extension.
     is_a: PIDInstInstrument
     mixins:
       - FooMixin
