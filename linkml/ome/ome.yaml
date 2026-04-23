@@ -245,10 +245,6 @@ classes:
       without an explicit slot for each type. This should make it easier
       to add _new_ types of component, because it will not be needed to
       extend this class to add corresponding new slots.
-
-      We still treat light sources differently, though, because they are
-      already treated somewhat differently in the original model. We
-      might make `LightSource` a bona fide `MicroscopeComponent` later.
     slots:
       - id
     attributes:
@@ -257,12 +253,6 @@ classes:
           The description of the microscope itself, without its various
           components.
         range: Microscope
-        inlined: true
-      light_source:
-        description: >-
-          The light sources available on this instrument.
-        range: LightSource
-        multivalued: true
         inlined: true
       components:
         description: >-
@@ -277,13 +267,7 @@ classes:
     description: >-
       A light source on an instrument. This class has several subclasses
       that each represent a different type of light source.
-
-      FIXME: For now `LightSource` is not considered as a
-      `MicroscopeComponent`.
-    mixins:
-      - ManufacturerSpec
-    slots:
-      - id
+    is_a: MicroscopeComponent
     attributes:
       power:
         description: >-
@@ -293,18 +277,6 @@ classes:
         description: >-
           Unit associated with the value of the power slot.
         range: PowerUnit
-      light_source_type:
-        description: >-
-          The type designator for the class, allowing to identify the
-          exact subtype of an instance.
-
-          FIXME: If we make LightSource a subclass of
-          MicroscopeComponent, then we shouldn’t need a distinct type
-          designator anymore – the type designator on
-          MicroscopeComponent itself would be enough.
-        designates_type: true
-    extra_slots:
-      allowed: true
 
   ArcLightSource:
     description: >-
