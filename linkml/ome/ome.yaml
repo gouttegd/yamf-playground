@@ -1,237 +1,489 @@
 id: https://example.org/ome
 name: ome
-description: Playground for a LinkML version of the OME model
+title: OME LinkML Schema
+description: >-
+  A tentative implementation of the OME model as a LinkML schema.
+
+  This schema is intended for experimental purposes only within the
+  context of the NGMF/Imaging-PHD project.
+
+  Of note, so far the schema (1) is limited to the “Instrument” branch
+  of the original OME model, and (2) does not represent “Annotations”.
+created_by: orcid:0000-0002-6095-8718
+
 prefixes:
   linkml: https://w3id.org/linkml/
   ome: https://example.org/ome/
-default_prefix: ome
+  orcid: https://orcid.org/
 imports:
   - linkml:types
+default_prefix: ome
 default_range: string
 
+
+###############################
+# SLOTS                       #
+###############################
 slots:
 
   id:
+    description: >-
+      The identifier slot for most of the classes within the OME model.
+
+      Set to a `uriorcurie` for now, though it might be set to a plain
+      URI later on for consistency with the original model (which AFAIK
+      has no place for CURIEs).
     range: uriorcurie
     identifier: true
 
+
+###############################
+# CLASSES                     #
+###############################
 classes:
 
   ManufacturerSpec:
+    description: >-
+      This mixin provides attributes to record common properties among
+      the various hardware components that make up a microscope.
+
+      Of note, in the original OME model, hardware components extend
+      this class. In this schema, we make it a mixin instead, so as to
+      avoid needlessly constraining all components to inherit from the
+      same superclass.
     mixin: true
     attributes:
       lot_number:
+        description: >-
+          The lot number of the component.
       manufacturer:
+        description: >-
+          The name of the manufacturer of the component.
       model:
+        description: >-
+          The name of the model of the component.
       serial_number:
+        description: >-
+          The serial number of the component.
 
   Microscope:
+    description: >-
+      The manufacturer’s specification for a microscope.
+
+      This only provides basic information about a microscope. The
+      `Instrument` class is the main class that aims to fully describe
+      a microscope with all its hardware components.
     mixins:
       - ManufacturerSpec
     attributes:
       type:
+        description: >-
+          A value from a controlled vocabulary describing the type of
+          microscope.
         range: MicroscopeType
+    extra_slots:
+      allowed: true
 
   MicroscopeComponent:
+    description: >-
+      A hardware component of a microscope.
     mixins:
       - ManufacturerSpec
     slots:
       - id
     attributes:
       component_type:
+        description: >-
+          The type designator for this class, allowing to unambiguously
+          indicate the exact subtype of an instance.
         designates_type: true
+    extra_slots:
+      allowed: true
   
   Detector:
+    description: >-
+      The type of detector used to capture an image.
     is_a: MicroscopeComponent
     attributes:
       gain:
+        description: >-
+          The Detector Gain for this detector.
         range: float
       voltage:
+        description: >-
+          The Voltage of the detector (e.g. PMT voltage).
         range: float
       voltage_unit:
+        description: >-
+          Unit associated with the value of the voltage slot.
         range: ElectricPotentialUnit
       offset:
+        description: >-
+          The Detector Offset.
         range: float
       zoom:
+        description: >-
+          The fixed Zoom for a detector.
         range: float
       amplification_gain:
+        description: >-
+          Gain applied to the detector signal. This is the electronic
+          gain (as opposed to the inherent gain) that is set for the
+          detector.
         range: float
       type:
+        description: >-
+          The type of detector (e.g. CCD, PMT, EMCCD, etc.).
         range: DetectorType
 
   Objective:
+    description: >-
+      A description of the microscope’s objective lens.
     is_a: MicroscopeComponent
     attributes:
       correction:
+        description: >-
+          The correction applied to the lens.
         range: CorrectionType
       immersion:
+        description: >-
+          The immersion medium the lens is designed for.
         range: ImmersionType
       lens_na:
+        description: >-
+          The numerical aperture of the lens. Expected range is between
+          0.02 and 1.5.
         range: float
       nominal_magnification:
+        description: >-
+          The magnification of the lens as specified by the
+          manufacturer.
         range: float
       calibrated_magnification:
+        description: >-
+          The magnification of the lens as measured by a calibration
+          process.
         range: float
       working_distance:
+        description: >-
+          The working distance of the lens.
         range: float
       working_distance_unit:
+        description: >-
+          Unit associated with the value of the working_distance slot.
         range: LengthUnit
       iris:
+        description: >-
+          Records whether or not the objective was fitted with an iris.
         range: boolean
 
   FilterSet:
+    description: >-
+      A set of filter. This is merely a container for references to the
+      filter objects.
     is_a: MicroscopeComponent
     attributes:
       emission_filters:
-        # Non-inlined list of references to filter objects
+        description: >-
+          The filters placed in the excitation light path.
         range: Filter
         multivalued: true
       dichroic:
-        # Non-inlined reference to a Dichroic object
+        description: >-
+          The dichromatic beamsplitter or dichroic mirror used for this
+          filter combination.
         range: Dichroic
       excitation_filters:
-        # Non-inlined list of references to filter objects
+        description: >-
+          The filters placed in the emission light path.
         range: Filter
         multivalued: true
 
   Filter:
+    description: >-
+      A filter that may be placed in either the excitation or the
+      emission light path.
     is_a: MicroscopeComponent
     attributes:
       type:
+        description: >-
+          The type of filter.
         range: FilterType
       filter_wheel:
+        description: >-
+          A filter “wheel” is OME can refer to any arrangement of
+          filters in a filter holder of any shape. It could, for
+          example, be a filter slider.
       transmittance_range:
+        description: >-
+          This records the range of wavelengths that are transmitted by
+          the filter. It also records the maximum amount of light
+          transmitted.
         range: TransmittanceRange
 
   Dichroic:
+    description: >-
+      The dichromatic beamsplitter or dichroic mirror used for this
+      filter combination.
     is_a: MicroscopeComponent
+    # This class has no other attributes than those inherited from
+    # MicroscopeComponent.
 
   Instrument:
+    description: >-
+      This class describes the instrument used to capture the image. It
+      is primarily a container for manufacturer’s model and catalog
+      numbers for the microscope itself and its various components.
+
+      Of note, in the original OME model the Instrument element has
+      explicit children for each type of component. In this LinkML
+      version, we have instead a single `components` slot that can
+      contain an arbitrary number of any kind of components. We rely on
+      the fact that components can self-declare their type (since the
+      `MicroscopeComponent` class has a type designator slot) so that we
+      can always know the kind of component we are dealing with, even
+      without an explicit slot for each type. This should make it easier
+      to add _new_ types of component, because it will not be needed to
+      extend this class to add corresponding new slots.
+
+      We still treat light sources differently, though, because they are
+      already treated somewhat differently in the original model. We
+      might make `LightSource` a bona fide `MicroscopeComponent` later.
     slots:
       - id
     attributes:
       microscope:
+        description: >-
+          The description of the microscope itself, without its various
+          components.
         range: Microscope
         inlined: true
       light_source:
+        description: >-
+          The light sources available on this instrument.
         range: LightSource
+        multivalued: true
         inlined: true
       components:
+        description: >-
+          All the hardware components (save for the light sources) that
+          make up this instrument.
         range: MicroscopeComponent
         multivalued: true
         inlined: true
         inlined_as_list: true
 
   LightSource:
+    description: >-
+      A light source on an instrument. This class has several subclasses
+      that each represent a different type of light source.
+
+      FIXME: For now `LightSource` is not considered as a
+      `MicroscopeComponent`.
     mixins:
       - ManufacturerSpec
     slots:
       - id
     attributes:
       power:
+        description: >-
+          The light-source power.
         range: float
       power_unit:
+        description: >-
+          Unit associated with the value of the power slot.
         range: PowerUnit
       light_source_type:
+        description: >-
+          The type designator for the class, allowing to identify the
+          exact subtype of an instance.
+
+          FIXME: If we make LightSource a subclass of
+          MicroscopeComponent, then we shouldn’t need a distinct type
+          designator anymore – the type designator on
+          MicroscopeComponent itself would be enough.
         designates_type: true
+    extra_slots:
+      allowed: true
 
   ArcLightSource:
+    description: >-
+      A light source that is some kind of arc lamp (Hg, Xe, HgXe, etc.).
     is_a: LightSource
     attributes:
       type:
+        description: >-
+          The type of arc lamp.
         range: ArcLightSourceType
 
   FilamentLightSource:
+    description: >-
+      A light source that is is some kind of filament bulb.
     is_a: LightSource
     attributes:
       type:
+        description: >-
+          The type of filament bulb.
         range: FilamentLightSourceType
 
   LaserLightSource:
+    description: >-
+      A light source that is some kind of laser.
     is_a: LightSource
     attributes:
       type:
+        description: >-
+          The type of laser.
         range: LaserLightSourceType
       medium:
+        description: >-
+          The lasing medium for this laser.
         range: LaserMedium
       wavelength:
+        description: >-
+          The wavelength of the laser.
         range: float
         minimum_value: 0.0
       wavelength_unit:
+        description: >-
+          Unit associated with the wavelength slot.
         range: LengthUnit
       frequency_multiplication:
+        description: >-
+          Frequency multiplicator that may be applied.
         range: integer
         minimum_value: 0
       tuneable:
+        description: >-
+          Whether or not the laser is tuneable.
         range: boolean
       pulse:
+        description: >-
+          The pulse mode of the laser.
         range: LaserPulseType
       pockel_cell:
+        description: >-
+          Whether or not the laser has a PocketCell to rotate the
+          polarization of the beam.
         range: boolean
       repetition_rate:
+        description: >-
+          This is the rate in Hz at which the laser pulses if the pulse
+          type is `Repetitive`.
         range: float
       repetition_unit:
+        description: >-
+          Unit associated with the repetition_rate slot.
         range: FrequencyUnit
       pump:
-        # Non-inlined reference to a light source object
+        description: >-
+          The light source used to pump the laser.
         range: LightSource
   
   LightEmittingDiodeLightSource:
+    description: >-
+      A light source that is some kind od LED lamp.
     is_a: LightSource
 
   GenericExcitationSource:
-    # FIXME: Obviously this type had been designed as a way to have some kind of
-    # built-in support for as-yet-unknown types of light source. Not sure we would
-    # need it in the new OME/LiMi model, as we should be able to use the generic
-    # extension mechanism (which is the entire point of the new model!) instead.
-    # That extension mechanism should automatically apply to _all_ types in the
-    # model, without having to explicitly define a GenericSomething.
+    description: >-
+      An arbitrary light source, that is not described by any of the
+      other subclass of `LightSource` but that is described instead by
+      key/value pairs.
+
+      FIXME: Obviously this type had been designed in the original OME
+      model as a way to have some kind of built-in support for
+      as-yet-unknown types of light source. Not sure we would need such
+      a type in the new OME/LiMi model, as we would be able to use the
+      generic extension mechanism (which is the entire point of the new
+      model!) instead. That extension mechanism should automatically
+      apply to _all_ types in the model (at least, all those we
+      explicitly mark with `extra_slots.allowed`), without having to
+      explicitly define a GenericSomething.
     is_a: LightSource
     attributes:
       map:
+        description: >-
+          A list of arbitrary key/value pairs that can be used to
+          describe a light source not covered by this model.
         range: MapEntry
         multivalued: true
         inlined: true
         inlined_as_list: false
 
   MapEntry:
+    description: >-
+      An entry in a generic table of key/value pairs.
     attributes:
       key:
+        description: >-
+          The name of the entry.
         key: true
       value:
+        description: >-
+          The value of the entry.
 
   TransmittanceRange:
+    description: >-
+      This records the range of wavelengths that are transitted by a
+      filter. It also records the maximum amount of light transmitted.
     attributes:
       cutin:
+        description: >-
+          The wavelength below which there is less than 50%
+          transmittance for a filter.
         range: float
         # FIXME: LinkML seemingly does not support exclusive boundaries,
         # so we can't mandate that the value must be strictly superior.
         # See: https://github.com/linkml/linkml/issues/1648
         minimum_value: 0.0
       cutin_unit:
+        description: >-
+          Unit associated with the value of the cutin slot.
         range: LengthUnit
       cutout:
+        description: >-
+          The wavelength above which there is less than 50%
+          transmittance for a filter.
         range: float
         minimum_value: 0.0
       cutout_unit:
+        description: >-
+          Unit associated with the value of the cutout slot.
         range: LengthUnit
       cutin_tolerance:
+        description: >-
+          CutIn tolerance.
         range: float
         minimum_value: 0.0
-      cutin_tolerance_Unit:
+      cutin_tolerance_unit:
+        description: >-
+          Unit associated with the value of the cutin_tolerance slot.
         range: LengthUnit
       cutout_tolerance:
+        description: >-
+          CutOut tolerance.
         range: float
         minimum_value: 0.0
       cutout_tolerance_unit:
+        description: >-
+          Unit associated with the value of the cutout_tolerance slot.
         range: LengthUnit
       transmittance:
+        description: >-
+          The amount of light the filter transmits at a maximum.
         range: float
         minimum_value: 0.0
         maximum_value: 1.0
 
+
+###############################
+# ENUMS                       #
+###############################
 enums:
   MicroscopeType:
+    description: >-
+      Available values to describe the type of a microscope.
     permissible_values:
       Upright:
       Inverted:
@@ -240,6 +492,8 @@ enums:
       Other:
 
   DetectorType:
+    description: >-
+      Available values to describe the type of a detector.
     permissible_values:
       CCD:
       IntensifiedCCD:
@@ -257,6 +511,9 @@ enums:
       Other:
 
   ElectricPotentialUnit:
+    description: >-
+      Available values describe the unit of a value that represents an
+      electric potential.
     permissible_values:
       YV:
       ZV:
@@ -281,6 +538,8 @@ enums:
       yV:
 
   CorrectionType:
+    description: >-
+      Available values to describe the type of correction on a lens.
     permissible_values:
       UV:
       PlanApo:
@@ -299,6 +558,8 @@ enums:
       Other:
 
   ImmersionType:
+    description: >-
+      Available values to describe the type of a detector.
     permissible_values:
       Oil:
       Water:
@@ -309,6 +570,9 @@ enums:
       Other:
 
   LengthUnit:
+    description: >-
+      Available values describe the unit of a value that represents a
+      length.
     permissible_values:
       Ym:
       Zm:
@@ -346,6 +610,8 @@ enums:
       reference frame:
 
   FilterType:
+    description: >-
+      Available values to describe the type of a filter.
     permissible_values:
       Dichroic:
       LongPass:
@@ -357,6 +623,9 @@ enums:
       Other:
 
   PowerUnit:
+    description: >-
+      Available values describe the unit of a value that represents a
+      power.
     permissible_values:
       YW:
       ZW:
@@ -381,6 +650,9 @@ enums:
       yW:
 
   FrequencyUnit:
+    description: >-
+      Available values describe the unit of a value that represents a
+      frequency.
     permissible_values:
       YHz:
       ZHz:
@@ -405,6 +677,8 @@ enums:
       yHz:
 
   ArcLightSourceType:
+    description: >-
+      Available values to describe the type of a arc-based lamp.
     permissible_values:
       Hg:
       Xe:
@@ -412,12 +686,16 @@ enums:
       Other:
 
   FilamentLightSourceType:
+    description: >-
+      Available values to describe the type of a filament-based lamp.
     permissible_values:
       Incandescent:
       Halogen:
       Other:
   
   LaserLightSourceType:
+    description: >-
+      Available values to describe the type of a laser.
     permissible_values:
       Excimer:
       Gas:
@@ -429,6 +707,8 @@ enums:
       Other:
 
   LaserMedium:
+    description: >-
+      Available values to describe the type of lasing medium.
     permissible_values:
       Cu:
       Ag:
@@ -466,6 +746,8 @@ enums:
       Other:
 
   LaserPulseType:
+    description: >-
+      Available values to describe the pulse modes of a laser.
     permissible_values:
       CW:
       Single:
