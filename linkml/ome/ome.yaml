@@ -1,5 +1,6 @@
 id: https://example.org/ome
-name: Playground for a LinkML version of the OME model
+name: ome
+description: Playground for a LinkML version of the OME model
 prefixes:
   linkml: https://w3id.org/linkml/
   ome: https://example.org/ome/
@@ -7,6 +8,12 @@ default_prefix: ome
 imports:
   - linkml:types
 default_range: string
+
+slots:
+
+  id:
+    range: uriorcurie
+    identifier: true
 
 classes:
 
@@ -28,6 +35,8 @@ classes:
   MicroscopeComponent:
     mixins:
       - ManufacturerSpec
+    slots:
+      - id
     attributes:
       component_type:
         designates_type: true
@@ -47,16 +56,12 @@ classes:
         range: float
       amplification_gain:
         range: float
-      id:
-        range: TODO DetectorID
       type:
         range: DetectorType
 
   Objective:
     is_a: MicroscopeComponent
     attributes:
-      id:
-        range: TODO ObjectiveID
       correction:
         range: CorrectionType
       immersion:
@@ -77,23 +82,21 @@ classes:
   FilterSet:
     is_a: MicroscopeComponent
     attributes:
-      id:
-        range: TODO FilterSetID
       emission_filters:
+        # Non-inlined list of references to filter objects
         range: Filter
         multivalued: true
       dichroic:
-        range: TODO reference to a dichroic
+        # Non-inlined reference to a Dichroic object
+        range: Dichroic
       excitation_filters:
+        # Non-inlined list of references to filter objects
         range: Filter
         multivalued: true
-      
 
   Filter:
     is_a: MicroscopeComponent
     attributes:
-      id:
-        range: TODO FilterID
       type:
         range: FilterType
       filter_wheel:
@@ -102,14 +105,11 @@ classes:
 
   Dichroic:
     is_a: MicroscopeComponent
-    attributes:
-      id:
-        range: TODO DichroicID
 
   Instrument:
+    slots:
+      - id
     attributes:
-      id:
-        range: TODO InstrumentID
       microscope:
         range: Microscope
         inlined: true
@@ -125,13 +125,13 @@ classes:
   LightSource:
     mixins:
       - ManufacturerSpec
+    slots:
+      - id
     attributes:
-      id:
-        range: TODO LightSourceID
       power:
         range: float
       power_unit:
-        range: TODO PowerUnit
+        range: PowerUnit
       light_source_type:
         designates_type: true
 
@@ -173,7 +173,8 @@ classes:
       repetition_unit:
         range: FrequencyUnit
       pump:
-        range: TODO LightSourceID
+        # Non-inlined reference to a light source object
+        range: LightSource
   
   LightEmittingDiodeLightSource:
     is_a: LightSource
