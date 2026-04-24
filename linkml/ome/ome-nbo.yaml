@@ -1,0 +1,153 @@
+id: https://example.org/ome-nbo
+name: ome-nbo-extension
+title: NBO Basic extension to the OME schema
+description: >-
+  A tentative implementation of the NBO “Basic” extension to the OME
+  model, as an overlay onto the tentative OME/LinkML schema.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  nbo: https://exanple.org/ome-nbo/
+  ome: https://example.org/ome/
+  orcid: https://orcid.org/
+imports:
+  - ome
+default_prefix: nbo
+default_range: string
+
+
+###############################
+# CLASSES                     #
+###############################
+classes:
+
+  # The following classes represent extensions to existing classes in
+  # original OME model.
+  #
+  # Each extension to an existing class is represented by _two_ classes:
+  # - a "mixin" class that holds the new slots added by the extension;
+  # - a "true" class that is made by (1) deriving from the base class
+  #   (2) inheriting the corresponding mixin.
+  MicroscopeStandMixin:
+    mixin: true
+    attributes:
+      eye_piece_field_number:
+
+  MicroscopeStand:
+    # Note that in this case, we don't need a NBO prefix because the
+    # proposed NBO extension already has a different name compared to
+    # original model.
+    is_a: Microscope
+    mixins:
+      - MicroscopeStandMixin
+
+  NBOLightSourceMixin:
+    mixin: true
+    attributes:
+      purchase_date:
+      illumination_power_reporting_statistic:
+      illumination_power_reporting_position:
+
+  NBOLightSource:
+    is_a: LightSource
+    mixins:
+      - NBOLightSourceMixin
+
+  NBOArcLightSource:
+    # We have a choice here:
+    # - we make NBOArcLightSource derive from the original
+    #   ArcLightSource and we add the NBO mixin;
+    # - or we make NBOArcLightSource derive from NBOLightSource, and
+    #   we re-add the slots from the original ArcLightSource.
+    # I favour the former, as it would allow NBOArcLightSource to still
+    # be recognised as a ArcLightSource by an implementation that is not
+    # aware of NBO.
+    is_a: ArcLightSource
+    mixins:
+      - NBOLightSourceMixin
+
+  NBOFilamentLightSource:
+    is_a: FilamentLightSource
+    mixins:
+      - NBOLightSourceMixin
+
+  NBOGenericLightSource:
+    is_a: GenericLightSource
+    mixins:
+      - NBOLightSourceMixin
+
+  NBOLaserLightSourceMixin:
+    mixin: true
+    attributes:
+      modulation_mechanism:
+      laser_class:
+      is_pump:
+      position:
+      pulse_duration:
+  
+  NBOLaserLightSource:
+    is_a: LaserLightSource
+    mixins:
+      - NBOLightSourceMixin
+      - NBOLaserLightSourceMixin
+
+  NBOLightEmittingDiodeLightSource:
+    is_a: LightEmittingDiodeLightSource
+    mixins:
+      - NBOLightSourceMixin
+
+  NBOFilterMixin:
+    mixin: true
+    attributes:
+      coating_method:
+      light_path_location:
+      technology:
+      attenuation_method:
+      attenuation_coefficient:
+      diameter:
+      thickness:
+      angle_of_incidence:
+      polarization:
+      transmittance_profile_file:
+
+  NBOFilter:
+    is_a: Filter
+    mixins:
+      - NBOFilterMixin
+
+  # The following classes all derive from the base model's
+  # `MicroscopeComponent` class (directly or indirectly). Therefore,
+  # nothing special is needed to "attach" them to an object from the
+  # base model. They can be used wherever a `MicroscopeComponent` object
+  # is required.
+
+  PointDetector:
+    is_a: Detector
+
+  Camera:
+    is_a: Detector
+
+  Lens:
+    is_a: MicroscopeComponent
+
+  TubeLens:
+    is_a: Lens
+
+  RelayLens:
+    is_a: Lens
+
+  OpticalAperture:
+    is_a: MicroscopeComponent
+
+  StageInsert:
+    is_a: MicroscopeComponent
+
+  SamplePositioningDevice:
+    is_a: MicroscopeComponent
+
+  Stage:
+    is_a: SamplePositioningDevice
+
+  FocusingDevice:
+    is_a: SamplePositioningDevice
