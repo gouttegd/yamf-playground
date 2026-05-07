@@ -1,4 +1,4 @@
-package org.incenp.yamf.playground.pidinst;
+package org.incenp.yamf.playground.util;
 
 import java.util.HashMap;
 import java.util.HashSet;

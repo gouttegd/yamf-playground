@@ -1,4 +1,4 @@
-package org.incenp.yamf.playground.pidinst;
+package org.incenp.yamf.playground;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,8 @@ import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.yamf.playground.pidinst.model.Foo;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
 import org.incenp.yamf.playground.pidinst.model.PIDInstInstrument;
+import org.incenp.yamf.playground.util.NestedExtensionConverter;
+import org.incenp.yamf.playground.util.YAMFParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +25,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseSimpleFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-base.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -37,7 +39,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseDirectExtendedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-direct.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -55,7 +57,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseDirectNestedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -72,7 +74,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseFooSimpleFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-base.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         FooInstrument ins = p.parse(f, FooInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -87,7 +89,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseFooDirectExtendedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-direct.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         FooInstrument ins = p.parse(f, FooInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -107,7 +109,7 @@ public class TestPIDINSTParser {
     @Test
     void testParseFooNestedExtendedFile() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         FooInstrument ins = p.parse(f, FooInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -127,7 +129,7 @@ public class TestPIDINSTParser {
     @Test
     void testGetExtensionFromDirect() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-direct.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());
@@ -143,7 +145,7 @@ public class TestPIDINSTParser {
     @Test
     void testGetExtensionFromNested() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/pidinst/pidinst-extended-nested.json");
-        PIDINSTParser p = new PIDINSTParser();
+        YAMFParser<PIDInstInstrument> p = new YAMFParser<>(PIDInstInstrument.class);
         PIDInstInstrument ins = p.parse(f, PIDInstInstrument.class);
 
         Assertions.assertEquals("Alice", ins.getName());

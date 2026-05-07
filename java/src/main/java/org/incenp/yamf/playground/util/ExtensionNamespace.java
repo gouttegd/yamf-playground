@@ -1,4 +1,4 @@
-package org.incenp.yamf.playground.pidinst;
+package org.incenp.yamf.playground.util;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

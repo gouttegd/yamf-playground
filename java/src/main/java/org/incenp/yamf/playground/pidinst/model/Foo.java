@@ -2,7 +2,7 @@ package org.incenp.yamf.playground.pidinst.model;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 import org.incenp.linkml.core.annotations.Required;
-import org.incenp.yamf.playground.pidinst.ExtensionNamespace;
+import org.incenp.yamf.playground.util.ExtensionNamespace;
 
 @LinkURI("https://example.org/pidinst-foo/Foo")
 @ExtensionNamespace("com.example.foo")
