@@ -28,6 +28,13 @@ public class YAMFParser<T> {
     }
 
     /**
+     * Gets the underlying converter context.
+     */
+    public ConverterContext getContext() {
+        return loader.getContext();
+    }
+
+    /**
      * Parses a YAMF file into a readily usable object.
      * 
      * @param <V> The exact type of object to parse. It can either be the base type
