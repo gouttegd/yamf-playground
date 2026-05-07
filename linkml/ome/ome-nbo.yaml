@@ -73,7 +73,7 @@ classes:
       - NBOLightSourceMixin
 
   NBOGenericLightSource:
-    is_a: GenericLightSource
+    is_a: GenericExcitationSource
     mixins:
       - NBOLightSourceMixin
 
