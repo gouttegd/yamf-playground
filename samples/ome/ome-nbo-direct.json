@@ -1,0 +1,36 @@
+{
+    "id": "https://example.org/ome/inst1",
+    "microscope": {
+        "type": "Upright",
+        "manufacturer": "Zeiss",
+        "model": "LSM-880",
+        "eye_piece_field_number": "eye piece field number"
+    },
+    "components": [
+        {
+            "component_type": "Detector",
+            "id": "https://example.org/ome/det1",
+            "gain": 123.456,
+            "zoom": 10.0,
+            "type": "CCD"
+        },
+        {
+            "component_type": "Objective",
+            "id": "https://example.org/ome/obj1",
+            "correction": "PlanApo",
+            "immersion": "Oil",
+            "lens_na": 0.8
+        },
+        {
+            "component_type": "NBOArcLightSource",
+            "id": "https://example.org/ome/lig1",
+            "power": 45,
+            "type": "Hg",
+            "purchase_date": "2026-03-20"
+        },
+        {
+            "component_type": "FocusingDevice",
+            "id": "https://example.org/ome/foc1"
+        }
+    ]
+}
