@@ -116,6 +116,15 @@ classes:
     mixins:
       - NBOFilterMixin
 
+  # We need tocreate this subclass of OME’s Instrument so that we can
+  # explicitly indicate that the `microscope` slot now expects a
+  # `MicroscopeStand` object, rather than a `Microscope` object.
+  NBOInstrument:
+    is_a: Instrument
+    slot_usage:
+      microscope:
+        range: MicroscopeStand
+
   # The following classes all derive from the base model's
   # `MicroscopeComponent` class (directly or indirectly). Therefore,
   # nothing special is needed to "attach" them to an object from the

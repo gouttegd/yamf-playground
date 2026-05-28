@@ -8,12 +8,11 @@ import org.incenp.yamf.playground.ome.model.ArcLightSource;
 import org.incenp.yamf.playground.ome.model.Detector;
 import org.incenp.yamf.playground.ome.model.FocusingDevice;
 import org.incenp.yamf.playground.ome.model.Instrument;
-import org.incenp.yamf.playground.ome.model.Microscope;
 import org.incenp.yamf.playground.ome.model.MicroscopeComponent;
 import org.incenp.yamf.playground.ome.model.MicroscopeStand;
 import org.incenp.yamf.playground.ome.model.NBOArcLightSource;
+import org.incenp.yamf.playground.ome.model.NBOInstrument;
 import org.incenp.yamf.playground.ome.model.Objective;
-import org.incenp.yamf.playground.util.OverridingConverter;
 import org.incenp.yamf.playground.util.YAMFParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -59,8 +58,8 @@ public class TestOMEParser {
     @Test
     void testParseOMEFileToNBO() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/ome/ome-base.json");
-        YAMFParser<Instrument> p = new YAMFParser<>(Instrument.class);
-        Instrument ins = p.parse(f, Instrument.class);
+        YAMFParser<NBOInstrument> p = new YAMFParser<>(NBOInstrument.class);
+        Instrument ins = p.parse(f, NBOInstrument.class);
 
         Assertions.assertEquals("Zeiss", ins.getMicroscope().getManufacturer());
         Assertions.assertInstanceOf(Detector.class, ins.getComponents().get(0));
@@ -68,6 +67,7 @@ public class TestOMEParser {
         Assertions.assertInstanceOf(ArcLightSource.class, ins.getComponents().get(2));
 
         Assertions.assertFalse(ins.getMicroscope().getExtraSlots(true).containsKey("eye_piece_field_number"));
+        Assertions.assertInstanceOf(MicroscopeStand.class, ins.getMicroscope());
     }
 
     /*
@@ -98,14 +98,16 @@ public class TestOMEParser {
     }
 
     /*
-     * This tests idea (c) above.
+     * This tests idea (b) above, except that we do not even need to force the use
+     * of a special converter, because the Java LinkML runtime can automatically
+     * detect that the `microscope` slot in the derived NBOInstrument class expects
+     * a `MicroscopeStand` object.
      */
     @Test
-    void testParseNBOFileToNBOWithOverridingConverter() throws IOException, LinkMLRuntimeException {
+    void testParseNBOFileToNBOWithDerivedClass() throws IOException, LinkMLRuntimeException {
         File f = new File("../samples/ome/ome-nbo-direct.json");
-        YAMFParser<Instrument> p = new YAMFParser<>(Instrument.class);
-        p.getContext().addConverter(new OverridingConverter(MicroscopeStand.class, Microscope.class));
-        Instrument ins = p.parse(f, Instrument.class);
+        YAMFParser<NBOInstrument> p = new YAMFParser<>(NBOInstrument.class);
+        NBOInstrument ins = p.parse(f, NBOInstrument.class);
 
         Assertions.assertEquals("Zeiss", ins.getMicroscope().getManufacturer());
         Assertions.assertInstanceOf(Detector.class, ins.getComponents().get(0));
@@ -114,9 +116,6 @@ public class TestOMEParser {
         Assertions.assertInstanceOf(FocusingDevice.class, ins.getComponents().get(3));
 
         Assertions.assertFalse(ins.getMicroscope().getExtraSlots(true).containsKey("eye_piece_field_number"));
-
-        Assertions.assertInstanceOf(MicroscopeStand.class, ins.getMicroscope());
-        MicroscopeStand stand = (MicroscopeStand) ins.getMicroscope();
-        Assertions.assertEquals("eye piece field number", stand.getEyePieceFieldNumber());
+        Assertions.assertEquals("eye piece field number", ins.getMicroscope().getEyePieceFieldNumber());
     }
 }
