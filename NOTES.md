@@ -385,6 +385,88 @@ prefix, yielding names such as `PIDInstOwner`, `PIDInstManufacturer`,
 etc. A schema for the OME model could use a `OME` prefix, yielding names
 such as `OMEMicroscope`, `OMELightSource`, etc.
 
+#### Prefer type-designated classes to enums
+If a given object can be of several different types and the object can
+have varying attributes depending on its type, it’s better to represent
+each possible type as a distinct class (with its own attributes), rather
+than trying to design a single class that can represent all the possible
+types and to distinguish the actual type through an enumeration.
+
+For example, if a _frobnicator_ can be of three different types (_foo_,
+_bar_, and _baz_), and each type may require different attributes, then
+instead of having a single _Frobnicator_ class with with a
+`frobnicator_type` field accepting a `FrobnicatorTypeEnum`, it’s better
+to have:
+
+* a top-level `Frobnicator` class, which must at the very least contain
+  a _type designator_ slot, and which may optionally contain all the
+  attributes that are common between all three types of frobnicators (if
+  any);
+* one sub-class for each frobnicator type (e.g. `FooFrobnicator`,
+  `BarFrobnicator`, `BazFrobnicator`), each class containing the
+  attributes specific to that particular type.
+
+This achieves the same result as using an enum, but: (1) it’s cleaner,
+as each class can contain exactly the attributes required for the very
+object it is describing; (2) this allows for very easy extension of the
+schema later on (either by the schema’s own author or by a third-party),
+simply by adding new subclasses of `Frobnicator`.
+
+#### Prefer arbitrary list of “components“ to named attributes
+If an object has partonomy relationships with many other objects (e.g. a
+device that has many components), rather than having one attribute for
+each relationship, consider having a single multivalued relationship.
+
+For example, if a _frobnicator_ can have a _foo_ component, and/or a
+_bar_ component, and/or a _baz_ component, then instead of the
+following:
+
+```yaml
+classes:
+  Frobnicator:
+    attributes:
+      foo:
+        range: Foo
+      bar:
+        range: Bar
+      baz:
+        range: Baz
+
+  Foo:
+
+  Bar:
+
+  Baz:
+```
+
+consider something like this:
+
+```yaml
+classes:
+  Frobnicator:
+    attributes:
+      components:
+        range: FrobnicatorComponent
+        multivalued: true
+
+  FrobnicatorComponent:
+    attributes:
+      frobnicator_type:
+        designates_types: true
+
+  FooComponent:
+    is_a: FrobnicatorComponent
+
+  BarComponent:
+    is_a: FrobnicatorComponent
+
+  BazComponent:
+    is_a: FrobnicatorComponent
+```
+
+This makes the schema easier to extend to add a new component, simply by
+creating a new subclass of `FrobnicatorComponent`.
+
 #### Extending a schema
 The recommended way to extend a schema is to:
 
