@@ -467,6 +467,106 @@ classes:
 This makes the schema easier to extend to add a new component, simply by
 creating a new subclass of `FrobnicatorComponent`.
 
+#### Identifiers
+When a class needs an identifier, then:
+
+* use the built-in “identifier slot” feature; that is, create a normal
+  attribute to hold the identifier and then mark that slot as being an
+  “identifier slot” with `identifier: true`;
+* unless some external constraints exist about the format of the
+  identifier, make the identifier attribute/slot `uriorcurie`-typed.
+
+Keep in mind that, once a class has an identifier slot, whenever that
+class is used as the range of an attribute somewhere, the attribute is
+interpreted, by default, as holding a _reference_ to the object rather
+than the object itself. When that is not desired, the attribute must be
+qualified with `inline: true`.
+
+Identifiers should be, as much as possible, treated as opaque strings.
+This notably means that it should _not_ be necessary, for example, to
+have any kind of `identifier_type` attribute next to hold the _type_ of
+the attribute (e.g. DOI, PubMed ID, ISBN, URN, etc.).
+
+If `uriorcurie`-typed identifiers are used (they should), then the
+top-level object (“tree root”) should contain a dictionary allowing to
+unambiguously associate prefix names (as used in CURIEs) with URI
+prefixes. That dictionary should be modelled and used as follows:
+
+```yaml
+classes:
+  PrefixNamePrefixAssociation:
+    description: >-
+      This class represents an entry in the prefix table. It
+      associates a prefix name to a URI prefix.
+    attributes:
+      prefix_name:
+        range: ncname
+        key: true
+        slot_uri: http://www.w3.org/ns/shacl#prefix
+      uri_prefix:
+        range: uri
+        slot_uri: http://www.w3.org/ns/shacl#namespace
+
+  TopLevelClass:
+    attributes:
+      ...
+      prefixes:
+        range: PrefixNamePrefixAssociation
+        multivalued: true
+        inline: true
+```
+
+The exact name of the class representing a prefix table entry, or the
+of name of its attributes, do not matter. What matter is that:
+
+* the class must not contain any other attributes than the ones
+  representing the prefix name and the URI prefix;
+* those attributes must carry the indicated `slot_uri`;
+* the attribute representing the prefix name must be marked with
+  `key: true`.
+
+#### Only use built-in types
+For the time being, it is recommended to only use the types that are
+“built-in”, that is, those that are defined in the `linkml:types`
+schema. This is because support for custom-defined types in non-Python
+implementation is currently sparse.
+
+#### Use mixins to avoid duplicating code and/or embed common logic
+If a group of attributes is going to be reused together across several
+classes and/or those attributes should be accompanied by some custom
+rules, consider grouping those attributes in a dedicated “mixin” class,
+and then inherit from that mixin in all the classes that need those
+attributes.
+
+#### Naming conventions
+PascalCase for class and enum names. snake_case for slot/attribute
+names.
+
+#### Use `extra_slots`
+Most classes in a given schema should be marked with:
+
+```yaml
+extra_slots:
+  allowed: True
+```
+
+This is critical for extensibility. Only classes that, for whatever,
+should _never_ be allowed to be extended should dispense with that.
+
+#### Use `linkml:Any`
+`linkml:Any` should be used whenever one wants to allow a connect a
+foreign, as-yet-unknown schema in a precise location within the authored
+schema.
+
+#### Avoid unions
+Unions are poorly supported outside of non-Python implementations and
+should be avoided whenever possible. They are typically a sign of a weak
+design anyway.
+
+#### Defining slots
+“Defining slots” are a poorly supported, experimental feature. There
+should never be any reason to use them in NGMF context.
+
 #### Extending a schema
 The recommended way to extend a schema is to:
 
