@@ -1,0 +1,24 @@
+name: Frobnicator Max 2000
+components:
+  - type: https://example.org/frobnicator/TargetingComponent
+    name: Targetor Ultra
+    weight: 4
+    accuracy: 0.97
+    manufacturer:
+      name: ACME Corporation
+      country: United States of America
+  - type: https://example.org/frobnicator/AttenuationComponent
+    name: Softinator 2
+    weight: 5
+    method: Proprietary, unpublished
+    manufacturer:
+      name: Wayne Enterprises
+      country: United States of America
+  - type: https://example.org/frobnicator/LoadingComponent
+    name: LoadMeUpScotty
+    rate: 18
+    manufacturer:
+      type: https://example.org/frobnicator-baz/BazManufacturer
+      name: RAMJAC Corporation
+      country: United States of America
+      city: Duckburg, Calisota

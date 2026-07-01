@@ -1,0 +1,28 @@
+id: https://example.org/frobnicator-foo
+name: frobnicator-foo
+description: >-
+  A schema that describes the Foo extension to the Frobnicator schema.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+  foo: https://example.org/frobnicator-foo/
+imports:
+  - linkml:types
+  - frobnicator
+default_prefix: foo
+default_range: string
+
+classes:
+
+  ServicingComponent:
+    description: >-
+       A component that allows the frobnicator to be remotely serviced.
+    is_a: FrobnicatorComponent
+    attributes:
+      online:
+        description: >-
+          If true, the frobnicator can be serviced without having to be
+          taken offline first.
+        range: boolean

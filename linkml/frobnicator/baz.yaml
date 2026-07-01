@@ -1,0 +1,33 @@
+id: https://example.org/frobnicator-baz
+name: frobnicator-baz
+description: >-
+  A schema that describes the Baz extension to the Frobnicator schema.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+  baz: https://example.org/frobnicator-baz/
+imports:
+  - linkml:types
+  - frobnicator
+default_prefix: baz
+default_range: string
+
+classes:
+
+  ManufacturerCityMixin:
+    description: >-
+      An extension to add the city where a component manufacturer is
+      located.
+    mixin: true
+    attributes:
+      city:
+        description: The city where the manufacturer is located.
+
+  BazManufacturer:
+    description: >-
+      A manufacturer for which city information is available.
+    is_a: FrobnicatorManufacturer
+    mixins:
+      - ManufacturerCityMixin

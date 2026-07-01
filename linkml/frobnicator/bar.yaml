@@ -1,0 +1,29 @@
+id: https://example.org/frobnicator-bar
+name: frobnicator-bar
+description: >-
+  A schema that describes the Bar extension to the Frobnicator schema.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+  bar: https://example.org/frobnicator-bar/
+imports:
+  - linkml:types
+  - frobnicator
+default_prefix: bar
+default_range: string
+
+classes:
+
+  FrobnicatorUsage:
+    description: >-
+      An extension that can be used to describe the possible uses of a
+      frobnicator or of a frobnicator component.
+    is_a: ExtensibleNode
+    attributes:
+      dual_use:
+        description: >-
+          If true, the device can be used both for civilian and military
+          purposes.
+        range: boolean

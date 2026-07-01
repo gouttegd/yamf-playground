@@ -1,0 +1,149 @@
+id: https://example.org/frobnicator
+name: frobnicator
+description: >-
+  A schema that describes frobnicator devices.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+  frob: https://example.org/frobnicator/
+imports:
+  - linkml:types
+default_prefix: frob
+default_range: string
+
+slots:
+
+  node_type:
+    description: The type of the node.
+    alias: type
+    range: uri
+    designates_type: true
+    key: true
+
+  generic_type:
+    description: The type of the object.
+    alias: type
+    range: uri
+    designates_type: true
+
+classes:
+
+  IsExtensibleMixin:
+    description: >-
+      Add this mixin to any class to allow for generic extensions in a
+      recursive manner.
+    mixin: true
+    attributes:
+      nodes:
+        description: The collection of extension nodes.
+        range: ExtensibleNode
+        multivalued: true
+        inlined: true
+        inlined_as_list: false
+
+  IsExtensibleNodeMixin:
+    description: >-
+      Add this mixin to any class to make it usable as an extension
+      node.
+    mixin: true
+    is_a: IsExtensibleMixin
+    slots:
+      - node_type
+
+  ExtensibleNode:
+    description: >-
+      The base node.
+    mixins:
+      - IsExtensibleNodeMixin
+    abstract: true
+    attributes:
+      _unused:
+        description: >-
+          This attribute is here solely to work around a bug in the
+          LinkML validator. Without that slot, ExtensibleNode is
+          forcibly expected to be serialised as a simple dict (since it
+          has only a key slot and a non-key slot), and the recursive
+          nature of this class causes the JSONSchema generator to crash.
+
+  Frobnicator:
+    description: >-
+      A frobnicator, that is a device that frobnicates.
+    mixins:
+      - IsExtensibleMixin
+    attributes:
+      name:
+        description: >-
+          The name of the frobnicator.
+      components:
+        description: >-
+          The components that make up this frobnicator.
+        range: FrobnicatorComponent
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+    tree_root: true
+
+  FrobnicatorComponent:
+    description: >-
+      A part of a frobnicator device.
+    mixins:
+      - IsExtensibleMixin
+    slots:
+      - generic_type
+    attributes:
+      name:
+        description: The name of the component.
+      weight:
+        description: The weight of the component.
+        range: integer
+      manufacturer:
+        description: The manufacturer of the component.
+        range: FrobnicatorManufacturer
+    extra_slots:
+      allowed: true
+
+  FrobnicatorManufacturer:
+    description: The manufacturer of a component of a frobnicator.
+    mixins:
+      - IsExtensibleMixin
+    slots:
+      - generic_type
+    attributes:
+      name:
+        description: The name of the manufacturer.
+      country:
+        description: The country where the manufacturer is located.
+
+  TargetingComponent:
+    description: >-
+      A frobnicator component that helps in targeting the object to
+      frobnicate.
+    is_a: FrobnicatorComponent
+    attributes:
+      accuracy:
+        description: >-
+          The accuracy of the targeting device, expressed as the
+          fraction of on-target hits.
+        range: float
+
+  AttenuationComponent:
+    description: >-
+      A frobnicator component that attenatues the off-target effects of
+      the frobnication.
+    is_a: FrobnicatorComponent
+    attributes:
+      method:
+        description: The attenuation method used by this component.
+
+  LoadingComponent:
+    description: >-
+      A frobnicator component that loads a frobnication charge into the
+      frobnicator.
+    is_a: FrobnicatorComponent
+    attributes:
+      rate:
+        description: >-
+          The loading rate, expressed in charges loaded per minute.
+        range: integer
