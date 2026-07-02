@@ -2,6 +2,10 @@ id: https://example.org/frobnicator-baz
 name: frobnicator-baz
 description: >-
   A schema that describes the Baz extension to the Frobnicator schema.
+notes:
+  - >-
+    This schema is intended to illustrate how to create a “custom
+    extension” to the Frobnicator schema.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -20,6 +24,17 @@ classes:
     description: >-
       An extension to add the city where a component manufacturer is
       located.
+    notes:
+      - >-
+        We want to extend the `FrobnicatorManufacturer` class to add
+        some new attributes to it. We do this by first creating this
+        mixin, which defines only the attributes we want to add.
+
+        Using a mixin, instead of defining the attributes directly in
+        the derived class below, will facilitate reusing this extension
+        by another third-party. In particular, it will facilitate
+        composing this extension with another, independent custom
+        extension to the same class.
     mixin: true
     attributes:
       city:
@@ -28,6 +43,33 @@ classes:
   BazManufacturer:
     description: >-
       A manufacturer for which city information is available.
+    notes:
+      - >-
+        This class simultaneously (1) derives from the class we want to
+        extend (`FrobnicatorManufacturer`) and (2) reuses the mixin
+        defined above.
+      - >-
+        This class can be used whenever a `FrobnicatorManufacturer`
+        object is expected. An implementation that is unaware of this
+        extension will still recognise the object as a
+        `FrobnicatorManufacturer`, and the additional `city` attribute
+        will be ignored but preserved (because the original class is
+        configured to allow extra slots).
+      - >-
+        Well, the above is not entirely true _for now_. Currently, a
+        LinkML validator that is not aware of the present schema will
+        _reject_ a `BazManufacturer` instance whenever an instance of
+        `FrobnicatorManufacturer` instance is expected. But an optional
+        feature to allow the validator to accept “unrecognised types”
+        has been requested from upstream LinkML, and will hopefully be
+        accepted and later implemented.
+      - >-
+        Compared to “generic” extensions, “custom” extensions have the
+        advantage that they are automatically specific to a given class.
+        On the other hand, they do not guarantee the absence of name
+        clash between independently developed extensions, it is
+        something that extension developers have to be careful about
+        themselves.
     is_a: FrobnicatorManufacturer
     mixins:
       - ManufacturerCityMixin

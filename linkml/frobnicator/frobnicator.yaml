@@ -2,6 +2,10 @@ id: https://example.org/frobnicator
 name: frobnicator
 description: >-
   A schema that describes frobnicator devices.
+notes:
+  - >-
+    This schema is intended to illustrate how to design an extensible
+    LinkML schema.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -13,27 +17,67 @@ imports:
 default_prefix: frob
 default_range: string
 
+
 slots:
 
-  node_type:
-    description: The type of the node.
-    alias: type
-    range: uri
-    designates_type: true
-    key: true
-
   generic_type:
-    description: The type of the object.
+    description: The type designator for any kind of object.
+    notes:
+      - >-
+        In principle we could declare a local attribute in any class
+        that requires a type designator. However, a current bug in
+        LinkML (specifically in `linkml convert`) prevents type
+        designators from working correctly when they are defined as
+        local attribute, so we need to define type designators as
+        global, schema-wide slots instead.
+      - >-
+        Rather than creating one slot for each class that requires a
+        type designator, we create one single “generic” type designator
+        slot that any class that requires a type designator can simply
+        reuse.
+      - >-
+        The slot is explicitly named `generic_type` to avoid polluting
+        the global namespace with a generically named `type` slot. It is
+        aliased to `type` so that it can (and in fact, must) be referred
+        to as simply `type` in instance data.
+      - >-
+        The range is set to `uri`, so that types are designated by their
+        specific URIs. This is better than using class names, because
+        this embeds information about the originating schema of a class
+        directly into the type designator.
     alias: type
     range: uri
     designates_type: true
+    see_also:
+      - https://github.com/linkml/linkml/issues/3663
+
 
 classes:
 
+  ##############################################
+  # Components of the generic extension system
+  #
+  # The following classes/mixins are not specific to the “Frobnicator”
+  # example and could in fact be grouped in a separate, dedicated
+  # schema.
+  ##############################################
+
   IsExtensibleMixin:
-    description: >-
-      Add this mixin to any class to allow for generic extensions in a
-      recursive manner.
+    description: An object that can carry arbitrary extension “nodes”.
+    notes:
+      - >-
+        This mixin creates a generic, recursive, natural extension
+        point.
+      - >-
+        Reuse this mixin in any class to allow the class to be
+        extended. This is the most generic, friction-less way of
+        allowing a class to be extended with arbitrary extension data.
+      - >-
+        The fact that extension nodes are identified, within the `nodes`
+        list, by their type designator, combined to the fact that type
+        designators are schema-specific URIs, automatically guarantees
+        that independently developed extensions are namespaced and
+        cannot name-clash.
     mixin: true
     attributes:
       nodes:
@@ -44,17 +88,33 @@ classes:
         inlined_as_list: false
 
   IsExtensibleNodeMixin:
-    description: >-
-      Add this mixin to any class to make it usable as an extension
-      node.
+    description: Represents an extension “node”.
+    notes:
+      - >-
+        Reuse this mixin in any class to make it usable as an extension
+        node.
+      - >-
+        The type designator slot is set as the “key slot” of the class
+        so that extension nodes are identified, within a collection, by
+        their type.
+      - >-
+        This mixin inherits from the `IsExtensibleMixin` mixin, so that
+        any extension node is itself extensible (it has its own
+        collection of nodes).
     mixin: true
     is_a: IsExtensibleMixin
     slots:
-      - node_type
+      - generic_type
+    slot_usage:
+      generic_type:
+        key: true
 
   ExtensibleNode:
-    description: >-
-      The base node.
+    description: An extension node.
+    notes:
+      - >-
+        Derive this class (adding all the attributes you might need) to
+        create an actual “extension”.
     mixins:
       - IsExtensibleNodeMixin
     abstract: true
@@ -66,19 +126,41 @@ classes:
           forcibly expected to be serialised as a simple dict (since it
           has only a key slot and a non-key slot), and the recursive
           nature of this class causes the JSONSchema generator to crash.
+    see_also:
+      - https://github.com/linkml/linkml/issues/3692
+
+
+###############################
+# Frobnicator-specific classes
+#
+# The following classes define the example “frobnicator” model.
+###############################
 
   Frobnicator:
-    description: >-
-      A frobnicator, that is a device that frobnicates.
+    description: A device that can frobnicate.
+    notes:
+      - >-
+        This class reuses the `IsExtensibleMixin`, which gives it a
+        generic extension point (the `nodes` collection).
+      - >-
+        This class also has a specific (non-generic) natural extension
+        point in the `components` attribute. A third-party schema can
+        very easily create additional `FrobnicatorComponent` classes
+        that would automatically be accepted in the `components`
+        attribute.
     mixins:
       - IsExtensibleMixin
     attributes:
       name:
-        description: >-
-          The name of the frobnicator.
+        description: The name of the frobnicator.
       components:
-        description: >-
-          The components that make up this frobnicator.
+        description: The components that make up this frobnicator.
+        notes:
+          - >-
+            As noted above, this is an example of a natural extension
+            point, that is specific to this class and independent of the
+            “generic” extension system based on the concept of
+            “extension nodes”.
         range: FrobnicatorComponent
         multivalued: true
         inlined: true
@@ -86,8 +168,18 @@ classes:
     tree_root: true
 
   FrobnicatorComponent:
-    description: >-
-      A part of a frobnicator device.
+    description: A part of a frobnicator device.
+    notes:
+      - >-
+        This class also reuses the `IsExtensibleMixin`, so it also has a
+        generic extension point. A `FrobnicatorComponent` object can act
+        as a container for extension nodes.
+      - >-
+        This class is explicitly configured to allow “extra slots”. This
+        is required to make sure that an instance of a derived class
+        defined by a third-party schema (that may have its own
+        additional slots beyond those defined in the present schema)
+        will still be considered valid according to the present schema.
     mixins:
       - IsExtensibleMixin
     slots:
@@ -106,6 +198,16 @@ classes:
 
   FrobnicatorManufacturer:
     description: The manufacturer of a component of a frobnicator.
+    notes:
+      - >-
+        Again, this class reuses the `IsExtensibleMixin` so as to give
+        it a generic natural extension point.
+      - >-
+        It also has a type designator, even though the present schema
+        does not define any subclass. This will make it possible for a
+        third-party schema to create a custom specific extension by
+        deriving this class and adding new attributes as needed to the
+        derived class.
     mixins:
       - IsExtensibleMixin
     slots:
@@ -115,6 +217,8 @@ classes:
         description: The name of the manufacturer.
       country:
         description: The country where the manufacturer is located.
+    extra_slots:
+      allowed: true
 
   TargetingComponent:
     description: >-

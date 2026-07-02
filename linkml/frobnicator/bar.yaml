@@ -2,6 +2,11 @@ id: https://example.org/frobnicator-bar
 name: frobnicator-bar
 description: >-
   A schema that describes the Bar extension to the Frobnicator schema.
+notes:
+  - >-
+    This schema is intended to illustrate how to create a “generic
+    extension” to the Frobnicator schema, using the generic extension
+    scheme.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -20,6 +25,24 @@ classes:
     description: >-
       An extension that can be used to describe the possible uses of a
       frobnicator or of a frobnicator component.
+    notes:
+      - >-
+        This class derives from the `ExtensibleNode` class that is part
+        of the “generic” extension scheme. As such, it can be used
+        whenever a `ExtensibleNode` object is expected, which means that
+        all objects that have a `nodes` collection (all instances of a
+        class that reuses the `IsExtensibleMixin` mixin) can carry such
+        a node.
+      - >-
+        The main limitation of “generic extensions” is that it is not
+        possible to restrict where a given extension might be used (at
+        least not in pure LinkML; of course an application can always
+        implement its own logic, on top of whatever is already done by
+        LinkML). For example, this extension, as per its description,
+        is intended to be used on a `Frobnicator` object or a
+        `FrobnicatorComponent` object; however there is nothing
+        preventing it to be used on a `FrobnicatorManufacturer` object,
+        even though it would not make any sense.
     is_a: ExtensibleNode
     attributes:
       dual_use:

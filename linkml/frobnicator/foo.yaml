@@ -2,6 +2,10 @@ id: https://example.org/frobnicator-foo
 name: frobnicator-foo
 description: >-
   A schema that describes the Foo extension to the Frobnicator schema.
+notes:
+  - >-
+    This schema is intended to illustrate how to create a “natural
+    extension” to the Frobnicator schema.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -10,7 +14,7 @@ prefixes:
   foo: https://example.org/frobnicator-foo/
 imports:
   - linkml:types
-  - frobnicator
+  - frobnicator # We must import the schema we wish to extend
 default_prefix: foo
 default_range: string
 
@@ -19,6 +23,21 @@ classes:
   ServicingComponent:
     description: >-
        A component that allows the frobnicator to be remotely serviced.
+    notes:
+      - >-
+        All we have to do for a “natural” extension is to derive from
+        the base class (or any of the pre-existing derived classes
+        already defined in the original schema), then add any attribute
+        we need.
+      - >-
+        By virtue of both inheritance and the use of a type designator,
+        objects of this class can be used whenever an instance of the
+        base class is expected.
+      - >-
+        This is called a “natural” extension because the original schema
+        is already designed to accept a variety of classes whenever a
+        `FrobnicatorComponent` is expected. The original schema is
+        “naturally” extensible at this point.
     is_a: FrobnicatorComponent
     attributes:
       online:
