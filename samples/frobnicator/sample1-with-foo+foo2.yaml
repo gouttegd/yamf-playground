@@ -21,7 +21,13 @@ components:
       name: RAMJAC Corporation
       country: United States of America
   - type: https://example.org/frobnicator-foo/ServicingComponent
-    # This is the Foo extension. It is a "natural extension", so no
-    # extension node is needed.
+    # This is the Foo extension.
     name: Serviceator
     online: true
+    nodes:
+      # This is the Foo2 extension, an extension to the Foo
+      # extension. It does not define a new Component type (so it is
+      # not a "natural extension", but it adds a new field to the
+      # new type added by the Foo extension.
+      https://example.org/frobnicator-foo2/ServicingComponentFoo:
+        mode: online

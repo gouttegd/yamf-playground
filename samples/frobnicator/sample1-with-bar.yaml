@@ -8,7 +8,9 @@ components:
       name: ACME Corporation
       country: United States of America
     nodes:
-      https://example.org/frobnicator-bar/FrobnicatorUsage:
+      https://example.org/frobnicator-bar/FrobnicatorComponentUsage:
+       # This is a facet of the Bar extension, which adds the dual_use
+       # field to the base FrobnicatorComponent class.
         dual_use: true
   - type: https://example.org/frobnicator/AttenuationComponent
     name: Softinator 2
@@ -25,4 +27,6 @@ components:
       country: United States of America
 nodes:
   https://example.org/frobnicator-bar/FrobnicatorUsage:
+  # This is another facet of the Bar extension, which adds the same
+  # dual_use field to the Frobnicator class.
     dual_use: true

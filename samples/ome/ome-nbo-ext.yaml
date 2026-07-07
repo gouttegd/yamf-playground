@@ -1,0 +1,38 @@
+id: https://example.org/ome/inst1
+microscope:
+  # This is a normal OME Microscope object
+  type: Upright
+  manufacturer: Zeiss
+  model: LSM-880
+  nodes:
+    https://example.org/ome-nbo/MicroscopeStand:
+      # This is the etxension node from the LiMi extension, which
+      # contains the additional fields from LiMi's MicroscopeStand
+      # object
+      eye_piece_field_number: 7
+components:
+  - component_type: Detector
+    id: https://example.org/ome/det1
+    gain: 123.456
+    zoom: 10.0
+    type: CCD
+  - component_type: Objective
+    id: https://example.org/ome/obj1
+    correction: PlanApo
+    immersion: Oil
+    lens_na: 0.8
+  - component_type: ArcLightSource
+    # This is a normal OME ArcLightSource object
+    id: https://example.org/ome/lig1
+    power: 45
+    type: Hg
+    nodes:
+      https://example.org/ome-nbo/NBOLightSource:
+        # This is the extension node from the LiMi extension, which
+        # contains the additional fields from LiMi's LightSource base
+        # object (which adds fields to all OME *LightSource object)
+        purchase_date: 2026-03-20
+  - component_type: NBOFocusingDevice
+    # This is a LiMi FocusingDevice component. No need for an extension
+    # node here since this is connected to a "natural extension point"
+    id: https://example.org/ome/foc1

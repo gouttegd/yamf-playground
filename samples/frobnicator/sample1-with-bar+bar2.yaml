@@ -20,8 +20,12 @@ components:
     manufacturer:
       name: RAMJAC Corporation
       country: United States of America
-  - type: https://example.org/frobnicator-foo/ServicingComponent
-    # This is the Foo extension. It is a "natural extension", so no
-    # extension node is needed.
-    name: Serviceator
-    online: true
+nodes:
+  https://example.org/frobnicator-bar/FrobnicatorUsage:
+    # This is the Bar extension, which adds the dual_use field to the
+    # Frobnicator class.
+    dual_use: true
+  https://example.org/frobnicator-bar2/FrobnicatorRealUsage:
+    # This is another extension, which adds another field to the
+    # Frobnicator class. This is an example of extension composability.
+    civilian_fraction: 0.6

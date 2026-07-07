@@ -1,0 +1,20 @@
+id: https://example.org/ome/inst1
+microscope:
+  type: Upright
+  manufacturer: Zeiss
+  model: LSM-880
+components:
+  - component_type: Detector
+    id: https://example.org/ome/det1
+    gain: 123.456
+    zoom: 10.0
+    type: CCD
+  - component_type: Objective
+    id: https://example.org/ome/obj1
+    correction: PlanApo
+    immersion: Oil
+    lens_na: 0.8
+  - component_type: ArcLightSource
+    id: https://example.org/ome/lig1
+    power: 45
+    type: Hg

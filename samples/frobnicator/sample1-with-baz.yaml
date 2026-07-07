@@ -19,6 +19,14 @@ components:
     rate: 18
     manufacturer:
       type: https://example.org/frobnicator-baz/BazManufacturer
+      # This is a "custom" extension, which relies on the fact that the
+      # Manufacturer class has a type designator, allowing
+      # implementations to recognise this is an extended type.
       name: RAMJAC Corporation
       country: United States of America
+      # There is no need for an extension node here. The field can be
+      # added alongside the other fields from the base class. An
+      # implementation that does not know about the Baz extension
+      # should still recognise this object as a base Manufacturer
+      # object, and will ignore (but preserve) the `city` slot.
       city: Duckburg, Calisota
