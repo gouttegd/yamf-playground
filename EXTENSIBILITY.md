@@ -279,8 +279,132 @@ only needs to provide one schema describing the additions to both
 classes. This would be more difficult to achieve if type designation and
 extension management were tightly coupled.
 
+### Notion of “natural extensions”
+This scheme distinguishes two ways of extending a model (not mutually
+exclusive: the same extension can extend the same model using both
+methods, if it needs to extend the model at more than one place).
+
+The first way (which is recommended wherever possible, but which may not
+be suitable in all situations) is through what the scheme calls “natural
+extension points”. Basically, a natural extension point is a point in
+the base model where the model is already set up to allow for some
+variability.
+
+To illustrate, let’s consider the following example of a _Microscope_
+object (inspired from the OME model):
+
+```yaml
+microscope_type: Upright
+manufacturer: Zeiss
+model: LSM-880
+light_source:
+  type: ArcLightSource
+  power: 45
+  lamp_type: Hg
+```
+
+We are interested in the `light_source` field, which expects an object
+that can be an instance of slightly different classes, each class
+representing a different type of “light source”. In the example above,
+the object is an instance of the _ArcLightSource_ class, representing
+a light source that is some kind of arc lamp.
+
+Here is another example with a different light source object:
+
+```yaml
+microscope_type: Upright
+manufacturer: Zeiss
+model: LSM-880
+light_source:
+  type: LaserLightSource
+  power: 200
+  wavelength: 488
+  laser_type: HeNe
+```
+
+The light source object in this case is an instance of the
+_LaserLightSource_ class, which has the same `power` field than the
+_ArcLightSource_ class but has also some specific fields of its own
+(`wavelength` and `laser_type`).
+
+The `type` field, which is also common to both classes, is what allows
+an application to recognise which type of light source it is dealing
+with, and therefore which fields to expect in the rest of the object.
+
+> In LinkML, the `type` field would be known as the _type designator_
+> slot for all the classes representing light sources.
+>
+> In the Rust language with the [Serde library](https://serde.rs), the
+> `light_source` field would be said to accept an
+> [internally tagged enum](https://serde.rs/enum-representations.html),
+> with the `type` field being the “tag”.
+>
+> Other (de)serialisation libraries might refer to the same concept
+> under other names. In this scheme, we will be using the LinkML
+> terminology.
+
+The important point here is that, even when just using the base model
+(before adding any extension to the mix), an OME application must
+already be prepared to deal with the facts that ① there are several
+types (“classes”) of light source objects, and ② the exact type of
+light source used in a given _Microscope_ object is not known in
+advance, but has to be discovered at runtime. Therefore, it would be
+quite trivial to add a new type of light source (a new _*LightSource_
+class) to the pre-existing list of types. This is why we say that the
+model is _naturally extensible_ at the `light_source` point.
+
+This scheme strongly recommends that model designers create natural
+extension points in their models whenever possible, as it is the
+simplest way to extend a model.
+
+All that is required to create a natural extension point is a base class
+(in the example above, the base class does not appear explicitly, but
+that is the _LightSource_ class from which both the _ArcLightSource_ and
+the _LaserLightSource_ classes are derived) with a _type designator_
+field. A third-party can then extend the model simply by deriving new
+classes from the base class.
+
+Let’s assume someone extends the OME model to add a new type of light
+source (_KyberLightSource_, a light source that uses the kind of kyber
+crystals that one could find a long time ago in a galaxy far, far away).
+Upon encountering a _Microscope_ instance making use of the new type:
+
+* an application that is aware of the extension at compile-time by
+  definition already knows about the new type, so for that application
+  nothing special would need to happen;
+* an application that becomes aware of the extension at runtime would
+  initially recognise the contents of the `light_source` field as an
+  instance of the base `LightSource` class, but could then use the
+  schema describing the extension to learn about any field that is
+  specific to the `KyberLightSource` class;
+* an application that is (and remains) unaware of the extension would
+  still recognise the contents of the `light_source` field as an
+  instance of the base `LightSource` class, and would at least preserve
+  any additional field that it does not know about.
+
+Of note, while in the example above the type designator values were
+simple names (`ArcLightSource`, `LaserLightSource`, `KyberLightSource`),
+this scheme **strongly recommends** to use schema-dependent URIs instead
+(e.g. `https://example.org/ome/ArcLightSource`), so as to ensure that
+independently developed extensions cannot clash with each other
+(provided that each extension uses its own base URI).
+
+
 ### Extending a class
-Let’s start with an example.
+Beyond “natural extensions” as described in the previous section, the
+other way to extend a schema is to add new fields to a pre-existing
+class.
+
+> As noted in the [section about constraints](#constraints-on-extensions),
+> an extension could also tigthen constraints on existing fields of a
+> class. However this kind of modification has no impact on how the data
+> is serialised, so it does not require any particular attention from
+> this extensibility scheme. Informing applications of the new,
+> tightened constraints would be the role of the schema formally
+> describing the extension, to be provided by the (to-be-defined)
+> [extension management layer](#making-extensions-manageable).
+
+Again, let’s illustrate how class extensions work with an example.
 
 Let _Person_ be a class defined in the base model, with two fields
 `name` and `email` such that the following object is a valid instance of
@@ -337,6 +461,26 @@ working together – rather than purely a _technical_ one. The role of the
 extensibility scheme here is merely to minimize the impact of such a
 situation, not to avoid it.)
 
+Upon encountering data where a _Person_ instance contains a
+`https://example.org/FooPersonExtension` node:
+
+* a parser that is aware of the Foo extension at compile-time could
+  virtually “move” the `age` field out of the extension node and into
+  the _Person_ object directly (allowing client code to behave as if the
+  `age` field is intrisincally part of the _Person_ class, without
+  having to worry about where that field had been stored in the
+  serialised data), or more generally provide any interface it deems
+  useful to expose the `age` field to client code (this scheme does not
+  mandate any mechanism for that, especially since such mechanisms are
+  likely to vary depending on the programming language used);
+* a parser that becomes dynamically aware of the Foo extension at
+  runtime would keep the extension node as it is, but could use the
+  schema describing the extension to validate its contents and provide
+  additional informations to client code;
+* a parser that is and remains unware of the Foo extension would keep
+  the extension node as it is, and simply offers to client code the
+  possibility to explore the contents of the nodes.
+
 #### Why using URIs to identify the extensions?
 This is strictly speaking not mandatory, but at least _very strongly_
 recommended.
@@ -362,8 +506,7 @@ bar:dob: 1983-01-01
 ```
 
 The author of this document strongly believes that such attempts to
-“transpose” XML-like qualified names (QNAME) to the JSON world are
-ill-inspired.
+mimic XML-style qualified names in JSON are ill-inspired.
 
 Qualified names work in XML because _XML has built-in support for them_!
 The concepts of qualified names and of namespaces are a core part of the
@@ -408,3 +551,6 @@ which does _not_ enclose the extension fields in their own namespace, it
 merely gives them longer names – with no intrinsic guarantee that no
 other extension developer will ever want to use the same “prefixes”
 `foo_` or `bar_`.
+
+## Implementation in LinkML
+TODO
