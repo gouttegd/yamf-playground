@@ -135,10 +135,10 @@ with varying extension support creates some fundamental constraints on
 what an extension can do – about how the base model can be extended.
 
 Simply put, an extension cannot _change_ the base model in a way that
-would make data conformant to the base model not conformant with the
-extended model. So, an extension is really about literally _extending_
-the base model – the extended model should be a strict superset of the
-base model.
+would make data conformant to the extented model not conformant with the
+base model. So, an extension is really about literally _extending_ the
+base model – the extended model should be a strict superset of the base
+model.
 
 Therefore, an extension can:
 
@@ -184,6 +184,13 @@ When LinkML schemas are used to formally describe the base model and its
 extension(s), compile-time awareness notably means that developers can
 rely on LinkML to automatically generate at least part of the code
 needed to read and manipulate the (extended) data.
+
+> Despite its name, the notion of “compile-time” is _not_ reserved to
+> applications written in compiled languages (e.g. C, Java, Rust…). It
+> applies equally to interpreted languages (e.g. Python, Javascript…) as
+> well, though for such languages it is, strictly speaking, improper (it
+> would be more appropriate to talk about “development-time”; however,
+> “compile-time” is the commonly accepted term).
 
 **Runtime awareness** of an extension is when an application has been
 developed _without_ explicit support for the extension (either because
