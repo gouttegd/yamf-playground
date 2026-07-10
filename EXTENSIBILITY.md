@@ -560,4 +560,237 @@ other extension developer will ever want to use the same “prefixes”
 `foo_` or `bar_`.
 
 ## Implementation in LinkML
-TODO
+
+### Base model
+
+#### Creating natural extension points
+To create a “natural extension point” in a LinkML schema:
+
+1. Give a class a “type designator” slot;
+2. Explicitly configure the class to “allow extra slots”, and make sure
+   it is not _abstract_.
+3. Any slot/attribute, anywhere in the schema, whose range is set to
+   that class becomes a _de facto_ natural extension point.
+
+The type designator SHOULD be URI- or CURIE-typed. This scheme currently
+favours URI-typed designators, since they dispense from having to
+manage CURIE prefixes. `uriorcurie`-typed designators SHOULD be avoided.
+
+Some limitations currently exists in LinkML-Py, that implementers should
+be aware of.
+
+The most important is that, for now, instance data containing a type
+designator value that does not correspond to a known subclass of the
+class carrying the type designator will be considered _invalid_. This
+means that an application that is only aware of the base schema will
+always reject data containing a “natural extension” – basically making
+the entire concept of “natural extension” void! Work is in progress with
+the LinkML community to fix that issue.
+
+Another issue (which may in fact be fixed at the same time as the
+previous one) is that, when generating Python code, the generated code
+will not include what is needed to properly recognise type designators
+when the schema does not contain at least one subclass of the class
+carrying the type designator (basically, the code generator assumes
+that, since there are no subclasses, there is no need for a way to
+designate the effective type at runtime).
+
+Lastly (but much less importantly – it’s more an annoyance than anything
+else), because of another bug in some components of LinkML-Py, type
+designators for now should always be defined as global, schema-wide
+_slots_, rather than as class-specific _attributes_, even if the slot is
+only ever used in one class.
+
+##### Example
+The “light source” example given above in this document can be
+implemented in LinkML as follows:
+
+```yaml
+slots:
+
+  light_source_type:
+    description: >-
+      The type designator for light source objects.
+    range: uri
+    designates_type: true
+    alias: type
+
+
+classes:
+
+  LightSource:
+    description: >-
+      The base class for all light source objects.
+    slots:
+      - light_source_type
+    attributes:
+      power:
+        range: integer
+      # All other attributes common to all light source types
+      # ...
+    extra_slots:
+      allowed: true
+
+  ArcLightSource:
+    description: >-
+      Represents a light source that is specifically an arc lamp.
+    is_a: LightSource
+    attributes:
+      # Attributes specific to this type of light source
+      # ...
+
+  LaserLightSource:
+    description: >-
+      Represents a light source that is specifically a laser.
+    is_a: LightSource
+    attributes:
+      # Attributes specific to a laser-based light source
+      # ...
+
+  Microscope:
+    attributes:
+      light_source:
+        description: >-
+          The light source available on this microscope.
+
+          This is the actual extension point.
+        range: LightSource
+      # Other attributes for the Microscope class
+      # ...
+```
+
+#### Allowing non-natural extensions
+
+To allow classes from the base schema to be extended according to the
+scheme described in this document, the base schema must:
+
+1. define a base class (hereafter called `ExtensionNode`, but the name
+   does not really matter) that all extensions shall derive from (that
+   class must have a type designator);
+2. ensure that any class that is intended to be extensible has a
+   dedicated field (called `nodes` in this proposal; the name _does_
+   matter as it will appear in serialised data, but any schema applying
+   this scheme is free to choose its own name) to store the “extension
+   nodes”.
+
+Here is a possible implementation:
+
+```yaml
+slots:
+
+  node_type:
+    description: >-
+      The type designator for all extension nodes.
+    range: uri
+    designates_type: true
+    key: true
+    alias: type
+
+
+classes:
+
+  IsExtensibleMixin:
+    description: >-
+      An object that can carry arbitrary extension “nodes”.
+
+      Reuse this mixin in any class to allow the class to be
+      extended.
+    mixin: true
+    attributes:
+      nodes:
+        description: The collection of extension nodes.
+        range: ExtensionNode
+        multivalued: true
+        inlined: true
+        inlined_as_list: false
+
+  ExtensionNode:
+    description: >-
+      Represents an extension “node”, that is a fragment of an object
+      that is defined by an extension rather than by the base schema.
+    slots:
+      - node_type
+    extra_slots:
+      allowed: true
+```
+
+You may notice at this point that the `nodes` attribute looks similar to
+a natural extension point, since its range is set to a class that has a
+type designator. This is because it _is_ indeed a natural extension
+point! Conceptually, the way this extensibility scheme allows to extend
+classes is by giving each class (or at least, each class reusing the
+`IsExtensibleMixin` mixin) a “generic” natural extension point.
+
+### Extended model
+
+#### Creating a natural extension
+If the base model has a natural extension point (such as the
+`light_source` field in the `Microscope` class we have seen above),
+then creating a natural extension intended to be used at that point is
+simply a matter of:
+
+1. importing the base schema;
+2. creating a new subclass of the appropriate base class.
+
+For example, to create the `KyberLightSource` extension:
+
+```yaml
+classes:
+
+  KyberLightSource:
+    description: >-
+      A light source that uses a Kyber crystal; allows to see things
+      through the Force, but can only be used by Jedi microscopists.
+    is_a: LightSource
+    attributes:
+      # Attributes that specifically describes this type of light source
+      # ...
+```
+
+Of note, the class does not need to derive directly from the base, it
+can derive from another subclass if it happens to be more appropriate.
+
+#### Creating a non-natural extension
+Going back to our _Person_ example, if we assume that we have a base
+model that defines a `Person` class and makes it reuse the
+`IsExtensibleMixin`, we can then create an extension to add a `age`
+field as follows:
+
+```yaml
+classes:
+
+  PersonExtensionMixin:
+    description: >-
+      A mixin that contains the attributes we want to extend the Person
+      class with.
+
+      This is a mixin to facilitate extension composability.
+    mixin: true
+    attributes:
+      age:
+        description: The age of the person, in years.
+        range: integer
+
+  PersonExtension:
+    description: >-
+      The actual extension node. This (1) inherits from ExtensionNode
+      (so that it is recognized as an extension) and (2) reuses the
+      PersonExtensionMixin above.
+    is_a: ExtensionNode
+    mixins:
+      - PersonExtensionMixin
+
+  ExtendedPerson:
+    description: >-
+      This is a subclass of the base Person class with the added
+      PersonExtensionMixin.
+
+      This class is not, strictly speaking, needed for the extension
+      scheme described in this document, but its presence will allow
+      an application to support the PersonExtension “natively”, by
+      using this class whenever the use of the Person class is
+      expected.
+    is_a: Person
+    mixins:
+      - PersonExtensionMixin
+```
