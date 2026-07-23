@@ -1,0 +1,79 @@
+% Presenting LinkML for imaging metadata
+% © 2026 Damien Goutte-Gattat
+%
+% This work is released under the Creative Commons
+% Attribution-ShareAlike 4.0 International License. To view a copy of
+% this license, visit https://creativecommons.org/licenses/by-sa/4.0/.
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{tikz}
+\usepackage{fancyvrb}
+
+\setmainlanguage{english}
+\usetheme{Boadilla}
+\definecolor{gerbigreen}{RGB}{0,152,57}
+\definecolor{gerbidarkgreen}{RGB}{0,146,55}
+\definecolor{gerbilightgreen}{RGB}{212,235,220}
+\usecolortheme[named=gerbidarkgreen]{structure}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercovered{transparent}
+
+\AtBeginSection{
+  \begin{frame}{Outline}{}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\graphicspath{{imgs/}{svgs/}}
+
+\title[LinkML for imaging metadata]{LinkML for the representation of rich imaging metadata}
+\author{Damien Goutte-Gattat}
+\institute[German BioImaging e.V.]{\includegraphics[width=4cm]{gerbi-logo}}
+\date[LinkML Workshop, October 2026]{LinkML Community Workshop, October 2026}
+
+\hypersetup{pdfpagemode=UseNone,
+  pdftitle={LinkML for imaging metadata},
+  pdfauthor={Damien Goutte-Gattat}}
+
+\begin{document}
+
+% Frontmatter
+
+\mode<beamer>{
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+
+
+% Contents
+
+
+
+% Backmatter
+
+\mode<beamer>{
+\begin{frame}[noframenumbering]
+  \frametitle{~}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+  \frametitle{About}
+
+  \begin{block}{\includegraphics[scale=.26]{ccbysa}\hspace{.2em}%
+    2026 Damien Goutte-Gattat \texttt{<damien@gerbi-gmb.de>}}
+    This presentation is released under the Creative Commons
+    Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).
+  \end{block}
+
+  \begin{block}{Revision}\ttfamily\scriptsize
+    \input{revision.tex}
+  \end{block}
+  
+  \begin{block}{Acknowledgements}
+    This work is funded by NSF grant \#2513921
+    (``Frameworks-Imaging-PHD'').
+  \end{block}
+\end{frame}
+}
+
+\end{document}
