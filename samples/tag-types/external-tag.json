@@ -1,0 +1,30 @@
+{
+   "messages" : [
+      {
+         "Request" : {
+            "id" : "req001",
+            "method" : "POST",
+            "params" : []
+         }
+      },
+      {
+         "Response" : {
+            "id" : "res001",
+            "result" : "OK"
+         }
+      },
+      {
+         "Request" : {
+            "id" : "req002",
+            "method" : "GET",
+            "params" : []
+         }
+      },
+      {
+         "Response" : {
+            "id" : "res002",
+            "result" : "KO"
+         }
+      }
+   ]
+}

@@ -1,0 +1,34 @@
+{
+   "messages" : [
+      {
+         "content" : {
+            "id" : "req001",
+            "method" : "POST",
+            "params" : []
+         },
+         "type" : "Request"
+      },
+      {
+         "content" : {
+            "id" : "res001",
+            "result" : "OK"
+         },
+         "type" : "Response"
+      },
+      {
+         "content" : {
+            "id" : "req002",
+            "method" : "GET",
+            "params" : []
+         },
+         "type" : "Request"
+      },
+      {
+         "content" : {
+            "id" : "res002",
+            "result" : "KO"
+         },
+         "type" : "Response"
+      }
+   ]
+}
