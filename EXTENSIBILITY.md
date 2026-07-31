@@ -110,9 +110,6 @@ allowing an implementation that does not explicitly support the
 extension to still be able to at least _validate_ the extended data
 against their reference schema.
 
-> Of note, the “extension manageability” part of this extensibility
-> scheme remains to be fully defined!
-
 
 ## Non-goals
 
@@ -408,8 +405,8 @@ class.
 > is serialised, so it does not require any particular attention from
 > this extensibility scheme. Informing applications of the new,
 > tightened constraints would be the role of the schema formally
-> describing the extension, to be provided by the (to-be-defined)
-> [extension management layer](#making-extensions-manageable).
+> describing the extension, to be provided by the
+> [extension management layer](#extension-management-layer).
 
 Again, let’s illustrate how class extensions work with an example.
 
@@ -430,7 +427,7 @@ represent a valid instance of that extended class as follows:
 name: Alice
 email: alice@example.org
 nodes:
-  https://example.org/foo/FooPersonExtension:
+  https://example.org/foo#FooPersonExtension:
     age: 43
 ```
 
@@ -453,9 +450,9 @@ own, this would look like this:
 name: Alice
 email: alice@example.org
 nodes:
-  https://example.org/foo/FooPersonExtension:
+  https://example.org/foo#FooPersonExtension:
     age: 43
-  https://example.com/bar/BarPersonExtension:
+  https://example.com/bar#BarPersonExtension:
     age: 43
     dob: 1983-01-01
 ```
@@ -469,7 +466,7 @@ extensibility scheme here is merely to minimize the impact of such a
 situation, not to avoid it.)
 
 Upon encountering data where a _Person_ instance contains a
-`https://example.org/FooPersonExtension` node:
+`https://example.org/foo#FooPersonExtension` node:
 
 * a parser that is aware of the Foo extension at compile-time could
   virtually “move” the `age` field out of the extension node and into
@@ -558,6 +555,50 @@ which does _not_ enclose the extension fields in their own namespace, it
 merely gives them longer names – with no intrinsic guarantee that no
 other extension developer will ever want to use the same “prefixes”
 `foo_` or `bar_`.
+
+## Extension management layer
+The “extension management” part of this proposed scheme is intended, as
+its name implies, to fulfil the secondary goal of making extensions
+manageable as first class entities.
+
+It relies on a simple data structure (hereafter called the `extension`
+object) that can be used to describe an extension. Such structures can
+then be used in any context where extensions need to be managed. For
+example, the top-level object of a data file could include a
+`extensions` key containing a list of `extension` objects for every
+single extension present anywhere else in the data file (thereby
+providing implementations with a single place to look at in order to
+determine which extensions are needed to fully understand the entire
+file). The same `extension` object could also serve as the basis for a
+hypothetical “extension registry”.
+
+As currently envisioned, the `extension` object would look like this:
+
+```yaml
+# Unique ID for the extension; can theoretically be any string, but
+# strongly RECOMMENDED to be a URI
+id: https://example.org/foo
+# Version of the extension used in this file
+version: 1.0
+# Formal schemas that an implementation can use (if possible) to
+# make sense of the extended data
+schemas:
+  - type: LinkML
+    url: https://schemas.example.org/foo/foo.yaml
+  - type: JSONSchema
+    url: https://schemas.example.org/foo/foo.json
+# List of types defined by this extension
+types:
+  - https://example.org/foo#FooPersonExtension
+# The other fields are more intended for humans than for machines; they
+# provide additional informations about the origin of the extension and
+# what it is for.
+creators:
+  - https://orcid.org/0000-0002-1825-0097
+homepage: https://example.org/foo/
+description: >-
+  The purpose of this extension is to...
+```
 
 ## Implementation in LinkML
 
