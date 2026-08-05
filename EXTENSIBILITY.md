@@ -1,18 +1,33 @@
-# Designing an extensibility scheme
+# Proposal for a generic extensibility scheme
 
 ## Preliminary notes
 
+### Genericity
+As its title implies, this document describes an extensibility scheme
+that is intended to be “generic“, meaning that it is _not_ tied to any
+particular data model or application.
+
+The scheme was designed with two specific applications in mind: the
+[OME-Zarr imaging file format](https://ngff.openmicroscopy.org) and an
+upcoming imaging metadata specification to be developed as part of the
+[Imaging-PHD project](https://persistent-hardware-descriptor-project.github.io/imaging-phd/).
+
+However, the scheme should be applicable to any other data model that
+one wishes to make extensible with the same aims than those stated
+[below](#goals).
+
 ### JSON vs YAML
-The extensibility scheme we are concerned about is primarily intended to
-deal with JSON-formatted data. However in this document, all examples
-will be given in YAML, which is considered (at least by the author of
-those lines) to be somewhat easier to read and write than JSON. The use
-of YAML rather than JSON should not affect the extensibility scheme in
-any meaningful way.
+The extensibility scheme proposed here is primarily intended to deal
+with JSON-formatted data. However in this document, all examples will be
+given in YAML, which is considered (at least by the author of those
+lines) to be somewhat easier to read and write than JSON. The use of
+YAML rather than JSON should not affect the extensibility scheme in any
+meaningful way.
 
 ### Objects, models, schemas
 This document will talk a lot about “objects”. In this context, an
-object is basically a JSON dictionary containing pre-determined keys.
+object is basically a JSON (or YAML, see above) dictionary containing
+pre-determined keys.
 
 The keys that an object can contain are defined by the object’s “model”,
 also referred to as the _class_ of the object. Those keys are
@@ -54,7 +69,7 @@ extensions (including the empty set, no extensions) of a same “base”
 model.
 
 Given a base model _M_ and two extensions _E1_ and _E2_ (which would
-ideally al be expected to be represented as schemas in an appropriate
+ideally all be expected to be represented as schemas in an appropriate
 schema definition language, though strictly speaking this is not
 necessary), we can define the following derived models:
 
@@ -77,6 +92,80 @@ that is conformant with all other models, under the same conditions.
 This is of course not limited to only two extensions: the principle is
 generalizable to an arbitrary number of extensions.
 
+#### Awareness of an extension
+Before going any further, it is necessary to explain what is exactly
+meant by “an application aware of an extension” or “aware of an extended
+model”.
+
+In this scheme, we consider three “levels” of awareness:
+
+* compile-time awareness;
+* runtime awareness;
+* unawareness.
+
+**Compile-time awareness** of an extension (or of an extended model) is
+when the developers of the application know about the extension during
+the development of the application, and write code to explicitly deal
+with data conformant with the extended model. Typically, this level of
+awareness will not only allow to read and manipulate the extended data,
+but also to offer specific features that explicitly make use of said
+extended data.
+
+When LinkML schemas are used to formally describe the base model and its
+extension(s), compile-time awareness notably means that developers can
+rely on LinkML to automatically generate at least part of the code
+needed to read and manipulate the (extended) data.
+
+> Despite its name, the notion of “compile-time” is _not_ reserved to
+> applications written in compiled languages (e.g. C, Java, Rust…). It
+> applies equally to interpreted languages (e.g. Python, Javascript…) as
+> well, though for such languages it is, strictly speaking, improper (it
+> would be more appropriate to talk about “development-time”; however,
+> “compile-time” is the commonly accepted term).
+
+**Runtime awareness** of an extension is when an application has been
+developed _without_ explicit support for the extension (either because
+the developers did not know about that extension, or because they made a
+conscious decision not to implement it for whatever reason), but is able
+to dynamically learn about the extension at runtime. This requires that
+(1) a formal schema describing the extension can be obtained somehow
+(this should be the role of the “extension manageability” layer
+envisioned [further below](#making-extensions-manageable)) and (2) that
+the application is able to exploit said schema.
+
+This level of awareness should allow an application to at least
+_validate_ the extended data, even if it cannot make explicit use of it.
+Depending on the “richness” of the provided schema, it could also
+allow the application to display the extended data to the user in a more
+meaningful way.
+
+When LinkML schemas are used, this level of awareness does _not_ allow
+to use any feature that depend on LinkML-powered code generation! By
+definition, the application is already running at that point, so code
+generation is no longer an option.
+
+> Some programming languages or frameworks may in fact allow the dynamic
+> generation and loading of code at runtime (for example the
+> `System.Reflection.Emit` system in the .NET framework). We do _not_
+> consider such cases here.
+
+**Unawareness** of an extension is when an application has been
+developed without explicit support for the extension _and_ is unable
+to dynamically learn about the extension at runtime – either because a
+schema describing the extension cannot be obtained, or because the
+application is not equipped to exploit the schema (for example, if the
+extension comes with a LinkML schema, the application must be able to
+understand LinkML schemas, which could be very difficult if the
+application is written in a language for which no LinkML runtime library
+is available).
+
+This level of “awareness” (or rather this absence of awareness)
+obviously drastically limits what an application can do with the
+extended data it may find. However, an application that is compatible
+with this extensibility scheme, even if it is completely unaware of a
+particular extension, should still minimally be able to recognise the
+presence of extended data and ensure that it is fully preserved.
+
 ### Guaranteeing independently developped extensions cannot clash
 This extensibility scheme is expressly designed to ensure that, even if
 two extensions, which are being developed separately without any kind of
@@ -84,15 +173,15 @@ coordination between their developers, extend the base model in an
 identical fashion (for example by adding a field with the same name, but
 possibly with a different meaning, to the same class), it is still
 possible to use both extensions at the same time in the same data,
-without any possible confusion.
+without any possible confusion or, worse, data loss.
 
 ### Making extensions manageable
-A secondary goal of this extensibility scheme is to make extensions
+Another aim of this extensibility scheme is to make extensions
 manageable as first-class entities.
 
 This notably means that, when a data file is making use of one or more
 extensions to the base model, an application (even an application that
-is not aware of any of the extensions being used) can know
+is not compile-time aware of any of the extensions being used) can know
 
 * that some extensions are being used;
 * what those extensions are;
@@ -103,12 +192,11 @@ applications (and users) with additional informations about the
 extensions, such as who is responsible for a given extension or where
 can more informations be found about the extension.
 
-Notably, “more informations about the extension” can include a schema
-that formally describes the extension (primarily in LinkML, though the
-scheme may allow the use of other schema definition languages as well),
-allowing an implementation that does not explicitly support the
-extension to still be able to at least _validate_ the extended data
-against their reference schema.
+Notably, “more informations about the extension” can include schemas
+that formally describe the extension, allowing an implementation that
+does not explicitly support the extension at compile-time to learn about
+the extension at runtime and to at least _validate_ the extended data
+against a reference schema.
 
 
 ## Non-goals
@@ -158,80 +246,6 @@ An extension cannot:
   that a given attribute is _required_ in any instance of a class, an
   extension cannot make that attribute _optional_).
 
-## Awareness of an extension
-This document has already mentioned several times the notion of an
-implementation “aware of an extension” or “aware of an extended model”.
-It is necessary to explain what is exactly meant by that.
-
-In this scheme, we consider three “levels” of awareness:
-
-* compile-time awareness;
-* runtime awareness;
-* unawareness.
-
-**Compile-time awareness** of an extension (or of an extended model) is
-when the developers of the application know about the extension during
-the development of the application, and write code to explicitly deal
-with data conformant with the extended model. Typically, this level of
-awareness will not only allow to read and manipulate the extended data,
-but also to offer specific features that explicitly make use of said
-extended data.
-
-When LinkML schemas are used to formally describe the base model and its
-extension(s), compile-time awareness notably means that developers can
-rely on LinkML to automatically generate at least part of the code
-needed to read and manipulate the (extended) data.
-
-> Despite its name, the notion of “compile-time” is _not_ reserved to
-> applications written in compiled languages (e.g. C, Java, Rust…). It
-> applies equally to interpreted languages (e.g. Python, Javascript…) as
-> well, though for such languages it is, strictly speaking, improper (it
-> would be more appropriate to talk about “development-time”; however,
-> “compile-time” is the commonly accepted term).
-
-**Runtime awareness** of an extension is when an application has been
-developed _without_ explicit support for the extension (either because
-the developers did not know about that extension, or because they made a
-conscious decision not to implement it for whatever reason), but is able
-to dynamically learn about the extension at runtime. This requires that
-(1) a formal schema describing the extension can be obtained somehow
-(this should be the role of the “extension manageability” layer
-envisioned in a [previous section](#making-extensions-manageable)) and
-(2) that the application is able to exploit said schema.
-
-This level of awareness should allow an application to at least
-_validate_ the extended data, even if it cannot make explicit use of it.
-Depending on the “richness” of the provided schema, it could also
-allow the application to display the extended data to the user in a more
-meaningful way.
-
-When LinkML schemas are used, this level of awareness does _not_ allow
-to use any feature that depend on LinkML-powered code generation! By
-definition, the application is already running at that point, so code
-generation is no longer an option.
-
-> Some programming languages or frameworks may in fact allow the dynamic
-> generation and loading of code at runtime (for example the
-> `System.Reflection.Emit` system in the .NET framework). We do _not_
-> consider such cases here.
-
-**Unawareness** of an extension is when an application has been
-developed without explicit support for the extension _and_ is unable
-to dynamically learn about the extension at runtime – either because a
-schema describing the extension cannot be obtained, or because the
-application is not equipped to exploit the schema (for example, if the
-extension comes with a LinkML schema, the application must be able to
-understand LinkML schemas, which could be very difficult if the
-application is written in a language for which no LinkML runtime library
-is available).
-
-This level of “awareness” (or rather this absence of awareness)
-obviously drastically limits what an application can do with the
-extended data it may find. However, as stated in a previous section, an
-application that is compatible with this extensibility scheme, even if
-it is completely unaware of a particular extension, should still
-minimally be able to recognise the presence of extended data and ensure
-that it is fully preserved.
 
 ## Basic principles
 
@@ -383,13 +397,15 @@ Upon encountering a _Microscope_ instance making use of the new type:
   specific to the `KyberLightSource` class;
 * an application that is (and remains) unaware of the extension would
   still recognise the contents of the `light_source` field as an
-  instance of the base `LightSource` class, and would at least preserve
-  any additional field that it does not know about.
+  instance of the base `LightSource` class (because it knows that the
+  `light_source` cannot contain anything else than a light source), and
+  would at least preserve any additional field that it does not know
+  about.
 
 Of note, while in the example above the type designator values were
 simple names (`ArcLightSource`, `LaserLightSource`, `KyberLightSource`),
 this scheme **strongly recommends** to use schema-dependent URIs instead
-(e.g. `https://example.org/ome/ArcLightSource`), so as to ensure that
+(e.g. `https://example.org/ome/#ArcLightSource`), so as to ensure that
 independently developed extensions cannot clash with each other
 (provided that each extension uses its own base URI).
 
@@ -426,13 +442,13 @@ represent a valid instance of that extended class as follows:
 ```yaml
 name: Alice
 email: alice@example.org
-nodes:
-  https://example.org/foo#FooPersonExtension:
+extensions:
+  https://example.org/foo/#FooPersonExtension:
     age: 43
 ```
 
 The principle is that any class intended to be extensible has an
-implicit field (here called `nodes`, but an implementation of this
+implicit field (here called `extensions`, but an implementation of this
 scheme could very well choose any other name) specifically intended to
 store all the fields added by extensions.
 
@@ -450,9 +466,9 @@ own, this would look like this:
 name: Alice
 email: alice@example.org
 nodes:
-  https://example.org/foo#FooPersonExtension:
+  https://example.org/foo/#FooPersonExtension:
     age: 43
-  https://example.com/bar#BarPersonExtension:
+  https://example.com/bar/#BarPersonExtension:
     age: 43
     dob: 1983-01-01
 ```
@@ -466,10 +482,10 @@ extensibility scheme here is merely to minimize the impact of such a
 situation, not to avoid it.)
 
 Upon encountering data where a _Person_ instance contains a
-`https://example.org/foo#FooPersonExtension` node:
+`https://example.org/foo/#FooPersonExtension` extension object fragment:
 
 * a parser that is aware of the Foo extension at compile-time could
-  virtually “move” the `age` field out of the extension node and into
+  virtually “move” the `age` field out of the extension object and into
   the _Person_ object directly (allowing client code to behave as if the
   `age` field is intrisincally part of the _Person_ class, without
   having to worry about where that field had been stored in the
@@ -478,12 +494,12 @@ Upon encountering data where a _Person_ instance contains a
   mandate any mechanism for that, especially since such mechanisms are
   likely to vary depending on the programming language used);
 * a parser that becomes dynamically aware of the Foo extension at
-  runtime would keep the extension node as it is, but could use the
+  runtime would keep the extension object as it is, but could use the
   schema describing the extension to validate its contents and provide
   additional informations to client code;
 * a parser that is and remains unware of the Foo extension would keep
   the extension node as it is, and simply offers to client code the
-  possibility to explore the contents of the nodes.
+  possibility to explore the contents of the extension objects.
 
 #### Why using URIs to identify the extensions?
 This is strictly speaking not mandatory, but at least _very strongly_
@@ -510,7 +526,7 @@ bar:dob: 1983-01-01
 ```
 
 The author of this document strongly believes that such attempts to
-mimic XML-style qualified names in JSON are ill-inspired.
+mimic XML-style qualified names in JSON or YAML are ill-inspired.
 
 Qualified names work in XML because _XML has built-in support for them_!
 The concepts of qualified names and of namespaces are a core part of the
@@ -561,18 +577,22 @@ The “extension management” part of this proposed scheme is intended, as
 its name implies, to fulfil the secondary goal of making extensions
 manageable as first class entities.
 
-It relies on a simple data structure (hereafter called the `extension`
-object) that can be used to describe an extension. Such structures can
-then be used in any context where extensions need to be managed. For
-example, the top-level object of a data file could include a
-`extensions` key containing a list of `extension` objects for every
-single extension present anywhere else in the data file (thereby
-providing implementations with a single place to look at in order to
-determine which extensions are needed to fully understand the entire
-file). The same `extension` object could also serve as the basis for a
-hypothetical “extension registry”.
+It relies on a simple data structure (hereafter called the 
+`extension_definition` object, but again, anyone applying this scheme to
+their data model can pick whatever name suits them) that can be used to
+describe an extension. Such structures can then be used in any context
+where extensions need to be managed. For example, the top-level object
+of a data file could include a `extensions_manifest` key containing a
+list of `extension_definition` objects for every single extension
+present anywhere else in the data file (thereby providing
+implementations with a single place to look at in order to determine
+which extensions are needed to fully understand the entire file). The
+same `extension_definition` object could also serve as the basis for a
+hypothetical, centrally managed “extension registry”, should such a
+registry be needed.
 
-As currently envisioned, the `extension` object would look like this:
+As currently envisioned, the `extension_definition` object would look
+like this:
 
 ```yaml
 # Unique ID for the extension; can theoretically be any string, but
@@ -589,7 +609,7 @@ schemas:
     url: https://schemas.example.org/foo/foo.json
 # List of types defined by this extension
 types:
-  - https://example.org/foo#FooPersonExtension
+  - https://example.org/foo/#FooPersonExtension
 # The other fields are more intended for humans than for machines; they
 # provide additional informations about the origin of the extension and
 # what it is for.
@@ -600,7 +620,18 @@ description: >-
   The purpose of this extension is to...
 ```
 
+
+## How to apply this scheme to a data model
+TODO.
+
+
 ## Implementation in LinkML
+This section illustrates how the scheme can be implemented in a data
+model that is formally defined using LinkML.
+
+This is informative only. The scheme does not _need_ LinkML to be
+implemented, and even when LinkML is used it could possibly be done
+differently than what is proposed here.
 
 ### Base model
 
@@ -719,7 +750,7 @@ Here is a possible implementation:
 ```yaml
 slots:
 
-  node_type:
+  extension_type:
     description: >-
       The type designator for all extension nodes.
     range: uri
@@ -732,14 +763,14 @@ classes:
 
   IsExtensibleMixin:
     description: >-
-      An object that can carry arbitrary extension “nodes”.
+      An object that can carry arbitrary extension object fragments.
 
       Reuse this mixin in any class to allow the class to be
       extended.
     mixin: true
     attributes:
-      nodes:
-        description: The collection of extension nodes.
+      extensions:
+        description: The collection of extension object fragments.
         range: ExtensionNode
         multivalued: true
         inlined: true
@@ -747,20 +778,21 @@ classes:
 
   ExtensionNode:
     description: >-
-      Represents an extension “node”, that is a fragment of an object
-      that is defined by an extension rather than by the base schema.
+      Represents a fragment of an object that is defined by an extension
+      rather than by the base schema.
     slots:
-      - node_type
+      - extension_type
     extra_slots:
       allowed: true
 ```
 
-You may notice at this point that the `nodes` attribute looks similar to
-a natural extension point, since its range is set to a class that has a
-type designator. This is because it _is_ indeed a natural extension
-point! Conceptually, the way this extensibility scheme allows to extend
-classes is by giving each class (or at least, each class reusing the
-`IsExtensibleMixin` mixin) a “generic” natural extension point.
+You may notice at this point that the `extensions` attribute looks
+similar to a natural extension point, since its range is set to a class
+that has a type designator. This is because it _is_ indeed a natural
+extension point! Conceptually, the way this extensibility scheme allows
+to extend classes is by giving each class (or at least, each class
+reusing the `IsExtensibleMixin` mixin) a “generic” natural extension
+point.
 
 ### Extended model
 
@@ -814,7 +846,7 @@ classes:
 
   PersonExtension:
     description: >-
-      The actual extension node. This (1) inherits from ExtensionNode
+      The actual extension object. This (1) inherits from ExtensionNode
       (so that it is recognized as an extension) and (2) reuses the
       PersonExtensionMixin above.
     is_a: ExtensionNode
