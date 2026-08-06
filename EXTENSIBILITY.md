@@ -622,7 +622,81 @@ description: >-
 
 
 ## How to apply this scheme to a data model
-TODO.
+As stated in the preliminary notes, the scheme presented here is
+intentionally generic and not immediately usable.
+
+In order to effectively use this scheme on an existing data model,
+thereby making that model extensible, the designers of the data model
+must make some decisions.
+
+### Naming all the special attributes
+This scheme involves several special attributes that must be added to
+data model, namely:
+
+* the “type designator attribute”, mentioned in the section about
+[natural extensions](#notion-of-natural-extensions), used to identify
+the exact type of an object assigned to a natural extension point;
+* the attribute holding the “extension object fragments”, mentioned in
+the section about [extending a class](#extending-a-class);
+* and the attribute holding the “extension manifest”, mentioned in the
+section about [extension management](#extension-management-layer).
+
+In the examples given in this document, those attributes are named
+`type`, `extensions`, and `extension_manifest`, respectively.
+
+Those names may or may not be sensible. One concern to bear in mind is
+that a name like `type` is a very common name, which may very well be
+already used somehwere (with another meaning) in the data model one
+wishes to apply this scheme to.
+
+It is up to model designers to decide whether the names proposed in this
+document suit them, and to pick alternative names if not.
+
+One may also consider prefixing all those names with some special
+character (e.g. `~type` or `%extensions`) to highlight the special roles
+of those attributes and help distinguish them from all the other,
+non-special attributes present in the data model.
+
+### Selecting a ID scheme
+This scheme requires three different types of identifiers:
+
+* identifiers for classes that are “natural extensions“ (e.g.,
+`KyberLightSource` in the example given in the [corresponding section](#notion-of-natural-extensions));
+* identifiers for extension object fragments (e.g.
+`https://example.org/foo/#FooPersonExtension`, again in the example
+given in the [corresponding section](#extending-a-class));
+* identifiers for extension definitions in the extension manifest (e.g.
+`https://example.org/foo`).
+
+Strictly speaking, the only requirement for those identifiers is that
+they must be unique (quite expectedly, for identifiers), and model
+designers applying this scheme to their model are free to, either avoid
+adding any additional restrictions on the identifiers or, on the
+contrary, mandate a specific ID scheme following some model-specific
+rules.
+
+However, we strongly recommend to use a **URI-based** identifier scheme,
+where an extension is identified by a base URI (e.g.
+`https://example.org/foo/`) and all the objects defined by that extension
+(be they natural extensions or extension fragments) are identified by
+URIs that are fragments (in the [RFC 3986](https://tools.ietf.org/html/rfc3986)
+sense of the term) of the extension’s base URI (e.g. `https://example.org/foo/#FooPersonExtension`)
+and `https://example.org/foo/#KyberLightSource`).
+
+Such a scheme automatically ensures uniqueness of identifiers across all
+extensions (provided that extension developers are well behaved and do
+not use URIs that they do not control), which is critical to ensure that
+independently developed extensions cannot “clash” with each other.
+
+It also offers a straightforward way to distinguish between “official“
+extensions and “third-party” extensions (should such a distinction be
+desired – this scheme is neutral on that aspect), simply by declaring
+that all extensions whose base URI is in a given domain are “official”,
+and all extensions whose base URI is outside of that domain are
+third-party extensions. The people responsible for managing the data
+model can then control who should be allowed to create official
+extensions (again, should such a control be desired) by controlling who
+can allocate URIs in the “official domain”.
 
 
 ## Implementation in LinkML
