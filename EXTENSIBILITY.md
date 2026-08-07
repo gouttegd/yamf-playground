@@ -625,6 +625,43 @@ model can then control who should be allowed to create official
 extensions (again, should such a control be desired) by controlling who
 can allocate URIs in the “official domain”.
 
+### Versioning of extensions
+The extensibility scheme currently does not strictly mandate how
+extensions should be _versioned_; it simply provides a way for
+extensions to self-describe their own version in the `version`
+attribute of their [extension definition](#extension-management-layer).
+
+However, we strongly recommend that all changes to an extension
+should be constrained in such a way that data that is conformant to
+version _X_ of an extension remains conformant with _X+n_.
+
+Should an extension developer wish to create breaking changes in its own
+extension, the recommended way to do that is to effectively create a
+_distinct_ extension, with its own base URI that must be different from
+the base URI of the original extension.
+
+For example, should the SWM extension be updated so that the `planet`
+field added to the _Microscope_ class is entirely removed and replaced
+by a new `planets` field accepting a _list_ of values rather than a
+single value (maybe reflecting the facts that a single microscope may be
+made of parts manufactured on different planets), this should be
+considered a _new_ extension. This could look like this:
+
+```yaml
+manufacturer: Imperial Microscope Builders
+model: K2SO
+extensions:
+  https://example.com/swm/v2/MicroscopeExtension:
+    planets:
+      - Coruscant
+      - Alderaan
+      - Chandrila
+extension_manifest:
+  - id: https://example.com/swm/v2/
+    version: 1.0 # <- first version of the v2 extension
+    ...
+```
+
 ### Why not using prefixed names for “class extensions”?
 That is, why not doing something like this:
 
