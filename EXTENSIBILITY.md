@@ -100,12 +100,12 @@ extension_manifest:
     homepage: https://example.com/swm/
 ```
 
-This example shows a single extension (`https://example.com/swm`, also
+This example shows a single extension (`https://example.com/swm/`, also
 referred to in the rest of this document as “the SWM extension”) making
 use of the two types of extension mechanisms supported by this scheme: a
 _natural extension class_ (`https://example.com/swm/KyberLightSource`)
-and a _class extension_ (`https://example.com/swm/`). Read on for
-details.    
+and a _class extension_ (`https://example.com/swm/MicroscopeExtension`).
+Read on for details.
 
 
 ## Goals
@@ -445,7 +445,7 @@ microscope has been manufactured). This is done as follows:
 manufacturer: Imperial Microscope Builders
 model: K2SO
 extensions:
-  https://example.com/swn/MicroscopeExtension:
+  https://example.com/swm/MicroscopeExtension:
     planet: Coruscant
 ```
 
