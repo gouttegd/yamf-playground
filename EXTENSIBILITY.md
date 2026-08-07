@@ -60,13 +60,67 @@ Its principles stand on their own, and it should be possible to
 implement it without ever using LinkML.
 
 
+## Full example
+The following example will be used throughout this document to
+illustrate how the proposed extensibility scheme works. It is loosely
+based on the OME model’s “Instrument” branch, that describes a
+microscope.
+
+```yaml
+manufacturer: Zeiss
+model: LSM-880
+light_source:
+  object_type: https://example.org/ome/ArcLightSource
+  power: 45
+  lamp_type: Hg
+```
+
+Here is what that example could look like, with an extension aiming
+to describe the kind of microscopes that one could find a long time ago,
+in a galaxy far, far away:
+
+```yaml
+manufacturer: Imperial Microscope Builders
+model: K2SO
+light_source:
+  object_type: https://example.com/swm/KyberLightSource
+  power: 900
+  crystal_color: red
+extensions:
+  https://example.org/com/MicroscopeExtension:
+    planet: Coruscant
+extension_manifest:
+  - id: https://example.com/swm/
+    version: 1.0
+    schemas:
+      - type: LinkML
+        url: https://schemas.example.com/swm/swm.yaml
+      - type: JSONSchema
+        url: https://schemas.example/com/swm/swm.json
+    homepage: https://example.com/swm/
+```
+
+This example shows a single extension (`https://example.com/swm`, also
+referred to in the rest of this document as “the SWM extension”) making
+use of the two types of extension mechanisms supported by this scheme: a
+_natural extension class_ (`https://example.com/swm/KyberLightSource`)
+and a _class extension_ (`https://example.com/swm/`). Read on for
+details.    
+
+
 ## Goals
+This extensibility scheme aims to achieve the following three goals:
+
+* guaranteeing runtime data interoperability,
+* guaranteeing that independently developed extensions cannot interfere
+  with each other;
+* making extensions manageable.
 
 ### Runtime data interoperability
-The key aim of this extensibility scheme is to allow for runtime data
-interoperability across implementations that support a different set of
-extensions (including the empty set, no extensions) of a same “base”
-model.
+The scheme is designed to allow for runtime data interoperability across
+implementations that support a different set of extensions (including the
+empty set, i.e. an application that supports no extensions) of a same
+“base” model.
 
 Given a base model _M_ and two extensions _E1_ and _E2_ (which would
 ideally all be expected to be represented as schemas in an appropriate
@@ -93,9 +147,9 @@ This is of course not limited to only two extensions: the principle is
 generalizable to an arbitrary number of extensions.
 
 #### Awareness of an extension
-Before going any further, it is necessary to explain what is exactly
-meant by “an application aware of an extension” or “aware of an extended
-model”.
+To fully understand the goal of runtime data interoperability, it is
+necessary to explain what is exactly meant by “an application aware of
+an extension” or “aware of an extended model”.
 
 In this scheme, we consider three “levels” of awareness:
 
@@ -111,16 +165,17 @@ awareness will not only allow to read and manipulate the extended data,
 but also to offer specific features that explicitly make use of said
 extended data.
 
-When LinkML schemas are used to formally describe the base model and its
-extension(s), compile-time awareness notably means that developers can
-rely on LinkML to automatically generate at least part of the code
+When schemas (such as LinkML) are used to formally describe the base
+model and its extension(s), compile-time awareness notably means that
+developers can rely on any code generation feature enabled by the type
+of schema used to automatically generate at least part of the code
 needed to read and manipulate the (extended) data.
 
 > Despite its name, the notion of “compile-time” is _not_ reserved to
 > applications written in compiled languages (e.g. C, Java, Rust…). It
-> applies equally to interpreted languages (e.g. Python, Javascript…) as
-> well, though for such languages it is, strictly speaking, improper (it
-> would be more appropriate to talk about “development-time”; however,
+> applies to interpreted languages (e.g. Python, Javascript…) as well,
+> though for such languages it is, strictly speaking, improper (it would
+> be more appropriate to talk about “development-time”; however,
 > “compile-time” is the commonly accepted term).
 
 **Runtime awareness** of an extension is when an application has been
@@ -139,10 +194,10 @@ Depending on the “richness” of the provided schema, it could also
 allow the application to display the extended data to the user in a more
 meaningful way.
 
-When LinkML schemas are used, this level of awareness does _not_ allow
-to use any feature that depend on LinkML-powered code generation! By
-definition, the application is already running at that point, so code
-generation is no longer an option.
+When schemas are used, this level of awareness does _not_ allow to use
+schema-powered code generation! By definition, the application is
+already running at that point, so code generation is no longer an
+option.
 
 > Some programming languages or frameworks may in fact allow the dynamic
 > generation and loading of code at runtime (for example the
@@ -154,10 +209,8 @@ developed without explicit support for the extension _and_ is unable
 to dynamically learn about the extension at runtime – either because a
 schema describing the extension cannot be obtained, or because the
 application is not equipped to exploit the schema (for example, if the
-extension comes with a LinkML schema, the application must be able to
-understand LinkML schemas, which could be very difficult if the
-application is written in a language for which no LinkML runtime library
-is available).
+extension comes with a LinkML schema, the application must have
+developed so that it can understand and exploit LinkML schemas).
 
 This level of “awareness” (or rather this absence of awareness)
 obviously drastically limits what an application can do with the
@@ -166,7 +219,7 @@ with this extensibility scheme, even if it is completely unaware of a
 particular extension, should still minimally be able to recognise the
 presence of extended data and ensure that it is fully preserved.
 
-### Guaranteeing independently developped extensions cannot clash
+### Guaranteeing independently developed extensions cannot clash
 This extensibility scheme is expressly designed to ensure that, even if
 two extensions, which are being developed separately without any kind of
 coordination between their developers, extend the base model in an
@@ -176,8 +229,8 @@ possible to use both extensions at the same time in the same data,
 without any possible confusion or, worse, data loss.
 
 ### Making extensions manageable
-Another aim of this extensibility scheme is to make extensions
-manageable as first-class entities.
+This extensibility scheme makes extensions manageable as first-class
+entities.
 
 This notably means that, when a data file is making use of one or more
 extensions to the base model, an application (even an application that
@@ -199,9 +252,9 @@ the extension at runtime and to at least _validate_ the extended data
 against a reference schema.
 
 
-## Non-goals
+### Non-goals
 
-### Controlling who can extend the base model
+#### Controlling who can extend the base model
 This extensibility scheme is not concerned about who is allowed to
 create an extension _E?_ to a base model _M_. As far as this scheme is
 concerned, _anyone_ can create an extension (and the scheme is
@@ -219,7 +272,7 @@ The requirement for data runtime interoperability across implementations
 with varying extension support creates some fundamental constraints on
 what an extension can do – about how the base model can be extended.
 
-Simply put, an extension cannot _change_ the base model in a way that
+Simply put, an extension cannot change the base model in a way that
 would make data conformant to the extented model not conformant with the
 base model. So, an extension is really about literally _extending_ the
 base model – the extended model should be a strict superset of the base
@@ -249,74 +302,30 @@ An extension cannot:
 
 ## Basic principles
 
-### Separating type designation from extension manageability
-An extensibility scheme has two main roles to fulfil:
+### Mechanisms for extending a model
+This scheme distinguishes two mechanisms by which a base model can be
+extended:
 
-(a) Allowing an application to recognise the parts of the data that
-“belong” (or are conformant) to an extension, rather than to the base
-model; this is hereafter called “type designation”, because the
-extensibility scheme informs the application of what the real type of an
-object is (is it ① an object that is entirely described by the base
-model, ② an object that is entirely described by an extension, or ③ an
-object that is originally described by the base model but that also
-contains fields added by one or more extensions?).
+* natural extension classes;
+* class extensions.
 
-> FIXME: “Type designation” is not really a good name for this role. It
-> stems from the fact that its principles are directly inspired by the
-> concept that LinkML calls “type designator” (which is how this role is
-> to be implemented in a LinkML-defined model).
+They are not mutually exclusive: the same extension can extend
+the same model at different places using any of the two mechanisms at
+each place where it needs to extend the model.
 
-(b) Allowing the application to “manage” extensions, as envisioned in
-the [corresponding section](#making-extensions-manageable).
+#### Natural extension classes
+A natural extension class exploits what this scheme calls a “natural
+extension point” in the base model. Basically, a natural extension point
+is a place in the base model where the model is already set up to allow
+for some variability.
 
-This scheme posits that the two roles can and should be separated, for
-several reasons.
-
-Firstly, type designation is much more critical, with regard to
-interoperability, than extension management. An application parser MUST
-be able to detect the effective type of an object in order to
-deserialise that object correctly – in the worst-case scenario, if the
-application is unaware of an extension, it must at least recognise that
-the object is not an object from the base model (or is an object from
-the base model with additional fields), and deal with it accordingly.
-Extension manageability is certainly a desirable feature, but is not
-_required_ for runtime data interoperability. Separating type
-designation from extension management allows to minimally implement the
-former while the latter can remain optional.
-
-Secondly, type designation and extension management operate at
-different level. Type designation must happen for every single object in
-the data. By contrast, extension management can (and arguably should) be
-a file-level thing.
-
-Thirdly, a single extension can affect (extend) many classes in the
-original model. If an extension _Foo_ extends both the _Bar_ class and
-the _Baz_ class, then objects of both type will need their own type
-designation, but we are still dealing with only one extension, which
-only needs to provide one schema describing the additions to both
-classes. This would be more difficult to achieve if type designation and
-extension management were tightly coupled.
-
-### Notion of “natural extensions”
-This scheme distinguishes two ways of extending a model (not mutually
-exclusive: the same extension can extend the same model using both
-methods, if it needs to extend the model at more than one place).
-
-The first way (which is recommended wherever possible, but which may not
-be suitable in all situations) is through what the scheme calls “natural
-extension points”. Basically, a natural extension point is a point in
-the base model where the model is already set up to allow for some
-variability.
-
-To illustrate, let’s consider the following example of a _Microscope_
-object (inspired from the OME model):
+To illustrate, let us consider again our base microscope example:
 
 ```yaml
-microscope_type: Upright
 manufacturer: Zeiss
 model: LSM-880
 light_source:
-  type: ArcLightSource
+  object_type: https://example.org/ome/ArcLightSource
   power: 45
   lamp_type: Hg
 ```
@@ -324,205 +333,307 @@ light_source:
 We are interested in the `light_source` field, which expects an object
 that can be an instance of slightly different classes, each class
 representing a different type of “light source”. In the example above,
-the object is an instance of the _ArcLightSource_ class, representing
-a light source that is some kind of arc lamp.
+the object is an instance of the `https://example.org/ome/ArcLightSource`
+class, representing a light source that is some kind of arc lamp.
 
 Here is another example with a different light source object:
 
 ```yaml
-microscope_type: Upright
 manufacturer: Zeiss
 model: LSM-880
 light_source:
-  type: LaserLightSource
+  object_type: https://example.org/ome/LaserLightSource
   power: 200
   wavelength: 488
   laser_type: HeNe
 ```
 
 The light source object in this case is an instance of the
-_LaserLightSource_ class, which has the same `power` field than the
-_ArcLightSource_ class but has also some specific fields of its own
-(`wavelength` and `laser_type`).
+`https://example.org/ome/LaserLightSource` class, which has the same
+`power` field than the `https://example.org/ome/ArcLightSource` class
+but has also some specific fields of its own (`wavelength` and
+`laser_type`).
 
-The `type` field, which is also common to both classes, is what allows
-an application to recognise which type of light source it is dealing
-with, and therefore which fields to expect in the rest of the object.
+The `object_type` field, which is also common to both classes, is what
+allows an application to recognise which type of light source it is
+dealing with, and therefore which fields to expect in the rest of the
+object.
 
-> In LinkML, the `type` field would be known as the _type designator_
-> slot for all the classes representing light sources.
+> In LinkML, the `object_type` field would be known as the
+> _type designator_ slot for all the classes representing light sources.
 >
 > In the Rust language with the [Serde library](https://serde.rs), the
 > `light_source` field would be said to accept an
 > [internally tagged enum](https://serde.rs/enum-representations.html),
-> with the `type` field being the “tag”.
+> with the `object_type` field being the “tag”.
 >
 > Other (de)serialisation libraries might refer to the same concept
-> under other names. In this scheme, we will be using the LinkML
+> under other names. In this document, we will be using the LinkML
 > terminology.
 
 The important point here is that, even when just using the base model
-(before adding any extension to the mix), an OME application must
-already be prepared to deal with the facts that ① there are several
-types (“classes”) of light source objects, and ② the exact type of
-light source used in a given _Microscope_ object is not known in
-advance, but has to be discovered at runtime. Therefore, it would be
-quite trivial to add a new type of light source (a new _*LightSource_
-class) to the pre-existing list of types. This is why we say that the
-model is _naturally extensible_ at the `light_source` point.
+(before adding any extension to the mix), an application using the base
+model must already be prepared to deal with the facts that (i) there are
+several types (“classes”) of light source objects, and (ii) the exact
+type of light source used in a given _Microscope_ object is not known in
+advance, but has to be discovered at runtime (by looking up the content
+of the `object_type` field). Therefore, it would be reasonably trivial
+to add new type of light source to the pre-existing list of types. This
+is why we say that the model is _naturally extensible_ at the
+`light_source` point (or that `light_source` is a “natural extension
+point”).
 
 This scheme strongly recommends that model designers create natural
 extension points in their models whenever possible, as it is the
-simplest way to extend a model.
+simplest way to extend a model. All that is required to create a
+natural extension point is a base class (in the example above, the
+base class does not explicitly appear, but that is the class from which
+both the `https://example.org/ome/ArcLightSource` and
+`https://example.org/ome/LaserLightSource` are derived) with a type
+designator field.
 
-All that is required to create a natural extension point is a base class
-(in the example above, the base class does not appear explicitly, but
-that is the _LightSource_ class from which both the _ArcLightSource_ and
-the _LaserLightSource_ classes are derived) with a _type designator_
-field. A third-party can then extend the model simply by deriving new
-classes from the base class.
+When a natural extension point is available, a third-party can then
+extend the model simply by deriving new classes from the base class.
 
-Let’s assume someone extends the OME model to add a new type of light
-source (_KyberLightSource_, a light source that uses the kind of kyber
-crystals that one could find a long time ago in a galaxy far, far away).
-Upon encountering a _Microscope_ instance making use of the new type:
-
-* an application that is aware of the extension at compile-time by
-  definition already knows about the new type, so for that application
-  nothing special would need to happen;
-* an application that becomes aware of the extension at runtime would
-  initially recognise the contents of the `light_source` field as an
-  instance of the base `LightSource` class, but could then use the
-  schema describing the extension to learn about any field that is
-  specific to the `KyberLightSource` class;
-* an application that is (and remains) unaware of the extension would
-  still recognise the contents of the `light_source` field as an
-  instance of the base `LightSource` class (because it knows that the
-  `light_source` cannot contain anything else than a light source), and
-  would at least preserve any additional field that it does not know
-  about.
-
-Of note, while in the example above the type designator values were
-simple names (`ArcLightSource`, `LaserLightSource`, `KyberLightSource`),
-this scheme **strongly recommends** to use schema-dependent URIs instead
-(e.g. `https://example.org/ome/#ArcLightSource`), so as to ensure that
-independently developed extensions cannot clash with each other
-(provided that each extension uses its own base URI).
-
-
-### Extending a class
-Beyond “natural extensions” as described in the previous section, the
-other way to extend a schema is to add new fields to a pre-existing
-class.
-
-> As noted in the [section about constraints](#constraints-on-extensions),
-> an extension could also tigthen constraints on existing fields of a
-> class. However this kind of modification has no impact on how the data
-> is serialised, so it does not require any particular attention from
-> this extensibility scheme. Informing applications of the new,
-> tightened constraints would be the role of the schema formally
-> describing the extension, to be provided by the
-> [extension management layer](#extension-management-layer).
-
-Again, let’s illustrate how class extensions work with an example.
-
-Let _Person_ be a class defined in the base model, with two fields
-`name` and `email` such that the following object is a valid instance of
-the _Person_ class:
+This is what our example “SWM extension” extension shown earlier in this
+document is doing. It creates a new light source class (which is a
+“natural extension class”) called
+`https://example.com/swm/KyberLightSource`, which can be used wherever a
+light source is expected:
 
 ```yaml
-name: Alice
-email: alice@example.org
+light_source:
+  object_type: https://example.com/swm/KyberLightSource
+  power: 900
+  crystal_color: red
 ```
 
-Now let _Foo_ be an extension of the base model that purports to add a
-`age` field to the _Person_ class. This extensibility scheme proposes to
-represent a valid instance of that extended class as follows:
+Upon encountering a _Microscope_ object containing such a light source:
+
+* an application that is aware of the SWM extension at compile-time by
+  definition already knows about the new class, so for that application
+  nothing special would need to happen;
+* an application that becomes aware of the extension at runtime would
+  initially the contents of the `light_source` field as a generic light
+  source, but could then use the schema describing the extension to
+  learn about any field that is specific to the
+  `https://example.com/swm/KyberLightSource` class;
+* an application that is (and remains) unaware of the extension would
+  still recognise the contents of the `light_source` field as a generic
+  light source (because it knows that the `light_source` field cannot
+  contain anything else than a light source, whatever its exact type
+  is), and would at least preserve any additional field that it does not
+  know about.
+
+#### Class extensions
+The second extensibility mechanism allowed by this scheme is intended to
+allow adding new fields to a pre-existing class.
+
+> As noted in the [section about constraints](#constraints-on-extensions),
+> an extension could also tighten constraints on existing fields of a
+> class. However this kind of modification has no impact on how the data
+> is serialised, so it does not require any particular attention here.
+> Informing applications of the new, tightened constraints would be the
+> role of the schema(s) formally describing the extension, to be
+> provided by the [extension management layer](#extension-management-layer).
+
+In our running example, the SWM extension needs to add a `planet` field
+to the _Microscope_ object (presumably representing the planet where the
+microscope has been manufactured). This is done as follows:
 
 ```yaml
-name: Alice
-email: alice@example.org
+manufacturer: Imperial Microscope Builders
+model: K2SO
 extensions:
-  https://example.org/foo/#FooPersonExtension:
-    age: 43
+  https://example.com/swn/MicroscopeExtension:
+    planet: Coruscant
 ```
 
 The principle is that any class intended to be extensible has an
-implicit field (here called `extensions`, but an implementation of this
-scheme could very well choose any other name) specifically intended to
-store all the fields added by extensions.
+implicit field named `extensions` specifically intended to store all the
+fields added by extensions.
 
 That field is itself a dictionary where each key corresponds to a
-particular extension, and the value is an “object fragment” containing
-the fields added to the base class by the extension (in this example,
-the `age` field).
+particular extension, and the value is an _object fragment_ containing
+the fields added to the class by the extension (in this example, the
+`planet` field).
 
 This principle naturally ensures that independently developed extensions
-cannot interfere with each other. If another extension (say _Bar_) also
-wanted to add its own `age` field, along with maybe other fields of its
-own, this would look like this:
+cannot interfere with each other, even when used within the same
+instance data. If another extension also wanted to add its own `planet`
+field, along with maybe other fields of its own, this would look like
+this:
 
 ```yaml
-name: Alice
-email: alice@example.org
-nodes:
-  https://example.org/foo/#FooPersonExtension:
-    age: 43
-  https://example.com/bar/#BarPersonExtension:
-    age: 43
-    dob: 1983-01-01
+manufacturer: Imperial Microscope Builders
+model: K2SO
+extensions:
+  https://example.com/swm/MicroscopeExtension:
+    planet: Coruscant
+  https://example.net/stm/MicroscopeExtension:
+    planet: Vulcan
+    user: Spock
 ```
 
-(Of course, we would likely want to avoid having different extensions to
-represent the same thing; but preventing this situation from happening
-is out of reach of an extensibility scheme, if only because it is mostly
-a _social_ problem – basically getting different people to agree on
-working together – rather than purely a _technical_ one. The role of the
-extensibility scheme here is merely to minimize the impact of such a
-situation, not to avoid it.)
+> Of course, we would likely want to _avoid_ having different extensions
+> to represent the same thing; but preventing this situation from
+> happening is out of reach of any extensibility scheme, if only because
+> it is mostly a _social_ problem – basically getting different people
+> to agree on working together – rather than purely a technical one. The
+> role of the extensibility scheme in that regard is merely to minimize
+> the impact of such a situation, not to avoid it.
 
-Upon encountering data where a _Person_ instance contains a
-`https://example.org/foo/#FooPersonExtension` extension object fragment:
+Upon encountering data where a _Microscope_ instance contains a
+`https://example.com/swm/MicroscopeExtension` object fragment:
 
-* a parser that is aware of the Foo extension at compile-time could
-  virtually “move” the `age` field out of the extension object and into
-  the _Person_ object directly (allowing client code to behave as if the
-  `age` field is intrisincally part of the _Person_ class, without
-  having to worry about where that field had been stored in the
-  serialised data), or more generally provide any interface it deems
-  useful to expose the `age` field to client code (this scheme does not
-  mandate any mechanism for that, especially since such mechanisms are
-  likely to vary depending on the programming language used);
-* a parser that becomes dynamically aware of the Foo extension at
-  runtime would keep the extension object as it is, but could use the
-  schema describing the extension to validate its contents and provide
-  additional informations to client code;
-* a parser that is and remains unware of the Foo extension would keep
-  the extension node as it is, and simply offers to client code the
-  possibility to explore the contents of the extension objects.
+* a parser that is aware of the SWM extension at compile-time could
+  virtually “move” the `planet` field out of the extension object
+  fragment and into the _Microscope_ object directly (allowing client
+  code to behave as if the `planet` field is intrinsically part of the
+  _Microscope_ class, without having to worry about where that field had
+  effectively been stored in the serialised data), or more generally
+  provide any interface it deems useful to expose the `planet` field to
+  client code (this scheme does not mandate any mechanism for that,
+  especially since such mechanisms are likely to vary depending on the
+  programming language used);
+* a parser than becomes dynamically aware of the SWM extension at
+  runtime would keep the extension object fragment as it is, but could
+  use the schema describing the extension to validate its contents and
+  provide additional informations to client code;
+* a parser that is and remains unaware of the SWM extension would keep
+  the extension object fragment as it is, and simply offers to client
+  code possibility to explore the contents of the extension objects.
 
-#### Why using URIs to identify the extensions?
-This is strictly speaking not mandatory, but at least _very strongly_
-recommended.
+## Extension management layer
+The “extension management” part of this proposed scheme is intended, as
+its name implies, to fulfil the goal of making extensions manageable as
+first-class entities.
 
-The implicit assumptions here are that ① the developers of a given
-extension have control over the base URI they choose, and ② other
-extension developers will be well-behaved enough not to use a base URI
-that they do _not_ control.
+It relies on a simple data structure (hereafter called the
+_extension definition_ structure) that can be used to describe an
+extension. Such a structure can then be used in any context where
+extensions need to be managed. Notably, this scheme proposes that the
+top-level object of a data file should include a `extension_manifest`
+key containing a list of extension definitions for every extension
+effectively used anywhere else in the data file (thereby providing
+implementations with a single place to look at in order to determine
+which extensions are needed to fully understand the entire file).
 
-If those two assumptions are satisfied, then the scheme guarantees that
-data from several independently developed extensions can always co-exist
-within the same data file.
+The same _extension definition_ structure could also serve as the basis
+for a hypothetical, centrally managed “extension registry”, should such
+a registry be needed.
 
-#### Why not using prefixed names?
+As currently envisioned, the extension definition structure would
+contain the following fields:
+
+* `id`: the unique identifier for the extension (in our running
+  example, this is `https://example.com/swm/`);
+* `version`: the version of the extension used;
+* `schemas`: a list of schemas that formally describe the extension;
+* `homepage`: a link to a page providing human-readable informations
+  about the extension (contrary to `schemas` which is intended to
+  provide **machine-readable** informations).
+
+Each item in the `schemas` list is a simple, two-fields structure like
+this:
+
+```yaml
+type: LinkML
+url: https://schemas.example.com/swm/swm.yaml
+```
+
+where the `type` field identifies the type of the schema, and `url` is
+a link to the schema itself.
+
+The scheme allows specifying schemas of different types (e.g. `LinkML`,
+`JSONSchema`, etc.) to avoid binding itself to a particular schema
+definition language. This does not mean that (i) all extensions should
+always provide a schema for each of the available schema definition
+languages (though providing more than one type of schema would increase
+the likelihood that an application can understand at least one of the
+schemas), and that (ii) applications should support all possible types
+of schemas (though supporting more than one type would again increase
+the likelihood that the application can understand at least one of the
+schemas provided by an extension).
+
+
+## Discussions
+
+### Customizations
+As stated in a preliminary note, the scheme discussed here is intended
+to be generic.
+
+Among other things, this means that some aspects of it might be
+“customized” when the scheme is actually applied to a data model.
+
+In particular, the scheme involves several special attributes that must
+be added to the data model that one wishes to make extensible, namely:
+
+* the “type designator attribute”, used to identify the exact type of an
+  object assigned to a [natural extension point](#natural-extension-classes);
+* the attribute holding the “extension object fragments” used for
+  [class extensions](#class-extensions);
+* and the attribute holding the “extension manifest” as described in the
+  section about [extension management](#extension-management-layer).
+
+In this document, those attributes are named `object_type`,
+`extensions`,and `extension_manifest`, respectively.
+
+Those names may or may not be sensible when the scheme is applied to a
+particular data model. If they are deemed not to be sensible, it is up
+to the model designers to pick alternative names as needed.
+
+One may also consider prefixing all those names with some special
+character (e.g. `~object_type` or `%extensions`) to highlight the
+special roles of those attributes and help distinguish them from all the
+other, non-special attributes present in the data model.
+
+### On the use of URIs as identifiers
+This scheme requires three different types of identifiers:
+
+* identifiers for [natural extension classes](#natural-extension-classes);
+* identifiers for [class extensions](#class-extensions);
+* identifiers for [extension definitions](#extension-management-layer)
+  in the “extensions manifest”.
+
+As shown in the running example used in this document, this scheme
+proposes that all identifiers follow a URI-based scheme, where (i) an
+extension is identified by some base URI, and (ii) any natural extension
+class or class extension defined by the extension is defined by a URI
+that is built on top of the extension’s base URI.
+
+For example, the SWM extension is identified by the base URI
+`https://example.com/swm/`, its “KyberLightSource” natural extension
+class is identified by `https://example.com/swm/KyberLightSource`, and
+its class extension for the _Microscope_ class is identified by
+`https://example.com/swm/MicroscopeExtension`.
+
+Such a ID scheme automatically ensures uniqueness of identifiers across
+all extensions, which is critical to ensure that independently developed
+extensions cannot interfere with each other.
+
+> The implicit assumption here is that extension developers will be well
+> behaved and will not use URIs that they do not control.
+
+It also offers a straightforward way to distinguish between “official”
+extensions and “third-party” extensions (should such a distinction be
+desired – this scheme is neutral on that aspect), simply by declaring
+that all extensions whose base URI is in a given domain are “official”,
+and all extensions whose base URI is outside of that domain are
+third-party extensions. The people responsible for managing the data
+model can then control who should be allowed to create official
+extensions (again, should such a control be desired) by controlling who
+can allocate URIs in the “official domain”.
+
+### Why not using prefixed names for “class extensions”?
 That is, why not doing something like this:
 
 ```yaml
-name: Alice
-email: alice@example.org
-foo:age: 43
-bar:age: 43
-bar:dob: 1983-01-01
+manufacturer: Imperial Microscope Builders
+model: K2SO
+swm:planet: Coruscant
+stm:planet: Vulcan
+stm:user: Spock
 ```
 
 The author of this document strongly believes that such attempts to
@@ -532,171 +643,48 @@ Qualified names work in XML because _XML has built-in support for them_!
 The concepts of qualified names and of namespaces are a core part of the
 XML specification, and any XML-compliant library must support them. JSON
 does _not_ have any such concept (and neither does YAML), which means
-that applications must either hack their own namespace management
-feature, or accept that such “qualified names” do not in fact constitute
-a proper scoping mechanism.
+that applications would either need to hack their own namespace
+management feature, or accept that such “qualified names” do not in fact
+constitute a proper scoping mechanism.
 
-“Hacking a namespace management feature” could look like this:
+“Hacking a namespace management feature” could look like thisL
 
 ```yaml
 namespaces:
-  foo: https://example.org/foo/
-  bar: https://example.com/bar/
-name: Alice
-email: alice@example.org
-foo:age: 43
-bar:age: 43
-bar:dob: 1983-01-01
+  swm: https://example.com/swm/
+  stm: https://example.net/stm/
+manufacturer: Imperial Microscope Builders
+model: K2SO
+swm:planet: Coruscant
+stm:planet: Vulcan
+stm:user: Spock
 ```
 
-but this will never be directly supported by a JSON parsing library,
-meaning that applications will need to implement all the namespace
-management on their own.
+but this will never be directly supported by a JSON or YAML parsing
+library, meaning that applications will need to implement all the
+namespace management on their own.
 
-Without a custom namespace management, then “qualified names” are in
-fact just slightly longer names in a single, global, flat namespace. The
-use of a colon does not automagically transform the global namespace
-into a tree of scoped namespaces. This is in fact no different than
-this:
+Without a custom namespace management system, then “qualified names” are
+in fact just slightly longer names in a single, global, flat namespace.
+The presence of a colon does not automagically transform the global
+namespace into a tree of scoped namespaces. This is in fact no different
+than this:
 
 ```yaml
-name: Alice
-email: alice@example.org
-foo_age: 43
-bar_age: 43
-bar_dob: 1983-01-01
+namespaces:
+  swm: https://example.com/swm/
+  stm: https://example.net/stm/
+manufacturer: Imperial Microscope Builders
+model: K2SO
+swm_planet: Coruscant
+stm_planet: Vulcan
+stm_user: Spock
 ```
 
 which does _not_ enclose the extension fields in their own namespace, it
 merely gives them longer names – with no intrinsic guarantee that no
 other extension developer will ever want to use the same “prefixes”
-`foo_` or `bar_`.
-
-## Extension management layer
-The “extension management” part of this proposed scheme is intended, as
-its name implies, to fulfil the secondary goal of making extensions
-manageable as first class entities.
-
-It relies on a simple data structure (hereafter called the 
-`extension_definition` object, but again, anyone applying this scheme to
-their data model can pick whatever name suits them) that can be used to
-describe an extension. Such structures can then be used in any context
-where extensions need to be managed. For example, the top-level object
-of a data file could include a `extensions_manifest` key containing a
-list of `extension_definition` objects for every single extension
-present anywhere else in the data file (thereby providing
-implementations with a single place to look at in order to determine
-which extensions are needed to fully understand the entire file). The
-same `extension_definition` object could also serve as the basis for a
-hypothetical, centrally managed “extension registry”, should such a
-registry be needed.
-
-As currently envisioned, the `extension_definition` object would look
-like this:
-
-```yaml
-# Unique ID for the extension; can theoretically be any string, but
-# strongly RECOMMENDED to be a URI
-id: https://example.org/foo
-# Version of the extension used in this file
-version: 1.0
-# Formal schemas that an implementation can use (if possible) to
-# make sense of the extended data
-schemas:
-  - type: LinkML
-    url: https://schemas.example.org/foo/foo.yaml
-  - type: JSONSchema
-    url: https://schemas.example.org/foo/foo.json
-# List of types defined by this extension
-types:
-  - https://example.org/foo/#FooPersonExtension
-# The other fields are more intended for humans than for machines; they
-# provide additional informations about the origin of the extension and
-# what it is for.
-creators:
-  - https://orcid.org/0000-0002-1825-0097
-homepage: https://example.org/foo/
-description: >-
-  The purpose of this extension is to...
-```
-
-
-## How to apply this scheme to a data model
-As stated in the preliminary notes, the scheme presented here is
-intentionally generic and not immediately usable.
-
-In order to effectively use this scheme on an existing data model,
-thereby making that model extensible, the designers of the data model
-must make some decisions.
-
-### Naming all the special attributes
-This scheme involves several special attributes that must be added to
-data model, namely:
-
-* the “type designator attribute”, mentioned in the section about
-[natural extensions](#notion-of-natural-extensions), used to identify
-the exact type of an object assigned to a natural extension point;
-* the attribute holding the “extension object fragments”, mentioned in
-the section about [extending a class](#extending-a-class);
-* and the attribute holding the “extension manifest”, mentioned in the
-section about [extension management](#extension-management-layer).
-
-In the examples given in this document, those attributes are named
-`type`, `extensions`, and `extension_manifest`, respectively.
-
-Those names may or may not be sensible. One concern to bear in mind is
-that a name like `type` is a very common name, which may very well be
-already used somehwere (with another meaning) in the data model one
-wishes to apply this scheme to.
-
-It is up to model designers to decide whether the names proposed in this
-document suit them, and to pick alternative names if not.
-
-One may also consider prefixing all those names with some special
-character (e.g. `~type` or `%extensions`) to highlight the special roles
-of those attributes and help distinguish them from all the other,
-non-special attributes present in the data model.
-
-### Selecting a ID scheme
-This scheme requires three different types of identifiers:
-
-* identifiers for classes that are “natural extensions“ (e.g.,
-`KyberLightSource` in the example given in the [corresponding section](#notion-of-natural-extensions));
-* identifiers for extension object fragments (e.g.
-`https://example.org/foo/#FooPersonExtension`, again in the example
-given in the [corresponding section](#extending-a-class));
-* identifiers for extension definitions in the extension manifest (e.g.
-`https://example.org/foo`).
-
-Strictly speaking, the only requirement for those identifiers is that
-they must be unique (quite expectedly, for identifiers), and model
-designers applying this scheme to their model are free to, either avoid
-adding any additional restrictions on the identifiers or, on the
-contrary, mandate a specific ID scheme following some model-specific
-rules.
-
-However, we strongly recommend to use a **URI-based** identifier scheme,
-where an extension is identified by a base URI (e.g.
-`https://example.org/foo/`) and all the objects defined by that extension
-(be they natural extensions or extension fragments) are identified by
-URIs that are fragments (in the [RFC 3986](https://tools.ietf.org/html/rfc3986)
-sense of the term) of the extension’s base URI (e.g. `https://example.org/foo/#FooPersonExtension`)
-and `https://example.org/foo/#KyberLightSource`).
-
-Such a scheme automatically ensures uniqueness of identifiers across all
-extensions (provided that extension developers are well behaved and do
-not use URIs that they do not control), which is critical to ensure that
-independently developed extensions cannot “clash” with each other.
-
-It also offers a straightforward way to distinguish between “official“
-extensions and “third-party” extensions (should such a distinction be
-desired – this scheme is neutral on that aspect), simply by declaring
-that all extensions whose base URI is in a given domain are “official”,
-and all extensions whose base URI is outside of that domain are
-third-party extensions. The people responsible for managing the data
-model can then control who should be allowed to create official
-extensions (again, should such a control be desired) by controlling who
-can allocate URIs in the “official domain”.
+`swm_` or `stm_`.
 
 
 ## Implementation in LinkML
@@ -710,7 +698,8 @@ differently than what is proposed here.
 ### Base model
 
 #### Creating natural extension points
-To create a “natural extension point” in a LinkML schema:
+To create a [“natural extension point”](#natural-extension-classes) in a
+LinkML schema:
 
 1. Give a class a “type designator” slot;
 2. Explicitly configure the class to “allow extra slots”, and make sure
@@ -748,18 +737,17 @@ _slots_, rather than as class-specific _attributes_, even if the slot is
 only ever used in one class.
 
 ##### Example
-The “light source” example given above in this document can be
-implemented in LinkML as follows:
+The “light source” extension point in the running example of this
+document can be implemented in LinkML as follows:
 
 ```yaml
 slots:
 
-  light_source_type:
+  object_type:
     description: >-
-      The type designator for light source objects.
+      The type designator for natural extension points.
     range: uri
-    designates_type: true
-    alias: type
+    designates_type: uri
 
 
 classes:
@@ -768,7 +756,7 @@ classes:
     description: >-
       The base class for all light source objects.
     slots:
-      - light_source_type
+      - object_type
     attributes:
       power:
         range: integer
@@ -805,19 +793,16 @@ classes:
       # ...
 ```
 
-#### Allowing non-natural extensions
-
+#### Allowing class extensions
 To allow classes from the base schema to be extended according to the
-scheme described in this document, the base schema must:
+[mechanism described in this scheme](#class-extensions), the base
+schema must:
 
 1. define a base class (hereafter called `ExtensionNode`, but the name
    does not really matter) that all extensions shall derive from (that
    class must have a type designator);
 2. ensure that any class that is intended to be extensible has a
-   dedicated field (called `nodes` in this proposal; the name _does_
-   matter as it will appear in serialised data, but any schema applying
-   this scheme is free to choose its own name) to store the “extension
-   nodes”.
+   dedicated `extensions` field to store the extension object fragments.
 
 Here is a possible implementation:
 
@@ -868,6 +853,22 @@ to extend classes is by giving each class (or at least, each class
 reusing the `IsExtensibleMixin` mixin) a “generic” natural extension
 point.
 
+Applying this to our running example, when we define the _Microscope_
+class we only need to make it inherit from the `IsExtensibleMixin`,
+which will give it the `extensions` field intended to store the
+extension object fragments:
+
+```yaml
+classes:
+
+  Microscope:
+    mixins:
+      - IsExtensibleMixin
+    attributes:
+      # all the attributes for the Microscope class defined in the
+      # base model...
+```
+
 ### Extended model
 
 #### Creating a natural extension
@@ -897,47 +898,45 @@ classes:
 Of note, the class does not need to derive directly from the base, it
 can derive from another subclass if it happens to be more appropriate.
 
-#### Creating a non-natural extension
-Going back to our _Person_ example, if we assume that we have a base
-model that defines a `Person` class and makes it reuse the
-`IsExtensibleMixin`, we can then create an extension to add a `age`
-field as follows:
+#### Creating a class extension
+This is how the `https://example.com/swm/MicroscopeExtension` extension
+object fragment (which aims to add a `planet` field to the base
+_Microscope_ class) could be implemented:
 
 ```yaml
 classes:
 
-  PersonExtensionMixin:
+  MicroscopeExtensionMixin:
     description: >-
-      A mixin that contains the attributes we want to extend the Person
-      class with.
+      A mixin that contains the attributes we want to extend the
+      Microscope class with.
 
-      This is a mixin to facilitate extension composability.
+      This is a mixin in order to facilitate extension composability.
     mixin: true
     attributes:
-      age:
-        description: The age of the person, in years.
-        range: integer
-
-  PersonExtension:
+      planet:
+        description: The planet where the microscope was manufactured.
+  
+  MicroscopeExtension:
     description: >-
-      The actual extension object. This (1) inherits from ExtensionNode
-      (so that it is recognized as an extension) and (2) reuses the
-      PersonExtensionMixin above.
+      The actual extension object. This (i) inherits from ExtensionNode
+      (so that it is recognized as an extension object fragment) and
+      (ii) reuses the MicroscopeExtensionMixin above.
     is_a: ExtensionNode
     mixins:
-      - PersonExtensionMixin
+      - MicroscopeExtensionMixin
 
-  ExtendedPerson:
+  ExtendedMicroscope:
     description: >-
-      This is a subclass of the base Person class with the added
-      PersonExtensionMixin.
+      This is a subclass of the base Microscope class with the added
+      MicroscopeExtensionMixin.
 
       This class is not, strictly speaking, needed for the extension
       scheme described in this document, but its presence will allow
       an application to support the PersonExtension “natively”, by
       using this class whenever the use of the Person class is
       expected.
-    is_a: Person
+    is_a: Microscope
     mixins:
-      - PersonExtensionMixin
+      - MicroscopeExtensionMixin
 ```
