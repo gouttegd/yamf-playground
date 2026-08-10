@@ -376,10 +376,10 @@ The important point here is that, even when just using the base model
 model must already be prepared to deal with the facts that (i) there are
 several types (“classes”) of light source objects, and (ii) the exact
 type of light source used in a given _Microscope_ object is not known in
-advance, but has to be discovered at runtime (by looking up the content
-of the `object_type` field). Therefore, it would be reasonably trivial
-to add new type of light source to the pre-existing list of types. This
-is why we say that the model is _naturally extensible_ at the
+advance, but has to be discovered at runtime (by looking up the value of
+the `object_type` field). Therefore, it would be reasonably trivial to
+add new type of light source to the pre-existing list of types. This is
+why we say that the model is _naturally extensible_ at the
 `light_source` point (or that `light_source` is a “natural extension
 point”).
 
@@ -414,9 +414,9 @@ Upon encountering a _Microscope_ object containing such a light source:
   definition already knows about the new class, so for that application
   nothing special would need to happen;
 * an application that becomes aware of the extension at runtime would
-  initially the contents of the `light_source` field as a generic light
-  source, but could then use the schema describing the extension to
-  learn about any field that is specific to the
+  initially recognise the contents of the `light_source` field as a
+  generic light source, but could then use the schema describing the
+  extension to learn about any field that is specific to the
   `https://example.com/swm/KyberLightSource` class;
 * an application that is (and remains) unaware of the extension would
   still recognise the contents of the `light_source` field as a generic
@@ -708,9 +708,6 @@ namespace into a tree of scoped namespaces. This is in fact no different
 than this:
 
 ```yaml
-namespaces:
-  swm: https://example.com/swm/
-  stm: https://example.net/stm/
 manufacturer: Imperial Microscope Builders
 model: K2SO
 swm_planet: Coruscant
