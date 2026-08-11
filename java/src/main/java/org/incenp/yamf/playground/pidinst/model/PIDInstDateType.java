@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/PIDInstDateType")
+@LinkURI("https://example.invalid/pidinst/PIDInstDateType")
 public enum PIDInstDateType {
 
     COMMISSIONED("Commissioned"),

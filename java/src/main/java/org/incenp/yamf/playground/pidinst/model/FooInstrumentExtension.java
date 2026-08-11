@@ -19,8 +19,8 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst-foo/FooInstrument")
-public class FooInstrument extends PIDInstInstrument {
+@LinkURI("https://example.org/pidinst-foo-extension/FooInstrumentExtension")
+public class FooInstrumentExtension extends ExtensionNode {
 
     @LinkURI("https://example.org/pidinst-foo-extension/foo")
     private Foo foo;
@@ -35,14 +35,14 @@ public class FooInstrument extends PIDInstInstrument {
 
     @Override
     public String toString() {
-        return "FooInstrument(identifier=" + this.getIdentifier() + ")";
+        return "FooInstrumentExtension(extension_type=" + this.getExtensionType() + ")";
     }
 
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof FooInstrument) ) return false;
-        final FooInstrument other = (FooInstrument) o;
+        if ( !(o instanceof FooInstrumentExtension) ) return false;
+        final FooInstrumentExtension other = (FooInstrumentExtension) o;
         if ( !other.canEqual((Object) this)) return false;
         if ( !super.equals(o) ) return false;
 
@@ -53,7 +53,7 @@ public class FooInstrument extends PIDInstInstrument {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof FooInstrument;
+        return other instanceof FooInstrumentExtension;
     }
 
     @Override

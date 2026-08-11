@@ -19,23 +19,27 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/PIDInstRelatedIdentifier")
+@LinkURI("https://example.invalid/pidinst/PIDInstRelatedIdentifier")
 public class PIDInstRelatedIdentifier {
 
     @Required
-    @LinkURI("https://example.org/pidinst/identifier")
+    @LinkURI("https://example.invalid/pidinst/identifier")
     private String identifier;
 
-    @LinkURI("https://example.org/pidinst/name")
+    @LinkURI("https://example.invalid/pidinst/name")
     private String name;
 
     @Required
-    @LinkURI("https://example.org/pidinst/type")
+    @LinkURI("https://example.invalid/pidinst/type")
     private PIDInstRelatedIdentifierType type;
 
     @Required
-    @LinkURI("https://example.org/pidinst/relation")
+    @LinkURI("https://example.invalid/pidinst/relation")
     private PIDInstRelationType relation;
+
+    @Inlined
+    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
+    private List<ExtensionNode> extensions;
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -69,6 +73,21 @@ public class PIDInstRelatedIdentifier {
         return this.relation;
     }
 
+    public void setExtensions(List<ExtensionNode> extensions) {
+        this.extensions = extensions;
+    }
+
+    public List<ExtensionNode> getExtensions() {
+        return this.extensions;
+    }
+
+    public List<ExtensionNode> getExtensions(boolean set) {
+        if ( this.extensions == null && set ) {
+            this.extensions = new ArrayList<>();
+        }
+        return this.extensions;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -94,6 +113,11 @@ public class PIDInstRelatedIdentifier {
             sb.append(o);
             sb.append(",");
         }
+        if ( (o = this.getExtensions()) != null ) {
+            sb.append("extensions=");
+            sb.append(o);
+            sb.append(",");
+        }
         sb.append(")");
         return sb.toString();
     }
@@ -116,6 +140,9 @@ public class PIDInstRelatedIdentifier {
         final Object this$relation = this.getRelation();
         final Object other$relation = other.getRelation();
         if ( this$relation == null ? other$relation != null : !this$relation.equals(other$relation)) return false;
+        final Object this$extensions = this.getExtensions();
+        final Object other$extensions = other.getExtensions();
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
         return true;
     }
 
@@ -135,6 +162,8 @@ public class PIDInstRelatedIdentifier {
         result = result * PRIME + ($type == null ? 43 : $type.hashCode());
         final Object $relation = this.getRelation();
         result = result * PRIME + ($relation == null ? 43 : $relation.hashCode());
+        final Object $extensions = this.getExtensions();
+        result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
         return result;
     }
 }

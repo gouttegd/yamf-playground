@@ -19,18 +19,18 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/PIDInstIsIdentifiableEntity")
+@LinkURI("https://example.invalid/pidinst/PIDInstIsIdentifiableEntity")
 public class PIDInstIsIdentifiableEntity {
 
     @Required
-    @LinkURI("https://example.org/pidinst/name")
+    @LinkURI("https://example.invalid/pidinst/name")
     private String name;
 
-    @LinkURI("https://example.org/pidinst/identifier")
+    @LinkURI("https://example.invalid/pidinst/identifier")
     private String identifier;
 
     @SlotName("identifier_type")
-    @LinkURI("https://example.org/pidinst/identifier_type")
+    @LinkURI("https://example.invalid/pidinst/identifier_type")
     private String identifierType;
 
     public void setName(String name) {

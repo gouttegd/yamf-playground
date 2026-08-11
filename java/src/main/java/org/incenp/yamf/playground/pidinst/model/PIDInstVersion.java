@@ -6,10 +6,12 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/PIDInstVersion")
+@LinkURI("https://example.invalid/pidinst/PIDInstVersion")
 public enum PIDInstVersion {
 
-    NUMBER_1FULL_STOP0("1.0");
+    VERSION_1_0("1.0"),
+
+    VERSION_1_1("1.1");
 
     private final static Map<String, PIDInstVersion> MAP;
 

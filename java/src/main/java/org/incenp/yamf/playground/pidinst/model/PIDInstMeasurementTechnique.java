@@ -19,23 +19,31 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.invalid/pidinst/PIDInstAlternateIdentifier")
-public class PIDInstAlternateIdentifier {
+@LinkURI("https://example.invalid/pidinst/PIDInstMeasurementTechnique")
+public class PIDInstMeasurementTechnique {
 
     @Required
+    @LinkURI("https://example.invalid/pidinst/name")
+    private String name;
+
     @LinkURI("https://example.invalid/pidinst/identifier")
     private String identifier;
 
-    @Required
-    @LinkURI("https://example.invalid/pidinst/type")
-    private PIDInstAlternateIdentifierType type;
-
-    @LinkURI("https://example.invalid/pidinst/name")
-    private String name;
+    @SlotName("identifier_type")
+    @LinkURI("https://example.invalid/pidinst/identifier_type")
+    private String identifierType;
 
     @Inlined
     @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
     private List<ExtensionNode> extensions;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -45,20 +53,12 @@ public class PIDInstAlternateIdentifier {
         return this.identifier;
     }
 
-    public void setType(PIDInstAlternateIdentifierType type) {
-        this.type = type;
+    public void setIdentifierType(String identifierType) {
+        this.identifierType = identifierType;
     }
 
-    public PIDInstAlternateIdentifierType getType() {
-        return this.type;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
+    public String getIdentifierType() {
+        return this.identifierType;
     }
 
     public void setExtensions(List<ExtensionNode> extensions) {
@@ -80,19 +80,19 @@ public class PIDInstAlternateIdentifier {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("PIDInstAlternateIdentifier(");
+        sb.append("PIDInstMeasurementTechnique(");
+        if ( (o = this.getName()) != null ) {
+            sb.append("name=");
+            sb.append(o);
+            sb.append(",");
+        }
         if ( (o = this.getIdentifier()) != null ) {
             sb.append("identifier=");
             sb.append(o);
             sb.append(",");
         }
-        if ( (o = this.getType()) != null ) {
-            sb.append("type=");
-            sb.append(o);
-            sb.append(",");
-        }
-        if ( (o = this.getName()) != null ) {
-            sb.append("name=");
+        if ( (o = this.getIdentifierType()) != null ) {
+            sb.append("identifier_type=");
             sb.append(o);
             sb.append(",");
         }
@@ -108,18 +108,18 @@ public class PIDInstAlternateIdentifier {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof PIDInstAlternateIdentifier) ) return false;
-        final PIDInstAlternateIdentifier other = (PIDInstAlternateIdentifier) o;
+        if ( !(o instanceof PIDInstMeasurementTechnique) ) return false;
+        final PIDInstMeasurementTechnique other = (PIDInstMeasurementTechnique) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$identifier = this.getIdentifier();
-        final Object other$identifier = other.getIdentifier();
-        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
-        final Object this$type = this.getType();
-        final Object other$type = other.getType();
-        if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
         if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        final Object this$identifier = this.getIdentifier();
+        final Object other$identifier = other.getIdentifier();
+        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
+        final Object this$identifierType = this.getIdentifierType();
+        final Object other$identifierType = other.getIdentifierType();
+        if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType)) return false;
         final Object this$extensions = this.getExtensions();
         final Object other$extensions = other.getExtensions();
         if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
@@ -127,19 +127,19 @@ public class PIDInstAlternateIdentifier {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof PIDInstAlternateIdentifier;
+        return other instanceof PIDInstMeasurementTechnique;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $identifier = this.getIdentifier();
-        result = result * PRIME + ($identifier == null ? 43 : $identifier.hashCode());
-        final Object $type = this.getType();
-        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
         final Object $name = this.getName();
         result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+        final Object $identifier = this.getIdentifier();
+        result = result * PRIME + ($identifier == null ? 43 : $identifier.hashCode());
+        final Object $identifierType = this.getIdentifierType();
+        result = result * PRIME + ($identifierType == null ? 43 : $identifierType.hashCode());
         final Object $extensions = this.getExtensions();
         result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
         return result;

@@ -19,35 +19,12 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst-foo-extension/Foo")
-public class Foo {
-
-    @Required
-    @LinkURI("https://example.org/pidinst-foo-extension/name")
-    private String name;
-
-    @LinkURI("https://example.org/pidinst-foo-extension/type")
-    private String type;
+@LinkURI("https://schemas.incenp.org/extension/v1/IsExtensibleMixin")
+public class IsExtensibleMixin {
 
     @Inlined
     @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
     private List<ExtensionNode> extensions;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return this.type;
-    }
 
     public void setExtensions(List<ExtensionNode> extensions) {
         this.extensions = extensions;
@@ -68,17 +45,7 @@ public class Foo {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("Foo(");
-        if ( (o = this.getName()) != null ) {
-            sb.append("name=");
-            sb.append(o);
-            sb.append(",");
-        }
-        if ( (o = this.getType()) != null ) {
-            sb.append("type=");
-            sb.append(o);
-            sb.append(",");
-        }
+        sb.append("IsExtensibleMixin(");
         if ( (o = this.getExtensions()) != null ) {
             sb.append("extensions=");
             sb.append(o);
@@ -91,15 +58,9 @@ public class Foo {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof Foo) ) return false;
-        final Foo other = (Foo) o;
+        if ( !(o instanceof IsExtensibleMixin) ) return false;
+        final IsExtensibleMixin other = (IsExtensibleMixin) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$name = this.getName();
-        final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
-        final Object this$type = this.getType();
-        final Object other$type = other.getType();
-        if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
         final Object this$extensions = this.getExtensions();
         final Object other$extensions = other.getExtensions();
         if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
@@ -107,17 +68,13 @@ public class Foo {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof Foo;
+        return other instanceof IsExtensibleMixin;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $name = this.getName();
-        result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-        final Object $type = this.getType();
-        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
         final Object $extensions = this.getExtensions();
         result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
         return result;

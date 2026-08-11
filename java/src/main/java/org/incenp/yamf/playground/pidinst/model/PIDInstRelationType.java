@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/PIDInstRelationType")
+@LinkURI("https://example.invalid/pidinst/PIDInstRelationType")
 public enum PIDInstRelationType {
 
     ISDESCRIBEDBY("IsDescribedBy"),

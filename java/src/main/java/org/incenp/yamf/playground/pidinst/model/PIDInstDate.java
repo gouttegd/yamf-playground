@@ -19,23 +19,27 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/PIDInstDate")
+@LinkURI("https://example.invalid/pidinst/PIDInstDate")
 public class PIDInstDate {
 
     @Required
-    @LinkURI("https://example.org/pidinst/date")
-    private LocalDate date;
+    @LinkURI("https://example.invalid/pidinst/value")
+    private LocalDate value;
 
     @Required
-    @LinkURI("https://example.org/pidinst/type")
+    @LinkURI("https://example.invalid/pidinst/type")
     private PIDInstDateType type;
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    @Inlined
+    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
+    private List<ExtensionNode> extensions;
+
+    public void setValue(LocalDate value) {
+        this.value = value;
     }
 
-    public LocalDate getDate() {
-        return this.date;
+    public LocalDate getValue() {
+        return this.value;
     }
 
     public void setType(PIDInstDateType type) {
@@ -46,18 +50,38 @@ public class PIDInstDate {
         return this.type;
     }
 
+    public void setExtensions(List<ExtensionNode> extensions) {
+        this.extensions = extensions;
+    }
+
+    public List<ExtensionNode> getExtensions() {
+        return this.extensions;
+    }
+
+    public List<ExtensionNode> getExtensions(boolean set) {
+        if ( this.extensions == null && set ) {
+            this.extensions = new ArrayList<>();
+        }
+        return this.extensions;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
         sb.append("PIDInstDate(");
-        if ( (o = this.getDate()) != null ) {
-            sb.append("date=");
+        if ( (o = this.getValue()) != null ) {
+            sb.append("value=");
             sb.append(o);
             sb.append(",");
         }
         if ( (o = this.getType()) != null ) {
             sb.append("type=");
+            sb.append(o);
+            sb.append(",");
+        }
+        if ( (o = this.getExtensions()) != null ) {
+            sb.append("extensions=");
             sb.append(o);
             sb.append(",");
         }
@@ -71,12 +95,15 @@ public class PIDInstDate {
         if ( !(o instanceof PIDInstDate) ) return false;
         final PIDInstDate other = (PIDInstDate) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$date = this.getDate();
-        final Object other$date = other.getDate();
-        if ( this$date == null ? other$date != null : !this$date.equals(other$date)) return false;
+        final Object this$value = this.getValue();
+        final Object other$value = other.getValue();
+        if ( this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
         if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
+        final Object this$extensions = this.getExtensions();
+        final Object other$extensions = other.getExtensions();
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
         return true;
     }
 
@@ -88,10 +115,12 @@ public class PIDInstDate {
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $date = this.getDate();
-        result = result * PRIME + ($date == null ? 43 : $date.hashCode());
+        final Object $value = this.getValue();
+        result = result * PRIME + ($value == null ? 43 : $value.hashCode());
         final Object $type = this.getType();
         result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+        final Object $extensions = this.getExtensions();
+        result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
         return result;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/PIDInstAlternateIdentifierType")
+@LinkURI("https://example.invalid/pidinst/PIDInstAlternateIdentifierType")
 public enum PIDInstAlternateIdentifierType {
 
     SERIALNUMBER("SerialNumber"),

@@ -19,10 +19,10 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst-foo/FooMixin")
-public class FooMixin {
+@LinkURI("https://example.org/pidinst-foo-extension/FooInstrumentMixin")
+public class FooInstrumentMixin {
 
-    @LinkURI("https://example.org/pidinst-foo/foo")
+    @LinkURI("https://example.org/pidinst-foo-extension/foo")
     private Foo foo;
 
     public void setFoo(Foo foo) {
@@ -37,7 +37,7 @@ public class FooMixin {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("FooMixin(");
+        sb.append("FooInstrumentMixin(");
         if ( (o = this.getFoo()) != null ) {
             sb.append("foo=");
             sb.append(o);
@@ -50,8 +50,8 @@ public class FooMixin {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof FooMixin) ) return false;
-        final FooMixin other = (FooMixin) o;
+        if ( !(o instanceof FooInstrumentMixin) ) return false;
+        final FooInstrumentMixin other = (FooInstrumentMixin) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$foo = this.getFoo();
         final Object other$foo = other.getFoo();
@@ -60,7 +60,7 @@ public class FooMixin {
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof FooMixin;
+        return other instanceof FooInstrumentMixin;
     }
 
     @Override

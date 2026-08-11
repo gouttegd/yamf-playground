@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import org.incenp.linkml.core.annotations.LinkURI;
 
-@LinkURI("https://example.org/pidinst/PIDInstRelatedIdentifierType")
+@LinkURI("https://example.invalid/pidinst/PIDInstRelatedIdentifierType")
 public enum PIDInstRelatedIdentifierType {
 
     ARK("ARK"),
@@ -40,6 +40,8 @@ public enum PIDInstRelatedIdentifierType {
     RAID("RAiD"),
 
     RRID("RRID"),
+
+    SWHID("SWHID"),
 
     UPC("UPC"),
 

@@ -19,61 +19,86 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst/PIDInstInstrument")
+@LinkURI("https://example.invalid/pidinst/PIDInstInstrument")
 public class PIDInstInstrument {
 
     @SlotName("schema_version")
     @Required
-    @LinkURI("https://example.org/pidinst/schema_version")
+    @LinkURI("https://example.invalid/pidinst/schema_version")
     private PIDInstVersion schemaVersion;
 
     @SlotName("landing_page")
     @Required
-    @LinkURI("https://example.org/pidinst/landing_page")
+    @LinkURI("https://example.invalid/pidinst/landing_page")
     private URI landingPage;
 
-    @LinkURI("https://example.org/pidinst/owners")
+    @Required
+    @LinkURI("https://example.invalid/pidinst/owners")
     private List<PIDInstOwner> owners;
 
-    @LinkURI("https://example.org/pidinst/manufacturers")
+    @Required
+    @LinkURI("https://example.invalid/pidinst/manufacturers")
     private List<PIDInstManufacturer> manufacturers;
 
-    @LinkURI("https://example.org/pidinst/model")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/model")
     private PIDInstModel model;
 
-    @LinkURI("https://example.org/pidinst/description")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/description")
     private String description;
 
-    @LinkURI("https://example.org/pidinst/types")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/types")
     private List<PIDInstInstrumentType> types;
 
     @SlotName("measured_variables")
-    @LinkURI("https://example.org/pidinst/measured_variables")
+    @LinkURI("https://example.invalid/pidinst/measured_variables")
     private List<String> measuredVariables;
 
-    @LinkURI("https://example.org/pidinst/dates")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/dates")
     private List<PIDInstDate> dates;
 
     @SlotName("related_identifiers")
-    @LinkURI("https://example.org/pidinst/related_identifiers")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/related_identifiers")
     private List<PIDInstRelatedIdentifier> relatedIdentifiers;
 
     @SlotName("alternate_identifiers")
-    @LinkURI("https://example.org/pidinst/alternate_identifiers")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/alternate_identifiers")
     private List<PIDInstAlternateIdentifier> alternateIdentifiers;
 
+    @SlotName("measured_quantities")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/measured_quantities")
+    private List<PIDInstMeasuredQuantity> measuredQuantities;
+
+    @SlotName("measurement_techniques")
+    @Required(isRecommended = true)
+    @LinkURI("https://example.invalid/pidinst/measurement_techniques")
+    private List<PIDInstMeasurementTechnique> measurementTechniques;
+
+    @LinkURI("https://example.invalid/pidinst/subjects")
+    private List<PIDInstSubject> subjects;
+
     @Required
-    @LinkURI("https://example.org/pidinst/name")
+    @LinkURI("https://example.invalid/pidinst/name")
     private String name;
 
     @Identifier
     @Required
-    @LinkURI("https://example.org/pidinst/identifier")
+    @LinkURI("https://example.invalid/pidinst/identifier")
     private String identifier;
 
     @SlotName("identifier_type")
-    @LinkURI("https://example.org/pidinst/identifier_type")
+    @LinkURI("https://example.invalid/pidinst/identifier_type")
     private String identifierType;
+
+    @Inlined
+    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
+    private List<ExtensionNode> extensions;
 
     @ExtensionHolder
     private Map<String, Object> extraSlots;
@@ -215,6 +240,51 @@ public class PIDInstInstrument {
         return this.alternateIdentifiers;
     }
 
+    public void setMeasuredQuantities(List<PIDInstMeasuredQuantity> measuredQuantities) {
+        this.measuredQuantities = measuredQuantities;
+    }
+
+    public List<PIDInstMeasuredQuantity> getMeasuredQuantities() {
+        return this.measuredQuantities;
+    }
+
+    public List<PIDInstMeasuredQuantity> getMeasuredQuantities(boolean set) {
+        if ( this.measuredQuantities == null && set ) {
+            this.measuredQuantities = new ArrayList<>();
+        }
+        return this.measuredQuantities;
+    }
+
+    public void setMeasurementTechniques(List<PIDInstMeasurementTechnique> measurementTechniques) {
+        this.measurementTechniques = measurementTechniques;
+    }
+
+    public List<PIDInstMeasurementTechnique> getMeasurementTechniques() {
+        return this.measurementTechniques;
+    }
+
+    public List<PIDInstMeasurementTechnique> getMeasurementTechniques(boolean set) {
+        if ( this.measurementTechniques == null && set ) {
+            this.measurementTechniques = new ArrayList<>();
+        }
+        return this.measurementTechniques;
+    }
+
+    public void setSubjects(List<PIDInstSubject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public List<PIDInstSubject> getSubjects() {
+        return this.subjects;
+    }
+
+    public List<PIDInstSubject> getSubjects(boolean set) {
+        if ( this.subjects == null && set ) {
+            this.subjects = new ArrayList<>();
+        }
+        return this.subjects;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -237,6 +307,21 @@ public class PIDInstInstrument {
 
     public String getIdentifierType() {
         return this.identifierType;
+    }
+
+    public void setExtensions(List<ExtensionNode> extensions) {
+        this.extensions = extensions;
+    }
+
+    public List<ExtensionNode> getExtensions() {
+        return this.extensions;
+    }
+
+    public List<ExtensionNode> getExtensions(boolean set) {
+        if ( this.extensions == null && set ) {
+            this.extensions = new ArrayList<>();
+        }
+        return this.extensions;
     }
 
     public void setExtraSlots(Map<String,Object> extraSlots) {
@@ -298,6 +383,15 @@ public class PIDInstInstrument {
         final Object this$alternateIdentifiers = this.getAlternateIdentifiers();
         final Object other$alternateIdentifiers = other.getAlternateIdentifiers();
         if ( this$alternateIdentifiers == null ? other$alternateIdentifiers != null : !this$alternateIdentifiers.equals(other$alternateIdentifiers)) return false;
+        final Object this$measuredQuantities = this.getMeasuredQuantities();
+        final Object other$measuredQuantities = other.getMeasuredQuantities();
+        if ( this$measuredQuantities == null ? other$measuredQuantities != null : !this$measuredQuantities.equals(other$measuredQuantities)) return false;
+        final Object this$measurementTechniques = this.getMeasurementTechniques();
+        final Object other$measurementTechniques = other.getMeasurementTechniques();
+        if ( this$measurementTechniques == null ? other$measurementTechniques != null : !this$measurementTechniques.equals(other$measurementTechniques)) return false;
+        final Object this$subjects = this.getSubjects();
+        final Object other$subjects = other.getSubjects();
+        if ( this$subjects == null ? other$subjects != null : !this$subjects.equals(other$subjects)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
         if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
@@ -307,6 +401,9 @@ public class PIDInstInstrument {
         final Object this$identifierType = this.getIdentifierType();
         final Object other$identifierType = other.getIdentifierType();
         if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType)) return false;
+        final Object this$extensions = this.getExtensions();
+        final Object other$extensions = other.getExtensions();
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
         return true;
     }
 
@@ -340,12 +437,20 @@ public class PIDInstInstrument {
         result = result * PRIME + ($relatedIdentifiers == null ? 43 : $relatedIdentifiers.hashCode());
         final Object $alternateIdentifiers = this.getAlternateIdentifiers();
         result = result * PRIME + ($alternateIdentifiers == null ? 43 : $alternateIdentifiers.hashCode());
+        final Object $measuredQuantities = this.getMeasuredQuantities();
+        result = result * PRIME + ($measuredQuantities == null ? 43 : $measuredQuantities.hashCode());
+        final Object $measurementTechniques = this.getMeasurementTechniques();
+        result = result * PRIME + ($measurementTechniques == null ? 43 : $measurementTechniques.hashCode());
+        final Object $subjects = this.getSubjects();
+        result = result * PRIME + ($subjects == null ? 43 : $subjects.hashCode());
         final Object $name = this.getName();
         result = result * PRIME + ($name == null ? 43 : $name.hashCode());
         final Object $identifier = this.getIdentifier();
         result = result * PRIME + ($identifier == null ? 43 : $identifier.hashCode());
         final Object $identifierType = this.getIdentifierType();
         result = result * PRIME + ($identifierType == null ? 43 : $identifierType.hashCode());
+        final Object $extensions = this.getExtensions();
+        result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
         return result;
     }
 }
