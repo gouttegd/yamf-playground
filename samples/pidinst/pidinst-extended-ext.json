@@ -37,7 +37,7 @@
   ],
   "dates": [
     {
-      "date": "2026-01-08",
+      "value": "2026-01-08",
       "type": "Commissioned"
     }
   ],
@@ -56,16 +56,18 @@
         "name": "Serial number alternate identifier"
     }
   ],
-  "com.example.foo": {
-    "foo": {
-      "name": "The name of the Foo",
-      "type": "The type of the Foo"
-    }
-  },
-  "org.example.bar": {
-    "bar": {
-      "name": "The name of the Bar",
-      "type": "The type of the Bar"
+  "extensions": {
+    "https://example.org/pidinst-foo-extension/FooInstrumentExtension": {
+      "foo": {
+        "name": "The name of the Foo",
+        "type": "The type of the Foo"
+      }
+    },
+    "https://example.org/pidinst-bar-extension/BarInstrumentExtension": {
+      "bar": {
+        "name": "The name of the Bar",
+        "type": "The type of the Bar"
+      }
     }
   }
 }

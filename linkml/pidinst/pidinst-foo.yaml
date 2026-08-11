@@ -1,54 +1,28 @@
 id: https://example.org/pidinst-foo
-name: pidinst-foo-extension
-title: Foo extension to the PIDInst schema
+name: pidinst-foo
+title: PIDInst schema with the Foo extension
 description: >-
-  An example of a schema that extends the PIDInst schema.
+  A version of the PIDInst schema that bundles the Foo extension.
+
+  This version can be used by an implementation that wants to support
+  the Foo extension at compile-time.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
-  fooext: https://example.org/pidinst-foo/
+  pidfoo: https://example.org/pidinst-foo/
 imports:
-  # An extension should IMPORT the schema it wants to extend – not
-  # creating a new schema from scratch that merely reuses the same
-  # schema elements.
   - pidinst
+  - foo
 default_range: string
 
+
 classes:
-
-  Foo:
-    description: >-
-      The Foo extension proper. This class should contain all the
-      desired additional slots to represent all the additional metadata.
-    attributes:
-      name:
-        description: >-
-          An example of an additional metadata slot.
-        required: true
-      type:
-        description: >-
-          Another example of an additional metadata slot.
-
-  FooMixin:
-    description: >-
-      A mixin that wraps the Foo extension proper. Any extension class
-      should be wrapped in such a mixin. This allows a third-party to
-      compose several extensions together (which is useful when one
-      wants to support several extensions at the same time).
-    mixin: true
-    attributes:
-      foo:
-        description: >-
-          A slot intended to contain an instance of the Foo extension.
-          This is the slot that will be added to the base class.
-        range: Foo
 
   FooInstrument:
     description: >-
       The PIDInstInstrument class extended with the Foo extension. This
       class is constructed simply by (1) inheriting from the base
-      PIDInstInstrument class and (2) adding the `FooMixin` mixin that
-      wraps the Foo extension.
+      PIDInstInstrument class and (2) adding the FooInstrumentMixin.
     is_a: PIDInstInstrument
     mixins:
-      - FooMixin
+      - FooInstrumentMixin

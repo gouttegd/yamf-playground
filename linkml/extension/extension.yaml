@@ -1,0 +1,57 @@
+id: https://schemas.incenp.org/extension/v1/
+name: extension
+description: >-
+  A schema to implement the extensibility scheme envisisioned in
+  https://github.com/gouttegd/yamf-playground/EXTENSIBILITY.md.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  ext: https://schemas.incenp.org/extension/v1/
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+imports:
+  - linkml:types
+default_prefix: ext
+default_range: string
+
+
+slots:
+
+  object_type:
+    description: The type designator for any kind of object.
+    range: uri
+    designates_type: true
+
+  extension_type:
+    description: The type designator for a class extension object.
+    range: uri
+    designates_type: true
+    key: true
+
+
+classes:
+
+  IsExtensibleMixin:
+    description: >-
+      An object that can carry arbitrary class extension objects.
+
+      Reuse this mixin in any class to allow the class to be extended
+      with class extensions.
+    mixin: true
+    attributes:
+      extensions:
+        description: The collection of class extension objects.
+        range: ExtensionNode
+        multivalued: true
+        inlined: true
+        inlined_as_list: false
+
+  ExtensionNode:
+    description: >-
+      Represents a class extension object, that is a fragment of an
+      object that is defined by an extension rather than by the base
+      schema.
+    slots:
+      - extension_type
+    extra_slots:
+      allowed: true

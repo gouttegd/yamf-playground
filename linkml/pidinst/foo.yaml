@@ -1,0 +1,57 @@
+id: https://example.org/pidinst-foo-extension
+name: pidinst-foo-extension
+title: Foo extension to the PIDInst schema
+description: >-
+  An example of an extension to the PIDInst schema, according to the
+  extensibility scheme envisisioned in
+  https://github.com/gouttegd/yamf-playground/EXTENSIBILITY.md
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  fooext: https://example.org/pidinst-foo-extension/
+imports:
+  - pidinst
+
+default_range: string
+
+
+classes:
+
+  Foo:
+    description: >-
+      A Foo object. This is the main object by the extension. The point
+      of the extension is to extend the PIDInstInstrument class to add
+      an attribute that can contain such an object.
+
+      The object reuses the IsExtensibleMixin, so that it is itself
+      extensible by another extension if needed.
+    mixins:
+      - IsExtensibleMixin
+    attributes:
+      name:
+        description: The name of the foo.
+        required: true
+      type:
+        description: The type of the foo.
+
+  FooInstrumentMixin:
+    description: >-
+      The mixin that contains the attributes that the extension wants to
+      add to the PIDInstInstrument class.
+
+      This is a mixin in order to facilitate extension composability.
+    mixin: true
+    attributes:
+      foo:
+        description: The Foo associated with this instrument.
+        range: Foo
+
+  FooInstrumentExtension:
+    description: >-
+      The actual extension object. This (i) inherits from ExtensionNode
+      (so that it is recognized as a class extension object, that can be
+      assigned to an `extensions` field) and (ii) reuses the
+      FooInstrumentMixin above.
+    is_a: ExtensionNode
+    mixins:
+      - FooInstrumentMixin
