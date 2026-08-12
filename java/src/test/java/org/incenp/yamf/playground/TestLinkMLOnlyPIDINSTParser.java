@@ -11,9 +11,11 @@ import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.linkml.core.Slot;
 import org.incenp.linkml.ext.ObjectLoader;
 import org.incenp.yamf.playground.pidinst.model.ExtensionNode;
+import org.incenp.yamf.playground.pidinst.model.Foo;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
 import org.incenp.yamf.playground.pidinst.model.FooInstrumentExtension;
 import org.incenp.yamf.playground.pidinst.model.PIDInstInstrument;
+import org.incenp.yamf.playground.util.ClassExtensionConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -76,6 +78,38 @@ public class TestLinkMLOnlyPIDINSTParser {
         ExtensionNode fooNode = extensions.get("https://example.org/pidinst-foo-extension/FooInstrumentExtension");
         Assertions.assertNotNull(fooNode);
         Assertions.assertInstanceOf(FooInstrumentExtension.class, fooNode);
+
+        roundtrip(FooInstrument.class, ins);
+    }
+
+    /*
+     * Reads a file containing base model data into an instance of the extended Foo
+     * model, using a extension-aware converter.
+     */
+    @Test
+    void testParseBaseFileWithExtensionParser() throws IOException, LinkMLRuntimeException {
+        ClassExtensionConverter fooInstrumentConverter = new ClassExtensionConverter(FooInstrument.class);
+        fooInstrumentConverter.registerExtension(ClassInfo.get(FooInstrumentExtension.class));
+        loader.getContext().addConverter(fooInstrumentConverter);
+
+        FooInstrument ins = loader.loadObject(new File("../samples/pidinst/pidinst-base.json"), FooInstrument.class);
+        Assertions.assertEquals("Alice", ins.getName());
+
+        roundtrip(FooInstrument.class, ins);
+    }
+
+    @Test
+    void testExtendedFileWithExtensionParser() throws IOException, LinkMLRuntimeException {
+        ClassExtensionConverter fooInstrumentConverter = new ClassExtensionConverter(FooInstrument.class);
+        fooInstrumentConverter.registerExtension(ClassInfo.get(FooInstrumentExtension.class));
+        loader.getContext().addConverter(fooInstrumentConverter);
+
+        FooInstrument ins = loader.loadObject(new File("../samples/pidinst/pidinst-extended-ext.json"),
+                FooInstrument.class);
+        Assertions.assertEquals("Alice", ins.getName());
+        Foo foo = ins.getFoo();
+        Assertions.assertNotNull(foo);
+        Assertions.assertEquals(1, ins.getExtensions().size());
 
         roundtrip(FooInstrument.class, ins);
     }
