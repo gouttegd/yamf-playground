@@ -214,3 +214,49 @@ axes:
 >           plunge: 227
 >           trend: 87
 > ```
+
+## Coordinate transformations
+[Coordinate transformations](https://ngff.openmicroscopy.org/specifications/dev/index.html#coordinatetransformations-metadata)
+are another prime candidate for a natural extension point.
+
+The current specification describes 12 different types of coordinate
+transformations (`identity`, `translation`, `scale`, etc.), which all
+have a common set of keys (`type`, `name`, `input`, and `output`), with
+each specific type potentially having its own specific additional keys.
+
+To transform that into a natural extension point as per the envisioned
+extensibility mechanism, one would define a base class with a name like
+`https://ngff.openmicroscopy.org/core/CoordinateTransformation`, with
+the same `name`, `input`, and `output` fields as in the current
+specification, and the `type` field being replace with `object_type`
+(the type designator for the class). Then, we can define one subclass
+for each specific type of transformation as needed, e.g.:
+
+* a `https://ngff.openmicroscopy.org/core/MapAxisCoordinateTransformation`,
+  with an additional `mapAxis` field;
+* a `https://ngff.openmicroscopy.org/core/ProjectAxisCoordinateTransformation`,
+  with additional `createdOutputs` and `droppedInputs` fields;
+* a `https://ngff.openmicroscopy.org/core/TranslationCoordinateTransformation`,
+  with an additional `translation` field;
+* etc.
+
+Once coordinate transformations are turned into an extension point, then
+any extension could define its own subclass of `https://ngff.openmicroscopy.org/core/CoordinateTransformation`.
+For example, one could create a `https://example.org/my-ngff-extension/NDCoordinateTransformation`
+class that can store a list of _N_ monotonically increasing arrays (one
+for each dimension, where the _i_ th value represents the coordinate
+value for the _i_ th point of the array in that dimension). That new
+coordinate transformation type could then be used whenever a coordinate
+transformation object is expected.
+
+> Importantly, this transformation into a natural extension would
+> recursively apply to the types of transformations that wrap other
+> transformations.
+> 
+> For example, the `https://ngff.openmicroscopy.org/core/BijectionCoordinateTransformation`
+> class, which would represent the current [bijection](https://ngff.openmicroscopy.org/specifications/dev/index.html#bijection-md)
+> type of transformation, would be defined in such a way that its
+> `forward` and `inverse` fields both accept a `https://ngff.openmicroscopy.org/core/CoordinateTransformation`
+> object, so that they would accept an object of any of the defined
+> subclasses (including subclasses that do not exist in the core
+> specification but that would be added by an extension).
