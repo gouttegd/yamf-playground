@@ -34,6 +34,22 @@ also referred to as the _class_ of the object. Those keys are
 indistinctly called the _fields_, the _attributes_, or the _slots_ of
 the class.
 
+The use of the word “class” does not imply that this scheme is only
+intended to be used when working in a programming language that supports
+object-oriented programming. In this document, a “class” is merely an
+agreement that a given JSON or YAML dictionary is expected to contain a
+pre-defined set of keys, which are themselves expected to contain some
+pre-defined types of values. It has no bearing on how the dictionary can
+be represented in a computer program; it _can_ be represented using an
+actual class in a programming language that has such a concept (e.g. a
+Python class or a Java class), but it does not have to.
+
+Likewise, when this document says that “class C _inherits_ from class P”
+(or that it _derives_ from _P_, or that is a _subclass_ of _P_), it
+merely means that _C_ describes a dictionary that is expected to contain
+the same set of pre-defined keys as _P_, plus any additional keys that
+are specific to _C_.
+
 The word “model”, used alone, can also refer to the entire set of
 classes that describe all the objects that can be found in a given JSON
 document.
@@ -588,6 +604,19 @@ character (e.g. `~object_type` or `%extensions`) to highlight the
 special roles of those attributes and help distinguish them from all the
 other, non-special attributes present in the data model.
 
+The name of the type designator attribute and the name of the attribute
+holding the extension object fragments may vary throughout the same
+model. For example, the designator attribute could be named
+`object_type` for one natural extension point and simply `type` in
+another natural extension point. We recommend always using the same
+name, but that may not always be practical especially when this scheme
+is applied to a pre-existing model (rather than a new model designed
+from scratch). When the name of the type designator attribute may vary
+from one extension point to another, it is up to the model designers to
+ensure that they always clearly specify which attribute is the type
+designator attribute for one particular extension point. Likewise for
+the attribute holding the extension object fragments.
+
 ### On the use of URIs as identifiers
 This scheme requires three different types of identifiers:
 
@@ -597,20 +626,26 @@ This scheme requires three different types of identifiers:
   in the “extensions manifest”.
 
 As shown in the running example used in this document, this scheme
-proposes that all identifiers follow a URI-based scheme, where (i) an
-extension is identified by some base URI, and (ii) any natural extension
-class or class extension defined by the extension is defined by a URI
-that is built on top of the extension’s base URI.
+strongly recommends:
 
-For example, the SWM extension is identified by the base URI
-`https://example.com/swm/`, its “KyberLightSource” natural extension
-class is identified by `https://example.com/swm/KyberLightSource`, and
-its class extension for the _Microscope_ class is identified by
-`https://example.com/swm/MicroscopeExtension`.
+1. that all identifiers follow a URI-based scheme, and
+2. that the identifiers for natural extension classes and for class
+   extensions are built on top of the identifier of the extension they
+   belong to.
 
-Such a ID scheme automatically ensures uniqueness of identifiers across
-all extensions, which is critical to ensure that independently developed
-extensions cannot interfere with each other.
+For example, in the case of the SWM extension:
+
+* the extension itself is identified by the base URI
+  `https://example.com/swm/`;
+* its “KyberLightSource” natural extension class is identified by
+  `https://example.com/swm/KyberLightSource`;
+* its class extension for the _Microscope_ class is identified by
+  `https://example.com/swm/MicroscopeExtension`.
+
+The first recommendation (using URI as identifiers) is intended to
+automatically ensure uniqueness of identifiers across all extensions,
+which is critical to ensure that independently developed extensions
+cannot interfere with each other.
 
 > The implicit assumption here is that extension developers will be well
 > behaved and will not use URIs that they do not control.
@@ -624,6 +659,22 @@ third-party extensions. The people responsible for managing the data
 model can then control who should be allowed to create official
 extensions (again, should such a control be desired) by controlling who
 can allocate URIs in the “official domain”.
+
+The second recommendation (building all the identifiers for a same
+extension out of the same base URI) offers a straightforward way to
+identify the extension a given natural extension class or class
+extension belongs to, without even having to look at the formal schemas
+that describe the extension (assuming the extension provides at least
+one such schema, and the application can understand it).
+
+Both of those recommendations may be relaxed in a particular application
+of this scheme, but model designers must carefully weigh the
+consequences. In particular, allowing short, non-URI-based identifiers
+may produce slightly more “human-friendly” JSON (for as much as JSON can
+be human-friendly…) but removes all guarantees that independently
+developed extensions cannot interfere with each other – putting the onus
+on the people responsible for the model and on extension developers to
+ensure that it will not happen.
 
 ### Versioning of extensions
 The extensibility scheme currently does not strictly mandate how
@@ -743,7 +794,7 @@ LinkML schema:
 
 The type designator SHOULD be URI- or CURIE-typed. This scheme currently
 favours URI-typed designators, since they dispense from having to
-manage CURIE prefixes. `uriorcurie`-typed designators SHOULD be avoided.
+manage CURIE prefixes.
 
 Some limitations currently exists in LinkML-Py, that implementers should
 be aware of.

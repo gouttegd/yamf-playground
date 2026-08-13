@@ -40,6 +40,23 @@ Another preliminary step is that most objects under the `ome` key
 (including the `ome` object itself) must be made to accept the implicit
 `extensions` key, intended to hold the [class extension objects](../EXTENSIBILITY.md#class-extensions).
 
+## Practical considerations
+Unless otherwise specified, the use cases in the following sections all
+assume that we would want to apply the extensibility scheme to OME-Zarr
+in a “minimally invasive” way – that is, in a way that changes the
+existing specification (in its current 0.6 version) as little as
+possible.
+
+In particular, this means that in many cases, we explicitly deviate from
+the strong recommendation, set forth in the
+[generic extensibility scheme document](../EXTENSIBILITY.md#on-the-use-of-uris-as-identifiers),
+that all identifiers should be URIs. We still strongly recommend that
+identifiers for _extensions_ (all things that are _not_ already in the
+specification) should be URI-based (and all examples given this document
+will be); but identifiers for classes that already exist in the
+specification (even if they may not be formally described as “classes”
+yet) retain their current, non-URI-based identifiers.
+
 ## RFC-4 (“Axis Orientation”)
 Briefly, [RFC-4](https://ngff.openmicroscopy.org/rfc/4/index.html) wants
 to add a `orientation` field to the [`axis` object](https://ngff.openmicroscopy.org/specifications/dev/index.html#axes-metadata).
@@ -50,23 +67,16 @@ proposed extensibility scheme (to which we would tentatively give the ID
 done in two different ways.
 
 ### As a “class extension”
-This is the most straightforward (but not necessarily the most
-_elegant_, though that is eminently subjective) way. This would be a
-“pure” extension, in that it would be usable with the current OME-Zarr
-format almost as it currently is (as of version 0.6) – the only changes
-needed to the base format would be the changes required to allow the use
-of the extensibiltity system itself, as outlined
-[in the first section of this document](#preliminary-step).
-
 Following the [class extension mechanism](../EXTENSIBILITY.md#class-extensions),
-adding the `orientation` field to the `axis` object would be like this:
+adding the `orientation` field to the `axis` object would look like this:
+
 ```yaml
 axes:
   - name: x
     type: space
     unit: millimeter
     extensions:
-      https://ngff.openmicroscopy.org/rfc4/Orientation:
+      https://ngff.openmicroscopy.org/rfc4/orientation:
         orientation:
           type: anatomical
           value: right-to-left
@@ -74,7 +84,7 @@ axes:
 
 (It would then be expected that the schema formally describing the RFC4
 extension provide a description of the
-`https://ngff.openmicroscopy.org/rfc4/Orientation`) object, specifying
+`https://ngff.openmicroscopy.org/rfc4/orientation`) object, specifying
 that it accepts two keys `type` and `value` (and which values are
 accepted for those two keys).
 
@@ -91,43 +101,62 @@ could be extended in the future:
 
 This is clearly intended as an extension point, so we could make it a
 [“natural extension point”](../EXTENSIBILITY.md#natural-extension-classes)
-by:
+as per the extensibility scheme by:
 
-* making the `axes` field accept a list of
-  `https://ngff.openmicroscopy.org/core/Axis` objects;
-* defining the `https://ngff.openmicroscopy.org/core/Axis` object as
-  containing all the fields common to all types of axis as currently
-  defined by the specification (`name`, `unit`, `longname`, `discrete`)
-  plus a `object_type` field acting as the “type designator”
-* defining one subclass of `https://ngff.openmicroscopy.org/core/Axis`
-  for each of the currently recognized types (e.g.
-  `https://ngff.openmicroscopy.org/core/ArrayAxis`,
-  `https://ngff.openmicroscopy.org/core/SpaceAxis`, etc).
+* formally defining a base `axis` class, that would contain all the
+  fields common to all types of axis as currently defined by the
+  specification (`name`, `type`, `unit`, `longname`, and `discrete`),
+  with the `type` field acting as the “type designator” field;
+* defining one subclass of `Axis` for each of the currently recognized
+  types:
+    * `array`,
+    * `space`,
+    * `time`,
+    * `channel`,
+    * `coordinate`,
+    * `displacement`.
 
-With those change, a file conformant to the base specification (before
-adding the RFC-4 extension) could look like this:
+> This is where we deviate from the generic extensibility scheme, which
+> would recommend that those classes are identified by URI-based
+> identifiers (e.g. something like
+`https://ngff.openmicroscopy.org/core/array`) rather than such short
+> names. But doing so would be breaking change with the current version
+> of the specification, which may not be worth the trouble (though that
+> is of course debatable).
+>
+> Conceptually, this can be thought of as if there was a kind of
+> “default” extension that uses `https://ngff.openmicroscopy.org/core/`
+> as its ID, and all identifiers that do not start by a base URI are
+> interpreted as if they were prefixed with that base URI, thereby
+> marking them as beloning to that “default extension”.
+
+So far, this does not change anything about what the data would look
+like in a OME-Zarr fileset. A file that does not use the
+“RFC-4 extension“ could look like this:
 
 ```yaml
 axes:
   - name: x
-    object_type: https://ngff.openmicroscopy.org/core/SpaceAxis
+    object_type: space
     unit: millimeter
 ```
 
+which is exactly how it would look like under the current version 0.6 of
+the specification. The changes above are only about describing the
+`axis` object and what it can contain in a more formal manner.
+
 With such a basis, our hypothetical RFC-4 extension would then simply
-need to define its own subclass of
-`https://ngff.openmicroscopy.org/core/SpaceAxis` containing the
-additional `orientation` field. (It should subclass the 
-`https://ngff.openmicroscopy.org/core/SpaceAxis`
-class rather than the base `https://ngff.openmicroscopy.org/core/Axis`
-class because RFC-4 explicitly intends for the `orientation` field to be
-applicable _only_ for spatial axis.) In a OME-Zarr file, this could look
-like this:
+need to define its own subclass of the `space` class (tentatively named
+`https://ngff.openmicroscopy.org/rfc4/orientedSpatialAxis`), containing
+the additional `orientation` field. (Of note, it should subclass the
+`space` class rather than the base `axis` class because RFC-4 explicitly
+intends for the `orientation` field to be application _only_ for spatial
+axis.) In a OME-Zarr file, this could look like this:
 
 ```yaml
 axes:
   - name: x
-    object_type: https://ngff.openmicroscopy.org/rfc4/OrientedSpatialAxis
+    type: https://ngff.openmicroscopy.org/rfc4/orientedSpatialAxis
     unit: millimeter
     orientation:
       type: anatomical
@@ -136,7 +165,7 @@ axes:
 
 ### Making RFC-4 itself extensible
 About the `type: anatomical` field in the `orientation` object, the text
-text of RFC-4 says:
+of RFC-4 says:
 
 > The `orientation` field […] MUST have a `type` field that specifies
 > the orientation domain (e.g. “anatomical”) […]. Valid `type` strings
@@ -150,22 +179,26 @@ to implement RFC-4 as an extension (as a “class extension” or as a
 is naturally extensible (allowing anyone to create another extension
 that adds a new type of orientation).
 
-All that would be needed is to
+All the extension would need to do is to
 
-* define a base `https://ngff.openmicroscopy.org/rfc4/Orientation` class
-  with a type designator (`object_type`) field;
-* define a `https://ngff.openmicroscopy.org/rfc4/AnatomicalOrientation`
-  class representing the only currently supported type of orientation.
+* define a base `https://ngff.openmicroscopy.org/rfc4/orientation` base
+  class with a type designator field;
+* specify that the `orientation` field must contain an instance of that
+  class (which implies that it can contain an instance of any of its
+  subclasses);
+* define a `https://ngff.openmicroscopy.org/rfc4/anatomicalOrientation`
+  class representing what is currently the only supported type of
+  orientation.
 
 Here is what it would look like with just the base RFC-4 extension:
 
 ```yaml
 axes:
   - name: x
-    object_type: https://ngff.openmicroscopy.org/rfc4/OrientedSpatialAxis
+    type: https://ngff.openmicroscopy.org/rfc4/orientedSpatialAxis
     unit: millimeter
     orientation:
-      object_type: https://ngff.openmicroscopy.org/rfc4/AnatomicalOrientation
+      type: https://ngff.openmicroscopy.org/rfc4/anatomicalOrientation
       value: right-to-left
 ```
 
@@ -177,25 +210,25 @@ axes:
 >     type: space
 >     unit: millimeter
 >     extensions:
->       https://ngff.openmicroscopy.org/rfc4/Orientation:
+>       https://ngff.openmicroscopy.org/rfc4/orientation:
 >         orientation:
->           object_type: https://ngff.openmicroscopy.org/rfc4/AnatomicalOrientation
+>           type: https://ngff.openmicroscopy.org/rfc4/anatomicalOrientation
 >           value: right-to-left
 > ```
 
 Now let’s say someone wants to create an extension to add a `geological`
 orientation. All they would need to do in their extension (let’s call it
 `https://example.org/ngff-for-geology/`) is to define their own subclass
-of `https://ngff.openmicroscopy.org/rfc4/Orientation`, which could then
+of `https://ngff.openmicroscopy.org/rfc4/orientation`, which could then
 be used as follows:
 
 ```yaml
 axes:
   - name: x
-    object_type: https://ngff.openmicroscopy.org/rfc4/OrientedSpatialAxis
+    type: https://ngff.openmicroscopy.org/rfc4/orientedSpatialAxis
     unit: millimeter
     orientation:
-      object_type: https://example.org/ngff-for-geology/GeologicalOrientation
+      type: https://example.org/ngff-for-geology/geologicalOrientation
       plunge: 227
       trend: 87
 ```
@@ -208,9 +241,9 @@ axes:
 >     type: space
 >     unit: millimeter
 >     extensions:
->       https://ngff.openmicroscopy.org/rfc4/Orientation:
+>       https://ngff.openmicroscopy.org/rfc4/orientation:
 >         orientation:
->           object_type: https://example.org/ngff-for-geology/GeologicalOrientation
+>           type: https://example.org/ngff-for-geology/geologicalOrientation
 >           plunge: 227
 >           trend: 87
 > ```
@@ -225,38 +258,42 @@ have a common set of keys (`type`, `name`, `input`, and `output`), with
 each specific type potentially having its own specific additional keys.
 
 To transform that into a natural extension point as per the envisioned
-extensibility mechanism, one would define a base class with a name like
-`https://ngff.openmicroscopy.org/core/CoordinateTransformation`, with
-the same `name`, `input`, and `output` fields as in the current
-specification, and the `type` field being replace with `object_type`
-(the type designator for the class). Then, we can define one subclass
-for each specific type of transformation as needed, e.g.:
+extensibility mechanism, one would formally define a base
+`coordinateTransformation` class, with the same `name`, `type`,
+`input`, and `output` field as in the current specification (`type`
+being the type designator for the class). Then, we can define one
+subclass for each specific type of transformation as needed, e.g.:
 
-* a `https://ngff.openmicroscopy.org/core/MapAxisCoordinateTransformation`,
-  with an additional `mapAxis` field;
-* a `https://ngff.openmicroscopy.org/core/ProjectAxisCoordinateTransformation`,
-  with additional `createdOutputs` and `droppedInputs` fields;
-* a `https://ngff.openmicroscopy.org/core/TranslationCoordinateTransformation`,
-  with an additional `translation` field;
+* a `mapAxis` class, with an additional `mapAxis` field;
+* a `projectAxis` class, with additional `createdOutputs` and
+  `droppedInputs` fields;
+* a `translation` class, with an additional `translation` field;
+* a `bijection` class, with additional `forward` and `inverse` fields;
 * etc.
 
-Once coordinate transformations are turned into an extension point, then
-any extension could define its own subclass of `https://ngff.openmicroscopy.org/core/CoordinateTransformation`.
-For example, one could create a `https://example.org/my-ngff-extension/NDCoordinateTransformation`
-class that can store a list of _N_ monotonically increasing arrays (one
-for each dimension, where the _i_ th value represents the coordinate
-value for the _i_ th point of the array in that dimension). That new
-coordinate transformation type could then be used whenever a coordinate
+As with the [previous example](#rfc-4-axis-orientation), so far this
+does not change anything about how coordinate transformations metadata
+are expected to be written on disk. The above merely formalizes the
+current text of the spec in terms of “classes” and “subclasses”.
+
+Any extension could then define its own subclass of
+`coordinateTransformation` to represent an additional way of specifying
+coordinate transformations. For example, one could create a
+`https://example.org/my-ngff-extension/` that defines a
+`https://example.org/my-ngff-extension/NDCoordinate` class that can
+store a list of _N_ monotonically increasing arrays (one for each
+dimension, where the _i_ th value represents the coordinate value for
+the _i_ th point of the array in that dimension). That new coordinate
+transformation type could then be used whenever a coordinate
 transformation object is expected.
 
-> Importantly, this transformation into a natural extension would
-> recursively apply to the types of transformations that wrap other
-> transformations.
-> 
-> For example, the `https://ngff.openmicroscopy.org/core/BijectionCoordinateTransformation`
-> class, which would represent the current [bijection](https://ngff.openmicroscopy.org/specifications/dev/index.html#bijection-md)
-> type of transformation, would be defined in such a way that its
-> `forward` and `inverse` fields both accept a `https://ngff.openmicroscopy.org/core/CoordinateTransformation`
-> object, so that they would accept an object of any of the defined
+> In cases where a type of transformation wraps another transformation
+> (or set of transformations), the type newly added by the extension
+> would automatically be usable as one of the wrapped transformation.
+>
+> For example, the [`bijection`](https://ngff.openmicroscopy.org/specifications/dev/index.html#bijection-md)
+> class would be defined in such a way that its `forward` and `inverse`
+> fields both accept an instance of the base `coordinateTransformation`
+> class, so that they would automatically accept any of the defined
 > subclasses (including subclasses that do not exist in the core
 > specification but that would be added by an extension).
