@@ -45,7 +45,7 @@ actual class in a programming language that has such a concept (e.g. a
 Python class or a Java class), but it does not have to.
 
 Likewise, when this document says that “class C _inherits_ from class P”
-(or that it _derives_ from _P_, or that is a _subclass_ of _P_), it
+(or that it _derives_ from _P_, or that it is a _subclass_ of _P_), it
 merely means that _C_ describes a dictionary that is expected to contain
 the same set of pre-defined keys as _P_, plus any additional keys that
 are specific to _C_.
