@@ -82,13 +82,17 @@ In effect, every place in the OME-Zarr specification where
 * the value of the `type` attribute dictates how the dictionary is to
   be interpreted,
 
-is _de facto_ a natural extension point.
+may qualify as a natural extension point. It is _de facto_ a natural
+extension point if the specification explicitly states that “the `type`
+field may accept more values in the future” (or any similar formulation
+to the same effect).
 
-The present scheme proposes that at any such point, an extension can add
-its own type with its own interpretation. The only requirement is that
-the type MUST be identified with a value that is derived from the
-extension’s identifier (as provided in the extension manifest). That is,
-if the extension has the ID `https://example.com/my-ngff-extension/`,
+The present scheme proposes that at any natural extension point, an
+extension can add its own type with its own interpretation. The only 
+requirement is that the type MUST be identified with a value that is
+derived from the extension’s identifier (as provided in the extension
+manifest). That is, if the extension has the ID
+`https://example.com/my-ngff-extension/`,
 then the new type added by the extension MUST be something like
 `https://example.com/my-ngff-extension/my-new-type`.
 
@@ -128,7 +132,7 @@ even if they are both used simultaneously within the same OME-Zarr file.
 
 ### RFC-4 (“Axis Orientation”)
 Briefly, [RFC-4](https://ngff.openmicroscopy.org/rfc/4/index.html) wants
-to add a `orientation` field to the [`axis` object](https://ngff.openmicroscopy.org/specifications/dev/index.html#axes-metadata).
+to add an `orientation` field to the [`axis` object](https://ngff.openmicroscopy.org/specifications/dev/index.html#axes-metadata).
 
 Should we want to represent that as an extension conformant with this
 proposed extensibility scheme (to which we would tentatively give the ID
@@ -185,7 +189,7 @@ of RFC-4 says:
 > are defined in this document – currently only “anatomical”.
 
 This is clearly another natural extension point. Therefore, and
-regardless of which of the two approaches above is choosen to implement
+regardless of which of the two approaches above is chosen to implement
 RFC-4 as an extension (as a “generic class extension” or as a “natural
 extension”), the extension is itself naturally extensible, allowing
 anyone to create another extension that adds a new type of orientation.
@@ -206,6 +210,21 @@ axes:
       type: https://ngff.openmicroscopy.org/rfc4/anatomicalOrientation
       value: right-to-left
 ```
+
+instead of, as initially envisioned by the authors of RFC-4:
+
+```yaml
+axes:
+  - name: x
+    type: https://ngff.openmicroscopy.org/rfc4/orientedSpatialAxis
+    unit: millimeter
+    orientation:
+      type: anatomical
+      value: right-to-left
+```
+
+(that is, the `anatomical` keyword is replaced by an extension-specific
+URI-based identifier).
 
 > Or, if implemented as a class extension instead:
 > 
@@ -277,7 +296,7 @@ coordinate transformation object is expected.
 
 > This includes the case where a type of transformation wraps another
 > transformation (or set of transformations): the type newly added by
-> the extension would be usable as one of the wrapped transformation.
+> the extension would be usable as one of the wrapped transformations.
 >
 > For example, the new type could be used in the value of the
 > `forward` and/or `inverse` keys of the [`bijection`](https://ngff.openmicroscopy.org/specifications/dev/index.html#bijection-md)
@@ -294,7 +313,7 @@ For example, it would recommend that the `space` keyword (used to
 identify a type of axis) should be replaced by something like
 `https://ngff.openmicroscopy.org/core/spatialAxis`).
 
-This would avoid haxing a “mix” of non-URI, keyword-style identifiers
+This would avoid having a “mix” of non-URI, keyword-style identifiers
 (for things coming from the core specification) and URI-based
 identifiers (for things coming from extensions). But this would then
 necessarily be a breaking change from the current version of the

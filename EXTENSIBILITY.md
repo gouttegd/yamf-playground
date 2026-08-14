@@ -13,7 +13,7 @@ upcoming imaging metadata specification to be developed as part of the
 [Imaging-PHD project](https://persistent-hardware-descriptor-project.github.io/imaging-phd/).
 
 However, the scheme should be applicable to any other data model that
-one wishes to make extensible with the same aims than those stated
+one wishes to make extensible with the same aims as those stated
 [below](#goals).
 
 ### JSON vs YAML
@@ -162,7 +162,7 @@ that is conformant with all other models, under the same conditions.
 This is of course not limited to only two extensions: the principle is
 generalizable to an arbitrary number of extensions.
 
-#### Awareness of an extension
+### Awareness of an extension
 To fully understand the goal of runtime data interoperability, it is
 necessary to explain what is exactly meant by “an application aware of
 an extension” or “aware of an extended model”.
@@ -256,10 +256,10 @@ is not compile-time aware of any of the extensions being used) can know
 * what those extensions are;
 * which part of the data “belongs” to which extension.
 
-Extensions as first-class entities is also intended to provide
-applications (and users) with additional informations about the
+Extensions as first-class entities are also intended to provide
+applications (and users) with additional information about the
 extensions, such as who is responsible for a given extension or where
-can more informations be found about the extension.
+more information can be found about the extension.
 
 Notably, “more informations about the extension” can include schemas
 that formally describe the extension, allowing an implementation that
@@ -289,7 +289,7 @@ with varying extension support creates some fundamental constraints on
 what an extension can do – about how the base model can be extended.
 
 Simply put, an extension cannot change the base model in a way that
-would make data conformant to the extented model not conformant with the
+would make data conformant to the extended model not conformant with the
 base model. So, an extension is really about literally _extending_ the
 base model – the extended model should be a strict superset of the base
 model.
@@ -326,7 +326,7 @@ extended:
 * class extensions.
 
 They are not mutually exclusive: the same extension can extend
-the same model at different places using any of the two mechanisms at
+the same model at different places using either of the two mechanisms at
 each place where it needs to extend the model.
 
 #### Natural extension classes
@@ -394,8 +394,8 @@ several types (“classes”) of light source objects, and (ii) the exact
 type of light source used in a given _Microscope_ object is not known in
 advance, but has to be discovered at runtime (by looking up the value of
 the `object_type` field). Therefore, it would be reasonably trivial to
-add new type of light source to the pre-existing list of types. This is
-why we say that the model is _naturally extensible_ at the
+add a new type of light source to the pre-existing list of types. This
+is why we say that the model is _naturally extensible_ at the
 `light_source` point (or that `light_source` is a “natural extension
 point”).
 
@@ -517,8 +517,8 @@ Upon encountering data where a _Microscope_ instance contains a
   use the schema describing the extension to validate its contents and
   provide additional informations to client code;
 * a parser that is and remains unaware of the SWM extension would keep
-  the extension object fragment as it is, and simply offers to client
-  code possibility to explore the contents of the extension objects.
+  the extension object fragment as it is, and simply offer to client
+  code the possibility to explore the contents of the extension objects.
 
 ## Extension management layer
 The “extension management” part of this proposed scheme is intended, as
@@ -546,9 +546,9 @@ contain the following fields:
   example, this is `https://example.com/swm/`);
 * `version`: the version of the extension used;
 * `schemas`: a list of schemas that formally describe the extension;
-* `homepage`: a link to a page providing human-readable informations
-  about the extension (contrary to `schemas` which is intended to
-  provide **machine-readable** informations).
+* `homepage`: a link to a page providing human-readable information
+  about the extension (contrary to `schemas` which are intended to
+  provide **machine-readable** information).
 
 Each item in the `schemas` list is a simple, two-fields structure like
 this:
@@ -713,7 +713,7 @@ extension_manifest:
     ...
 ```
 
-### Why not using prefixed names for “class extensions”?
+### Why not use prefixed names for “class extensions”?
 That is, why not doing something like this:
 
 ```yaml
@@ -735,7 +735,7 @@ that applications would either need to hack their own namespace
 management feature, or accept that such “qualified names” do not in fact
 constitute a proper scoping mechanism.
 
-“Hacking a namespace management feature” could look like thisL
+“Hacking a namespace management feature” could look like this:
 
 ```yaml
 namespaces:
@@ -796,7 +796,7 @@ The type designator SHOULD be URI- or CURIE-typed. This scheme currently
 favours URI-typed designators, since they dispense from having to
 manage CURIE prefixes.
 
-Some limitations currently exists in LinkML-Py, that implementers should
+Some limitations currently exist in LinkML-Py that implementers should
 be aware of.
 
 The most important is that, for now, instance data containing a type
@@ -934,7 +934,7 @@ You may notice at this point that the `extensions` attribute looks
 similar to a natural extension point, since its range is set to a class
 that has a type designator. This is because it _is_ indeed a natural
 extension point! Conceptually, the way this extensibility scheme allows
-to extend classes is by giving each class (or at least, each class
+extending classes is by giving each class (or at least, each class
 reusing the `IsExtensibleMixin` mixin) a “generic” natural extension
 point.
 
