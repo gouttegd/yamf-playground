@@ -139,7 +139,13 @@ proposed extensibility scheme (to which we would tentatively give the ID
 `https://ngff.openmicroscopy.org/rfc4/` in this document), this could be
 done in two different ways.
 
-### As a generic class extension
+> In this document, we use existing proposed RFCs to illustrate how the
+> proposed extensibility scheme would work. This does _not_ imply that
+> all RFCs should necessarily be turned into extensions (rather than
+> being “built-in” into the specification), though that is clearly a
+> possibility.
+
+#### As a generic class extension
 As a generic class extension, RFC-4 metadata could be added to the
 `axis` object as follows:
 
@@ -155,7 +161,7 @@ axes:
           value: right-to-left
 ```
 
-### As a “natural extension”
+#### As a “natural extension”
 Alternatively, a natural extension could also be used, since the `axis`
 object qualifies as a natural extension point. Indeed, the specification
 very much foresees that the accepted list of axis types could be
@@ -180,7 +186,7 @@ axes:
       value: right-to-left
 ```
 
-### Making RFC-4 itself extensible
+#### Making RFC-4 itself extensible
 About the `type: anatomical` field in the `orientation` object, the text
 of RFC-4 says:
 
@@ -301,6 +307,104 @@ coordinate transformation object is expected.
 > For example, the new type could be used in the value of the
 > `forward` and/or `inverse` keys of the [`bijection`](https://ngff.openmicroscopy.org/specifications/dev/index.html#bijection-md)
 > type.
+
+### RFC-8 (“Collections”)
+[RFC-8](https://ngff.openmicroscopy.org/rfc/8/index.html) proposes to
+add a mechanism for storing collections of objects in a OME-Zarr
+metadata file.
+
+The core concept of RFC-8 is that of “nodes”, where a node is an object
+that has, at a minimum, a _type_ and a _name_, optionally an _ID_ and a
+generic _attributes_ dictionary. Nodes can be of different types, each
+type being intended for a specific purpose and being characterized by
+its own specific additional fields beyond the aforementioned four fields
+that are common to all nodes.
+
+The RFC-8 proposes a pre-defined set of three node types: `Collection`,
+`Singlescale`, and `Multiscale`. The `Collection` type is arguably the
+“key” type for the purpose of RFC-8; it has an additional `nodes` field
+intended to store a list (a “collection”) of nodes of arbitrary types
+(including other `Collection`-typed nodes).
+
+Importantly, RFC-8 proposes that the top-level `ome` object may itself
+be a node of any type.
+
+> The text of RFC-8 says: “A Node object **may** be used as the root
+> object of the `ome` key” (emphasis mine). But in fact, my
+> understanding of the RFC is that this is not merely a _possibility_,
+> but an _obligation_. Unless I have missed something, the RFC does not
+> propose any other place in the existing structure of the `ome` object
+> (as of the current version 0.6) where a node (or a collection of
+> nodes) could be introduced. All examples given within the RFC uses a
+> node as the root `ome` object.
+
+So, in effect, the RFC turns the `ome` object into an arbitrary node,
+which can either be a “simple” node such as `Singlescale`, or a
+“complex” node that can itself contain an arbitrary list of nodes (like
+`Multiscale` or `Collection`).
+
+#### Node types as a natural extension point
+Node types undoubtedly qualify as a “natural extension point”. The RFC
+is explicit that more types (beyond the aforementioned three types
+pre-defined by the RFC) could be added by future RFCs.
+
+Therefore, under the proposed extensibility scheme, any extension could
+add its own type of node, identified by a URI built from the extension’s
+own identifier as described [above](#natural-extensions) (e.g., an
+extension with the ID `https://example.com/my-ngff-extension/` could add
+a new node type `https://example.com/my-ngff-extension/FrobnicatorNode`).
+
+> This could also apply to the `Path` object – another type of object
+> introduced by the RFC, and which is used by by all three proposed
+> types of nodes. The `Path` object also has a `type` field that
+> dictates how the object is to be interpreted, with for now two
+> possible values and an explicit mention that “future RFCs may propose
+> additional path types” – this is another candidate for a natural
+> extension point.
+
+#### RFC-8 as an extension
+RFC-8 _could_ be made as an extension (under the currently proposed
+extensibility scheme) to the core specification, similarly to what we
+have shown [above for RFC-4](#rfc-4-axis-orientation).
+
+Contrary to RFC-4 though, this would require a preliminary amendment to
+the specification (RFC-4-as-an-extension would not require anything
+special, and could be done from the current state of the specification).
+Specifically, we would first need to explicitly turn the root `ome`
+object into a natural extension point, by (i) giving it an explicit
+`type` field and (ii) warning implementations that they can expect
+various types of `ome` objects.
+
+> Making the top-level `ome` object a natural extension point would
+> undoubtedly be a breaking change, but this is what RFC-8 proposes to
+> do anyway: if RFC-8 is adopted – as part of the core specification
+> rather than as an extension –, the top-level `ome` object will
+> become _de facto_ an extension point. The path proposed here is does
+> things in a different order (we make the top-level object an extension
+> point _first_, which can then be exploited by the RFC-8 extension),
+> but the end result is the same.
+
+For backwards compatibility, we would consider that the contents
+currently expected under the `ome` key (e.g. fields such as `scene`,
+`plate`, `multiscales`, etc.) define the “default” type for the
+top-level object, and that an `ome` object that does _not_ contain an
+explicit `type` field should be assumed to be of that “default” type.
+
+Then, once the top-level object is a natural extension point, our
+hypothetical `https://ngff.openmicroscopy.org/rfc8/` extension would be
+free to add its own types that can be used as the top-level object:
+
+* `https://ngff.openmicroscopy.org/rfc8/Collection`,
+* `https://ngff.openmicroscopy.org/rfc8/Multiscale`,
+* `https://ngff.openmicroscopy.org/rfc8/Singlescale`.
+
+> There would be several possible variations of this path. Notably,
+> the `Multiscale` and `Singlescale` types would not necessarily need
+> to be part of the same extension as the `Collection` type – they could
+> be defined by their own dedicated extensions.
+
+#### RFC-8’s own extensibility mechanism
+TBD.
 
 ## Discussions
 
