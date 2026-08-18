@@ -535,3 +535,49 @@ extension that uses `https://ngff.openmicroscopy.org/core/` as its ID,
 and all identifiers that do not start by a base URI are interpreted as
 if they were prefixed with that base URI, thereby marking them as
 belonging to that “default extension”.
+
+### Representing (most of) the specification as extensions?
+The extensibility scheme envisioned here is primarily intended to
+represent, well, “extensions” to the OME-Zarr specification. That is,
+parts of the content of an OME-Zarr file (or rather, of the contents of
+the `ome` object within a `zarr.json` file) that is not defined by the
+specification, but is instead defined by a “third party”.
+
+However, the “third party” could very well be the maintainers of the
+OME-Zarr specification themselves, according to two different scenarios.
+
+In the first scenario, any addition to the specification after the 1.0
+version would have to take the form of an extension – even if the
+addition is proposed by some maintainers of the specification and is
+accepted (likely through the standard RFC pathway) by the OME-Zarr
+community as a whole.
+
+Under that scenario, OME-Zarr 1.0, in whatever form it will have when it
+will exist, would be “frozen”, and any subsequent minor version (e.g.
+1.1) would merely consist of a list of “extensions” that would be
+considered important enough and well accepted enough that
+implementations SHOULD support them the same way they would support
+them if they were defined in the specification (maybe even “MUST”
+support them, though the exact requirement level may be decided on a
+case-by-case basis for each extension).
+
+A second, more “radical” scenario would be to formally describe most,
+possibly _all_ features of the 1.0 specification, as “extensions”.
+
+Under that scenario, the OME-Zarr 1.0 specification would consist in a
+minimal framework (mostly describing the extension system itself) and a
+list of “core extensions”.
+
+> Of note, should we choose to go that route, we would probably need to
+> use another name as “extension”, which could rapidly become confusing.
+> I would suggest a name like “featureset” or similar. We would thus
+> have “core featuresets” (part of the OME-Zarr 1.0 spec), and “external
+> featuresets” (actual “extensions” in the sense that they extend the
+> specification; but formally they would not be any different from core
+> featuresets).
+
+Of note, just because a featureset is a “core” featureset would not mean
+that it is mandatory to implement (the same way that, just because a
+given feature is currently described in the spec, it does not mean it is
+necessarily marked as a “MUST” feature). Each featureset can have its
+own requirement level.
