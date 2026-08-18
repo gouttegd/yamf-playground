@@ -335,7 +335,7 @@ be a node of any type.
 > but an _obligation_. Unless I have missed something, the RFC does not
 > propose any other place in the existing structure of the `ome` object
 > (as of the current version 0.6) where a node (or a collection of
-> nodes) could be introduced. All examples given within the RFC uses a
+> nodes) could be introduced. All examples given within the RFC use a
 > node as the root `ome` object.
 
 So, in effect, the RFC turns the `ome` object into an arbitrary node,
@@ -379,7 +379,7 @@ various types of `ome` objects.
 > undoubtedly be a breaking change, but this is what RFC-8 proposes to
 > do anyway: if RFC-8 is adopted – as part of the core specification
 > rather than as an extension –, the top-level `ome` object will
-> become _de facto_ an extension point. The path proposed here is does
+> become _de facto_ an extension point. The path proposed here does
 > things in a different order (we make the top-level object an extension
 > point _first_, which can then be exploited by the RFC-8 extension),
 > but the end result is the same.
