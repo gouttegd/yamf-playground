@@ -363,7 +363,7 @@ a new node type `https://example.com/my-ngff-extension/FrobnicatorNode`).
 > extension point.
 
 #### RFC-8 as an extension
-RFC-8 _could_ be made as an extension (under the currently proposed
+RFC-8 could be made as an extension (under the currently proposed
 extensibility scheme) to the core specification, similarly to what we
 have shown [above for RFC-4](#rfc-4-axis-orientation).
 
@@ -403,8 +403,113 @@ free to add its own types that can be used as the top-level object:
 > to be part of the same extension as the `Collection` type – they could
 > be defined by their own dedicated extensions.
 
-#### RFC-8’s own extensibility mechanism
-TBD.
+#### RFC-8’s own extensibility mechanisms
+Beyond defining collections, RFC-8 also proposes its own extensibility
+mechanisms.
+
+First, it explicitly defines extension points such as node types, path
+types, coordinate transformation types, etc, where a third-party can
+define its own custom types.
+
+Second, it provides each node type with an `attributes` dictionary that
+may contain arbitrary keys, including custom keys that can be defined by
+third-parties.
+
+Both mechanisms are very similar to what is proposed in this very
+document. A “custom type” is almost identical to what I call a
+[“natural extension class“](#natural-extensions), and the `attributes`
+dictionary can fulfil a role similar to that of the `extensions`
+dictionary used to store the [“generic class extensions“](#generic-class-extension).
+
+The main difference, and the main concern, is that RFC-8 proposes that
+custom types and custom keys in the `attributes` dictionary be
+identified by simple prefixes. As
+[discussed](../EXTENSIBILITY.md#why-not-use-prefixed-names-for-class-extensions)
+in the accompanying generic extensibility document, prefixed names do
+_not_ constitute a proper scoping mechanism – at least not without a
+namespace management system, that does not exist in native JSON. Under a
+scheme of prefixed names, the only protection against two independently
+developed extensions inadvertently (or even purposefully) using the same
+prefix would reside in the RFC-8-proposed centralized registry of
+extensions (whose use is recommended - SHOULD – but not mandatory). I
+believe this is not enough. 
+
+I would like to suggest that RFC-8 follow the recommendation of this
+document, in that
+
+* a custom type (be a node type, a path type, or whatever) should be
+  identified by a **URI** that is derived from the identifier of the
+  extension that defines it (extension that should itself be declared
+  in the [extension manifest](#the-extensions-manifest));
+
+* all custom keys defined by an extension should be enclosed in an
+  extension-specific dictionary that is itself identified by a **URI**
+  key that is again derived from the extension’s own identifier.
+
+#### Other concerns
+I have two further concerns with RFC-8’s use of the `attributes` field.
+They are not really related to extensibility, but they could both be
+fixed by the proper application of the extensibility scheme proposed in
+this document, so I will discuss them here.
+
+The first issue is that the `attributes` field, as currently used by
+RFC-8, is intended to store both metadata defined by the specification,
+and additional metadata defined by any third-party (with only the
+presence or absence of a prefix distinguishing the two cases). I believe
+this dual-use is a needless complication. It would in particular make it
+more difficult to write formal schemas to describe and validate such
+objects.
+
+The second issue is that, when dealing with a `collection`-typed node,
+an implementation has to peek into the contents of its `attributes`
+dictionary to figure out what the collection actually represents. For
+example, if it finds a `plate` attribute, then the collection represents
+a plate; if it finds a `well` attribute, then the collection represents
+a well. This again makes things needlessly more complicated, and is an
+under-utilization of the `type` field, which does not, as it is
+currently used, _fully_ identify the type of node we are dealing with.
+
+I would suggest to fix both issues at once by (i) defining as many
+subclasses of `collection` as needed to represent all possible types
+of collection (e.g. a `plate` type, a `well` type, etc.) and (ii) for
+each of those subclasses, moving their specific attributes out of the
+`attributes` dictionary and into the node itself.
+
+That is, a plate would _not_ be represented as follows:
+
+```yaml
+ome:
+  version: "0.x",
+  type: collection
+  name: hcs-plate-001
+  attributes:
+    plate:
+      acquisitions: ...
+      columns: ...
+      rows: ...
+  nodes: ...
+```
+
+but rather like this:
+
+```yaml
+ome:
+  version: "0.x"
+  type: plate
+  name: hcs-plate-001
+  plate:
+    acquisitions: ...
+    columns: ...
+    rows: ...
+  nodes: ...
+```
+
+where `plate` is defined by the RFC-8 as a subclass of `collection` that
+MUST contain a `plate` field directly in the node itself (_not_ in the
+`attributes` dictionary, which would be reserved for third-party
+metadata – and which could then possibly be replaced by the generic
+`extensions` key envisioned in this document, so as to avoid having two
+different dictionaries both intended to store third-party metadata).
 
 ## Discussions
 
