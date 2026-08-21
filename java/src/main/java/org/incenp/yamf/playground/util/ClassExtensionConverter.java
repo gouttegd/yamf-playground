@@ -6,6 +6,7 @@ import java.util.Map;
 import org.incenp.linkml.core.ClassInfo;
 import org.incenp.linkml.core.ConverterContext;
 import org.incenp.linkml.core.LinkMLRuntimeException;
+import org.incenp.linkml.core.LinkMLValueError;
 import org.incenp.linkml.core.ObjectConverter;
 import org.incenp.linkml.core.Slot;
 
@@ -30,7 +31,13 @@ public class ClassExtensionConverter extends ObjectConverter {
             for ( String extensionId : extensions.keySet() ) {
                 if ( rawExtensions.containsKey(extensionId) ) {
                     Map<String, Object> rawExtension = toMap(rawExtensions.remove(extensionId));
-                    rawMap.putAll(rawExtension);
+
+                    for ( Map.Entry<String, Object> entry : rawExtension.entrySet() ) {
+                        Slot slot = klass.getSlot(entry.getKey());
+                        if ( slot != null ) {
+                            ctx.getConverter(slot).convertForSlot(entry.getValue(), dest, slot, ctx);
+                        }
+                    }
                 }
             }
             if ( rawExtensions.isEmpty() ) {
@@ -44,31 +51,72 @@ public class ClassExtensionConverter extends ObjectConverter {
     @Override
     public Map<String, Object> serialise(Object object, boolean withIdentifier, ConverterContext ctx)
             throws LinkMLRuntimeException {
-        Map<String, Object> raw = super.serialise(object, withIdentifier, ctx);
+        // FIXME: The LinkML-Java runtime should be more flexible here. We should be
+        // able to customise the serialisation of slots without having to rewrite the
+        // entire method. We would need something like "serialiseSlot".
+        if ( !getType().isInstance(object) ) {
+            throw new LinkMLValueError(String.format("Invalid value type, '%s' expected", getType().getName()));
+        }
 
-        Map<String, Object> rawExtensions = new HashMap<>();
-        for ( String extensionId : extensions.keySet() ) {
-            ClassInfo extension = extensions.get(extensionId);
-            Map<String, Object> rawExtension = new HashMap<>();
-            for ( Slot slot : extension.getSlots() ) {
-                if ( !slot.isTypeDesignator() ) {
-                    Object value = raw.remove(slot.getLinkMLName());
-                    if ( value != null ) {
-                        rawExtension.put(slot.getLinkMLName(), value);
-                    }
+        Map<Slot, String> extensionsBySlot = new HashMap<>();
+        for ( Map.Entry<String, ClassInfo> extension : extensions.entrySet() ) {
+            for ( Slot extensionSlot : extension.getValue().getSlots() ) {
+                if ( extensionSlot.isExtensionStore() ) {
+                    continue;
+                }
+                Slot extendedSlot = klass.getSlot(extensionSlot.getLinkMLName());
+                if ( extendedSlot != null ) {
+                    extensionsBySlot.put(extendedSlot, extension.getKey());
                 }
             }
-            if ( !rawExtension.isEmpty() ) {
-                rawExtensions.put(extensionId, rawExtension);
+        }
+
+        Map<String, Object> raw = new HashMap<>();
+        Map<String, Map<String, Object>> rawExtensions = null;
+        for ( Slot slot : klass.getSlots() ) {
+            if ( (slot.isIdentifier() && !withIdentifier) ) {
+                continue;
+            }
+
+            Object slotValue = slot.getValue(object);
+            if ( slotValue == null && slot.isTypeDesignator() ) {
+                if ( slot.isMultivalued() ) {
+                    slotValue = ctx.getTypeDesignatorResolver().getDesignators(klass);
+                } else {
+                    slotValue = ctx.getTypeDesignatorResolver().getDesignator(klass);
+                }
+            } else if ( slotValue == null ) {
+                continue;
+            }
+
+            if ( slot.isExtensionStore() ) {
+                for ( Map.Entry<String, Object> extension : toMap(slotValue).entrySet() ) {
+                    raw.put(extension.getKey(), extension.getValue());
+                }
+            } else if ( extensionsBySlot.containsKey(slot) ) {
+                String extensionId = extensionsBySlot.get(slot);
+                if ( rawExtensions == null ) {
+                    rawExtensions = new HashMap<>();
+                }
+                Map<String, Object> rawExtension = rawExtensions.get(extensionId);
+                if ( rawExtension == null ) {
+                    rawExtension = new HashMap<>();
+                    rawExtensions.put(extensionId, rawExtension);
+                }
+                Object rawValue = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
+                if ( rawValue != null ) {
+                    rawExtension.put(slot.getLinkMLName(), rawValue);
+                }
+            } else {
+                Object o = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
+                if ( o != null ) {
+                    raw.put(slot.getLinkMLName(), o);
+                }
             }
         }
-        if ( !rawExtensions.isEmpty() ) {
-            Object existingRawExtensions = raw.get(EXTENSIONS_KEY);
-            if ( existingRawExtensions != null ) {
-                toMap(existingRawExtensions).putAll(rawExtensions);
-            } else {
-                raw.put(EXTENSIONS_KEY, rawExtensions);
-            }
+
+        if ( rawExtensions != null ) {
+            raw.put(EXTENSIONS_KEY, rawExtensions);
         }
 
         return raw;
