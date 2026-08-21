@@ -1,13 +1,11 @@
 package org.incenp.yamf.playground.util;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.incenp.linkml.core.ClassInfo;
 import org.incenp.linkml.core.ConverterContext;
 import org.incenp.linkml.core.LinkMLRuntimeException;
-import org.incenp.linkml.core.LinkMLValueError;
 import org.incenp.linkml.core.ObjectConverter;
 import org.incenp.linkml.core.Slot;
 
@@ -74,22 +72,5 @@ public class ClassExtensionConverter extends ObjectConverter {
         }
 
         return raw;
-    }
-
-    /*
-     * Workaround for a bug in LinkML-Java 0.2.2; already fixed in the main branch.
-     */
-    @SuppressWarnings("unchecked")
-    protected Map<String, Object> toMap(Object value) throws LinkMLRuntimeException {
-        if ( !(value instanceof Map) ) {
-            throw new LinkMLValueError("Invalid value type, map expected");
-        }
-        Map<Object, Object> map = (Map<Object, Object>) value;
-        for ( Object key : map.keySet() ) {
-            if ( !(key instanceof URI) && !(key instanceof String) ) {
-                throw new LinkMLValueError("Invalid value type, string expected");
-            }
-        }
-        return (Map<String, Object>) value;
     }
 }
