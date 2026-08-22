@@ -15,6 +15,7 @@ public class ClassExtensionConverter extends ObjectConverter {
     private final static String EXTENSIONS_KEY = "extensions";
 
     private Map<String, ClassInfo> extensions = new HashMap<>();
+    private Map<Slot, String> extensionIdBySlot = new HashMap<>();
 
     public ClassExtensionConverter(Class<?> klass) {
         super(klass);
@@ -22,6 +23,15 @@ public class ClassExtensionConverter extends ObjectConverter {
 
     public void registerExtension(ClassInfo extension) {
         extensions.put(extension.getURI(), extension);
+
+        for ( Slot extensionSlot : extension.getSlots() ) {
+            if ( extensionSlot.isExtensionStore() ) {
+                continue;
+            }
+            Slot extendedSlot = klass.getSlot(extensionSlot.getLinkMLName());
+            if ( extendedSlot != null )
+                extensionIdBySlot.put(extendedSlot, extension.getURI());
+        }
     }
 
     @Override
@@ -51,27 +61,14 @@ public class ClassExtensionConverter extends ObjectConverter {
     @Override
     public Map<String, Object> serialise(Object object, boolean withIdentifier, ConverterContext ctx)
             throws LinkMLRuntimeException {
-        // FIXME: The LinkML-Java runtime should be more flexible here. We should be
-        // able to customise the serialisation of slots without having to rewrite the
-        // entire method. We would need something like "serialiseSlot".
+        // FIXME: The LinkML-Java runtime should be updated to provide the
+        // `initSerialise` and `serialiseSlot` methods.
         if ( !getType().isInstance(object) ) {
             throw new LinkMLValueError(String.format("Invalid value type, '%s' expected", getType().getName()));
         }
 
-        Map<Slot, String> extensionsBySlot = new HashMap<>();
-        for ( Map.Entry<String, ClassInfo> extension : extensions.entrySet() ) {
-            for ( Slot extensionSlot : extension.getValue().getSlots() ) {
-                if ( extensionSlot.isExtensionStore() ) {
-                    continue;
-                }
-                Slot extendedSlot = klass.getSlot(extensionSlot.getLinkMLName());
-                if ( extendedSlot != null ) {
-                    extensionsBySlot.put(extendedSlot, extension.getKey());
-                }
-            }
-        }
-
         Map<String, Object> raw = new HashMap<>();
+        initSerialise(object, withIdentifier, raw, ctx);
         for ( Slot slot : klass.getSlots() ) {
             if ( (slot.isIdentifier() && !withIdentifier) ) {
                 continue;
@@ -92,45 +89,62 @@ public class ClassExtensionConverter extends ObjectConverter {
                 for ( Map.Entry<String, Object> extension : toMap(slotValue).entrySet() ) {
                     raw.put(extension.getKey(), extension.getValue());
                 }
-            } else if ( extensionsBySlot.containsKey(slot) ) {
-                String extensionId = extensionsBySlot.get(slot);
-                @SuppressWarnings("unchecked")
-                Map<String, Map<String, Object>> rawExtensions = (Map<String, Map<String, Object>>) raw
-                        .get(EXTENSIONS_KEY);
-                if ( rawExtensions == null ) {
-                    rawExtensions = new HashMap<>();
-                    raw.put(EXTENSIONS_KEY, rawExtensions);
-                }
-                Map<String, Object> rawExtension = rawExtensions.get(extensionId);
-                if ( rawExtension == null ) {
-                    rawExtension = new HashMap<>();
-                    rawExtensions.put(extensionId, rawExtension);
-                }
-                Object rawValue = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
-                if ( rawValue != null ) {
-                    rawExtension.put(slot.getLinkMLName(), rawValue);
-                }
-            } else if ( slot.getLinkMLName().equals(EXTENSIONS_KEY) ) {
-                Object o = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
-
-                @SuppressWarnings("unchecked")
-                Map<String, Map<String, Object>> rawExtensions = (Map<String, Map<String, Object>>) raw
-                        .get(EXTENSIONS_KEY);
-                if ( rawExtensions == null ) {
-                    raw.put(EXTENSIONS_KEY, o);
-                } else {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Map<String, Object>> unknownExtensions = (Map<String, Map<String, Object>>) o;
-                    rawExtensions.putAll(unknownExtensions);
-                }
             } else {
-                Object o = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
-                if ( o != null ) {
-                    raw.put(slot.getLinkMLName(), o);
-                }
+                serialiseSlot(slot, slotValue, raw, ctx);
             }
         }
 
         return raw;
+    }
+
+    protected void initSerialise(Object object, boolean withIdentifier, Map<String, Object> raw, ConverterContext ctx)
+            throws LinkMLRuntimeException {
+        // Process all unregistered extensions immediately.
+        Slot extensionsSlot = klass.getSlot(EXTENSIONS_KEY);
+        if ( extensionsSlot != null ) {
+            Object extensions = extensionsSlot.getValue(object);
+            if ( extensions != null ) {
+                Object rawExtensions = ctx.getConverter(extensionsSlot).serialiseForSlot(extensions, extensionsSlot,
+                        ctx);
+                if ( rawExtensions != null ) {
+                    raw.put(EXTENSIONS_KEY, rawExtensions);
+                }
+            }
+        }
+    }
+
+    protected void serialiseSlot(Slot slot, Object value, Map<String, Object> dest, ConverterContext ctx)
+            throws LinkMLRuntimeException {
+        if ( slot.getLinkMLName().equals(EXTENSIONS_KEY) ) {
+            // Already dealt with in initSerialise.
+            return;
+
+        }
+        Object rawValue = ctx.getConverter(slot).serialiseForSlot(value, slot, ctx);
+        if ( rawValue == null ) {
+            return;
+        }
+
+        if ( extensionIdBySlot.containsKey(slot) ) {
+            // This slot belongs to an extension. We must store it at the proper place under
+            // the extensions key.
+            String id = extensionIdBySlot.get(slot);
+            @SuppressWarnings("unchecked")
+            Map<String, Map<String, Object>> extensionsMap = (Map<String, Map<String, Object>>) dest
+                    .get(EXTENSIONS_KEY);
+            if ( extensionsMap == null ) {
+                extensionsMap = new HashMap<>();
+                dest.put(EXTENSIONS_KEY, extensionsMap);
+            }
+            Map<String, Object> extensionMap = extensionsMap.get(id);
+            if ( extensionMap == null ) {
+                extensionMap = new HashMap<>();
+                extensionsMap.put(id, extensionMap);
+            }
+            extensionMap.put(slot.getLinkMLName(), rawValue);
+        } else {
+            // This is a "normal" slot, to be stored at its natural place.
+            dest.put(slot.getLinkMLName(), rawValue);
+        }
     }
 }
