@@ -72,7 +72,6 @@ public class ClassExtensionConverter extends ObjectConverter {
         }
 
         Map<String, Object> raw = new HashMap<>();
-        Map<String, Map<String, Object>> rawExtensions = null;
         for ( Slot slot : klass.getSlots() ) {
             if ( (slot.isIdentifier() && !withIdentifier) ) {
                 continue;
@@ -95,8 +94,12 @@ public class ClassExtensionConverter extends ObjectConverter {
                 }
             } else if ( extensionsBySlot.containsKey(slot) ) {
                 String extensionId = extensionsBySlot.get(slot);
+                @SuppressWarnings("unchecked")
+                Map<String, Map<String, Object>> rawExtensions = (Map<String, Map<String, Object>>) raw
+                        .get(EXTENSIONS_KEY);
                 if ( rawExtensions == null ) {
                     rawExtensions = new HashMap<>();
+                    raw.put(EXTENSIONS_KEY, rawExtensions);
                 }
                 Map<String, Object> rawExtension = rawExtensions.get(extensionId);
                 if ( rawExtension == null ) {
@@ -107,16 +110,25 @@ public class ClassExtensionConverter extends ObjectConverter {
                 if ( rawValue != null ) {
                     rawExtension.put(slot.getLinkMLName(), rawValue);
                 }
+            } else if ( slot.getLinkMLName().equals(EXTENSIONS_KEY) ) {
+                Object o = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
+
+                @SuppressWarnings("unchecked")
+                Map<String, Map<String, Object>> rawExtensions = (Map<String, Map<String, Object>>) raw
+                        .get(EXTENSIONS_KEY);
+                if ( rawExtensions == null ) {
+                    raw.put(EXTENSIONS_KEY, o);
+                } else {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Map<String, Object>> unknownExtensions = (Map<String, Map<String, Object>>) o;
+                    rawExtensions.putAll(unknownExtensions);
+                }
             } else {
                 Object o = ctx.getConverter(slot).serialiseForSlot(slotValue, slot, ctx);
                 if ( o != null ) {
                     raw.put(slot.getLinkMLName(), o);
                 }
             }
-        }
-
-        if ( rawExtensions != null ) {
-            raw.put(EXTENSIONS_KEY, rawExtensions);
         }
 
         return raw;
