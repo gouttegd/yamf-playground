@@ -1018,8 +1018,8 @@ classes:
 
       This class is not, strictly speaking, needed for the extension
       scheme described in this document, but its presence will allow
-      an application to support the PersonExtension “natively”, by
-      using this class whenever the use of the Person class is
+      an application to support the MicroscopeExtension “natively”,
+      by using this class whenever the use of the Microscope class is
       expected.
     is_a: Microscope
     mixins:
