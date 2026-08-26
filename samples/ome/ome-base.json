@@ -7,21 +7,21 @@
     },
     "components": [
         {
-            "component_type": "Detector",
+            "component_type": "https://schemas.incenp.org/ome/v1/core/Detector",
             "id": "https://example.org/ome/det1",
             "gain": 123.456,
             "zoom": 10.0,
             "type": "CCD"
         },
         {
-            "component_type": "Objective",
+            "component_type": "https://schemas.incenp.org/ome/v1/core/Objective",
             "id": "https://example.org/ome/obj1",
             "correction": "PlanApo",
             "immersion": "Oil",
             "lens_na": 0.8
         },
         {
-            "component_type": "ArcLightSource",
+            "component_type": "https://schemas.incenp.org/ome/v1/core/ArcLightSource",
             "id": "https://example.org/ome/lig1",
             "power": 45,
             "type": "Hg"

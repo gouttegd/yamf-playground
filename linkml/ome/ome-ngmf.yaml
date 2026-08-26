@@ -1,0 +1,38 @@
+id: https://schemas.incenp.org/ngmf/v1/ome/
+name: ngmf-ome
+title: NGMF-enabled OME Schema
+description: >-
+  A version of the OME Schema that is usable within the Next Generation
+  Metadata Framework.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  ome: https://schemas.incenp.org/ome/v1/core/
+  orcid: https://orcid.org/
+imports:
+  - linkml:types
+  - ../ngmf/ngmf-base
+  - ome
+default_range: string
+
+
+classes:
+
+  OMEObject:
+    description: >-
+      The base class for all classes in the OME Schema.
+    notes:
+      - >-
+        We redefine this class here to add the `IsExtensibleMixin`,
+        thereby making all OME classes extensible.
+
+        HACK: We are exploiting a behaviour of LinkML-Py’s SchemaView
+        that is in violation of LinkML’s own specification (which
+        forbides such a re-definition) – but said specification is
+        almost worthless anyway, LinkML-Py devs themselves don’t seem to
+        care what it says. We follow SchemaView as the “reference”
+        implementation.
+    abstract: true
+    mixins:
+      - IsExtensibleMixin
