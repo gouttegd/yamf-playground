@@ -29,9 +29,9 @@ slots:
       The identifier slot for most of the classes within the OME model.
     range: uri
     identifier: true
-  
-  component_type:
-    description: The type designator for component objects.
+
+  light_source_type:
+    description: The type designator for light source objects.
     notes:
       - >-
         This is only ever used in the `MicroscopeComponent` class, but
@@ -51,16 +51,10 @@ classes:
     abstract: true
 
   ManufacturerSpec:
-    description: >-
+    description: The base class for instrument hardware components.
       This mixin provides attributes to record common properties among
       the various hardware components that make up a microscope.
-    notes:
-      - >-
-        In the original OME model, hardware components extends this
-        class. In this schema, we make it a mixin instead, so as to
-        avoid needlessly constraining all components to inherit from the
-        same superclass.
-    mixin: true
+    is_a: OMEObject
     attributes:
       lot_number:
         description: The lot number of the component.
@@ -78,28 +72,21 @@ classes:
       This only provides basic information about a microscope. The
       `Instrument` class is the main class that aims to fully describe
       a microscope with all its hardware components.
-    is_a: OMEObject
-    mixins:
-      - ManufacturerSpec
+    is_a: ManufacturerSpec
+    slots:
+      - id
     attributes:
       type:
         description: >-
           A value from a controlled vocabulary describing the type of
           microscope.
         range: MicroscopeType
-
-  MicroscopeComponent:
-    description: A hardware component of a microscope.
-    is_a: OMEObject
-    mixins:
-      - ManufacturerSpec
-    slots:
-      - id
-      - component_type
   
   Detector:
     description: The type of detector used to capture an image.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
     attributes:
       gain:
         description: The Detector Gain for this detector.
@@ -128,7 +115,9 @@ classes:
 
   Objective:
     description: A description of the microscope’s objective lens.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
     attributes:
       correction:
         description: The correction applied to the lens.
@@ -167,7 +156,9 @@ classes:
     description: >-
       A set of filter. This is merely a container for references to the
       filter objects.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
     attributes:
       emission_filters:
         description: The filters placed in the emission light path.
@@ -187,7 +178,9 @@ classes:
     description: >-
       A filter that may be placed in either the excitation or the
       emission light path.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
     attributes:
       type:
         description: The type of filter.
@@ -208,25 +201,15 @@ classes:
     description: >-
       The dichromatic beamsplitter or dichroic mirror used for this
       filter combination.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
 
   Instrument:
     description: >-
       This class describes the instrument used to capture the image. It
       is primarily a container for manufacturer’s model and catalog
       numbers for the microscope itself and its various components.
-    notes:
-      - >-
-        In the original OME model, the Instrument element has explicit
-        children for each type of component. In this schema, we chose
-        instead to have a single `components` attribute that can contain
-        an arbitrary number of any kind of components. We rely on the
-        fact that components can self-declare their type (since the
-        `OMEMicroscopeComponent` class has a type designator) so that we
-        can always know the kind of component we are dealing with, even
-        without an explicit attribute for each type. This will make it
-        easier to add new types of component, because it will not be
-        needed to extend this class to add corresponding new slots.
     is_a: OMEObject
     slots:
       - id
@@ -237,10 +220,41 @@ classes:
           components.
         range: Microscope
         inlined: true
-      components:
+      light_sources:
+        description: The light sources available on this instrument.
+        range: LightSource
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      detectors:
+        description: The detectors available on this instrument.
+        range: Detector
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      objectives:
+        description: The objectives available on this instrument.
+        range: Objective
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      filter_sets:
+        description: The filter sets available on this instrument.
+        range: FilterSet
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      filters:
+        description: The filters available on this instrument.
+        range: Filter
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      dichroics:
         description: >-
-          All the hardware components that make up this instrument.
-        range: MicroscopeComponent
+          The dichromatic beamsplitter or dichroic mirror available on
+          this instrument.
+        range: Dichroic
         multivalued: true
         inlined: true
         inlined_as_list: true
@@ -249,7 +263,10 @@ classes:
     description: >-
       A light source on an instrument. This class has several subclasses
       that each represent a different type of light source.
-    is_a: MicroscopeComponent
+    is_a: ManufacturerSpec
+    slots:
+      - id
+      - light_source_type
     attributes:
       power:
         description: The light-source power.

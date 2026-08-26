@@ -1,27 +1,30 @@
 {
     "id": "https://example.org/ome/inst1",
     "microscope": {
+        "id": "https://example.org/ome/mic1",
         "type": "Upright",
         "manufacturer": "Zeiss",
         "model": "LSM-880"
     },
-    "components": [
+    "detectors": [
         {
-            "component_type": "https://schemas.incenp.org/ome/v1/core/Detector",
             "id": "https://example.org/ome/det1",
             "gain": 123.456,
             "zoom": 10.0,
             "type": "CCD"
-        },
+        }
+    ],
+    "objectives": [
         {
-            "component_type": "https://schemas.incenp.org/ome/v1/core/Objective",
             "id": "https://example.org/ome/obj1",
             "correction": "PlanApo",
             "immersion": "Oil",
             "lens_na": 0.8
-        },
+        }
+    ],
+    "light_sources": [
         {
-            "component_type": "https://schemas.incenp.org/ome/v1/core/ArcLightSource",
+            "light_source_type": "https://schemas.incenp.org/ome/v1/core/ArcLightSource",
             "id": "https://example.org/ome/lig1",
             "power": 45,
             "type": "Hg"
