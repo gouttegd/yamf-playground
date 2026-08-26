@@ -252,7 +252,7 @@ classes:
         inlined_as_list: true
       dichroics:
         description: >-
-          The dichromatic beamsplitter or dichroic mirror available on
+          The dichromatic beamsplitters or dichroic mirrors available on
           this instrument.
         range: Dichroic
         multivalued: true
@@ -421,6 +421,123 @@ classes:
         minimum_value: 0.0
         maximum_value: 1.0
 
+  Settings:
+    description: Base class for all settings objects.
+    is_a: OMEObject
+
+  LightSourceSettings:
+    description: The settings for a light source.
+    is_a: Settings
+    attributes:
+      id:
+        description: The light source object those settings apply to.
+        range: LightSource
+        inlined: false
+        required: true
+      attenuation:
+        description: The attenuation of the light source.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+      wavelength:
+        description: The wavelength of the light source.
+        range: float
+        minimum_value: 0.0
+      wavelength_unit:
+        description: >-
+          Unit associated with the value of the wavelength slot.
+        range: LengthUnit
+
+  DetectorSettings:
+    description: The settings for a detector.
+    is_a: Settings
+    attributes:
+      id:
+        description: The detector those settings apply to.
+        range: Detector
+        inlined: false
+        required: true
+      offset:
+        description: The offset of the detector.
+        range: float
+      gain:
+        description: The gain of the detector.
+        range: float
+      voltage:
+        description: The voltage of the detector.
+        range: float
+      voltage_unit:
+        description: Unit associated with the value of the voltage slot.
+        range: ElectricPotentialUnit
+      zoom:
+        description: >-
+          The zoom or “confocal zoom” or “scan zoom” for a detector.
+        range: float
+      read_out_rate:
+        description: >-
+          The speed at which the detector can count pixels. This is the
+          bytes per second that can be read from the detector (like a
+          baud rate).
+        range: float
+      read_out_rate_unit:
+        description: >-
+          Unit associated with the value of the read_out_rate slot.
+        range: FrequencyUnit
+      binning:
+        description: >-
+          Indicates how many pixels are combined to form larger pixels.
+        range: BinningType
+      integration:
+        description: >-
+          The number of sequential frames that get averaged, to improve
+          the signal-to-noise ratio.
+        range: integer
+        minimum_value: 0
+
+  ObjectiveSettings:
+    description: The settings applied to an objective.
+    is_a: Settings
+    attributes:
+      id:
+        description: The objective those settings apply to.
+        range: Objective
+        inlined: false
+        required: true
+      correction_collar:
+        description: >-
+          The correction collar is normally an adjustable ring on the
+          objective. Each has an arbitrary scale on it so the value is
+          unit-less.
+        range: float
+      refractive_index:
+        description: >-
+          The refractive index is that of the immersion medium. This is
+          a ratio and the value is therefore unit-less.
+        range: float
+      medium:
+        description: The immersion medium used.
+        range: ImmersionType
+
+  LightPath:
+    description: >-
+      A description of the light path used for a given channel.
+    is_a: OMEObject
+    attributes:
+      excitation_filters:
+        description: The filters on the excitation path.
+        range: Filter
+        multivalued: true
+        inlined: false
+      emission_filters:
+        description: The filters on the emission path.
+        range: Filter
+        multivalued: true
+        inlined: false
+      dichroic:
+        description: The dichromatic beamsplitter or dichroic mirror.
+        range: Dichroic
+        inlined: false
+      
 
 enums:
   MicroscopeType:
@@ -471,7 +588,8 @@ enums:
       Other:
 
   ImmersionType:
-    description: Available values to describe the type of a detector.
+    description: >-
+      Available values to describe the type of immersion medium.
     permissible_values:
       Oil:
       Water:
@@ -572,3 +690,18 @@ enums:
       Repetitive:
       ModeLocked:
       Other:
+
+  BinningType:
+    description: >-
+      Available values to describe how many pixels are combined to form
+      larger pixels.
+    permissible_values:
+      1x1:
+        title: no binning
+      2x2:
+        title: two by two
+      4x4:
+        title: four by four
+      8x8:
+        title: eight by eight
+      other:
