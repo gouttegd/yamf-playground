@@ -1,16 +1,13 @@
-id: https://example.org/pidinst-foo-extension
+id: https://schemas.incenp.org/ngmf/v1/pidinst-foo-extension/
 name: pidinst-foo-extension
-title: Foo extension to the PIDInst schema
+title: NGMF Foo extension to the PIDInst Schema
 description: >-
-  An example of an extension to the PIDInst schema, according to the
-  extensibility scheme envisisioned in
-  https://github.com/gouttegd/yamf-playground/EXTENSIBILITY.md
+  An example of a NGMF-compatible extension to the NGMF-enabled PIDInst
+  Schema.
 created_by: orcid:0000-0002-6095-8718
 
-prefixes:
-  fooext: https://example.org/pidinst-foo-extension/
 imports:
-  - pidinst
+  - pidinst-ngmf
 
 default_range: string
 
@@ -52,6 +49,6 @@ classes:
       (so that it is recognized as a class extension object, that can be
       assigned to an `extensions` field) and (ii) reuses the
       FooInstrumentMixin above.
-    is_a: ExtensionNode
+    is_a: BaseExtensionObject
     mixins:
       - FooInstrumentMixin

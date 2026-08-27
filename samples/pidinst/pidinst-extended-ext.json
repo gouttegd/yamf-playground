@@ -57,7 +57,7 @@
     }
   ],
   "extensions": {
-    "https://example.org/pidinst-foo-extension/FooInstrumentExtension": {
+    "https://schemas.incenp.org/ngmf/v1/pidinst-foo-extension/FooInstrumentExtension": {
       "foo": {
         "name": "The name of the Foo",
         "type": "The type of the Foo"

@@ -23,11 +23,19 @@ default_prefix: pidinst
 
 imports:
   - linkml:types
-  - ../extension/extension
 default_range: string
 
 
 classes:
+
+  PIDInstObjectMixin:
+    description: A mixin used by all objects defined in this schema.
+    notes:
+      - >-
+        This mixin is intended to facilitate customization of this
+        schema, by allowing another schema to (i) import the present
+        schema and (ii) redefine this mixin as needed.
+    mixin: true
 
   PIDInstIsIdentifiableEntity:
     description: >-
@@ -78,7 +86,7 @@ classes:
       model.
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     attributes:
       schema_version:
         description: >-
@@ -229,7 +237,7 @@ classes:
       providing access to the instrument.
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     attributes:
       contact:
         description: >-
@@ -248,7 +256,7 @@ classes:
       The manufacturer of an instrument.
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 6.1
@@ -262,7 +270,7 @@ classes:
       The model of an instrument.
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 7.1
@@ -280,7 +288,7 @@ classes:
       of more than one type.
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 9.1
@@ -293,7 +301,7 @@ classes:
     description: >-
       A date relevant to an instrument.
     mixins:
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     attributes:
       value:
         description: >-
@@ -318,7 +326,7 @@ classes:
     description: >-
       An identifier for a resource related to an instrument.
     mixins:
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     attributes:
       identifier:
         description: >-
@@ -353,7 +361,7 @@ classes:
       A non-PIDInst identifier that can also identify an instrument
       instance.
     mixins:
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     attributes:
       identifier:
         description: >-
@@ -386,7 +394,7 @@ classes:
       added_in: "1.1"
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 14.1
@@ -404,7 +412,7 @@ classes:
       added_in: "1.1"
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 15.1
@@ -422,7 +430,7 @@ classes:
       added_in: "1.1"
     mixins:
       - PIDInstIsIdentifiableEntity
-      - IsExtensibleMixin
+      - PIDInstObjectMixin
     slot_usage:
       name:
         conforms_to: PIDINST model property ID 16.1

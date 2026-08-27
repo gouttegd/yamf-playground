@@ -1,0 +1,39 @@
+id: https://schemas.incenp.org/ngmf/v1/pidinst/
+name: ngmf-pidinst
+title: NGMF-enabled PIDInst Schema
+description: >-
+  A version of the PIDInst Schema that is usable within the Next
+  Generation Metadata Framework.
+conforms_to: https://doi.org/10.15497/RDA00070
+created_by: orcid:0000-0002-6095-8718
+contributors:
+  - orcid:0000-0002-1266-3819
+  - orcid:0000-0003-4163-9575
+  - orcid:0000-0003-3000-0020
+  - orcid:0000-0003-0870-3192
+  - orcid:0000-0001-5911-6022
+  - orcid:0000-0003-3585-6733
+  - orcid:0000-0001-5492-3212
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  orcid: https://orcid.org/
+  pidinst: https://example.invalid/pidinst/
+default_prefix: pidinst
+
+imports:
+  - linkml:types
+  - ../ngmf/ngmf-base
+  - pidinst
+default_range: string
+
+classes:
+
+  PIDInstObjectMixin:
+    description: The mixin used by all classes in the PIDInst Schema.
+    notes:
+      - >-
+        We redefine this mixin here to make it derive from the
+        `IsExtensibleMixin` mixin, thereby making all PIDInst classes
+        extensible.
+    is_a: IsExtensibleMixin

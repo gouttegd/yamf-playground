@@ -1,22 +1,30 @@
-id: https://example.org/pidinst-foo
+id: https://schemas.incenp.org/ngmf/v1/pidinst-foo/
 name: pidinst-foo
-title: PIDInst schema with the Foo extension
+title: NGMF PIDInst schema with the Foo extension
 description: >-
-  A version of the PIDInst schema that bundles the Foo extension.
+  A version of the NGMF-enabled PIDInst Schema that bundles the Foo
+  extension.
 
   This version can be used by an implementation that wants to support
   the Foo extension at compile-time.
 created_by: orcid:0000-0002-6095-8718
 
-prefixes:
-  pidfoo: https://example.org/pidinst-foo/
 imports:
-  - pidinst
+  - pidinst-ngmf
   - foo
-default_range: string
 
 
 classes:
+
+  PIDInstObjectMixin:
+    is_a: IsExtensibleMixin
+    notes:
+      - >-
+        We should not have to redefine this mixin here – it is already
+        redefined in pidinst-ngmf. But LinkML-Py’s behaviour with regard
+        to redefinitions in imports seems a bit… erratic. If
+        pidinst-ngmf is _not_ imported, then the redefinition becomes
+        unnecessary.
 
   FooInstrument:
     description: >-
