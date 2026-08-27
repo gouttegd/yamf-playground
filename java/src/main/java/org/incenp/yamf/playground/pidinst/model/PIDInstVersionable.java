@@ -56,7 +56,7 @@ public class PIDInstVersionable {
         if ( !other.canEqual((Object) this)) return false;
         final Object this$addedIn = this.getAddedIn();
         final Object other$addedIn = other.getAddedIn();
-        if ( this$addedIn == null ? other$addedIn != null : !this$addedIn.equals(other$addedIn)) return false;
+        if ( this$addedIn == null ? other$addedIn != null : !this$addedIn.equals(other$addedIn) ) return false;
         return true;
     }
 

@@ -19,33 +19,14 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://schemas.incenp.org/ngmf/v1/base/IsExtensibleMixin")
-public class IsExtensibleMixin {
-
-    @Inlined
-    @LinkURI("https://schemas.incenp.org/ngmf/v1/base/extensions")
-    private List<BaseExtensionObject> extensions;
-
-    public void setExtensions(List<BaseExtensionObject> extensions) {
-        this.extensions = extensions;
-    }
-
-    public List<BaseExtensionObject> getExtensions() {
-        return this.extensions;
-    }
-
-    public List<BaseExtensionObject> getExtensions(boolean set) {
-        if ( this.extensions == null && set ) {
-            this.extensions = new ArrayList<>();
-        }
-        return this.extensions;
-    }
+@LinkURI("https://schemas.incenp.org/ngmf/v1/pidinst-foo/PIDInstObjectMixin")
+public class PIDInstObjectMixin extends IsExtensibleMixin {
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Object o;
-        sb.append("IsExtensibleMixin(");
+        sb.append("PIDInstObjectMixin(");
         if ( (o = this.getExtensions()) != null ) {
             sb.append("extensions=");
             sb.append(o);
@@ -58,25 +39,22 @@ public class IsExtensibleMixin {
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof IsExtensibleMixin) ) return false;
-        final IsExtensibleMixin other = (IsExtensibleMixin) o;
+        if ( !(o instanceof PIDInstObjectMixin) ) return false;
+        final PIDInstObjectMixin other = (PIDInstObjectMixin) o;
         if ( !other.canEqual((Object) this)) return false;
-        final Object this$extensions = this.getExtensions();
-        final Object other$extensions = other.getExtensions();
-        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions) ) return false;
+        if ( !super.equals(o) ) return false;
+
         return true;
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof IsExtensibleMixin;
+        return other instanceof PIDInstObjectMixin;
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 59;
-        int result = 1;
-        final Object $extensions = this.getExtensions();
-        result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
+        int result = super.hashCode();
         return result;
     }
 }

@@ -19,10 +19,10 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://example.org/pidinst-foo/FooInstrument")
+@LinkURI("https://schemas.incenp.org/ngmf/v1/pidinst-foo/FooInstrument")
 public class FooInstrument extends PIDInstInstrument {
 
-    @LinkURI("https://example.org/pidinst-foo-extension/foo")
+    @LinkURI("https://schemas.incenp.org/ngmf/v1/pidinst-foo-extension/foo")
     private Foo foo;
 
     public void setFoo(Foo foo) {
@@ -48,7 +48,7 @@ public class FooInstrument extends PIDInstInstrument {
 
         final Object this$foo = this.getFoo();
         final Object other$foo = other.getFoo();
-        if ( this$foo == null ? other$foo != null : !this$foo.equals(other$foo)) return false;
+        if ( this$foo == null ? other$foo != null : !this$foo.equals(other$foo) ) return false;
         return true;
     }
 

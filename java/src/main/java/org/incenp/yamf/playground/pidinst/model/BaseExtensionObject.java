@@ -19,14 +19,14 @@ import org.incenp.linkml.core.annotations.SlotName;
 import org.incenp.linkml.core.annotations.TypeDesignator;
 import org.incenp.linkml.core.CurieConverter;
 
-@LinkURI("https://schemas.incenp.org/extension/v1/ExtensionNode")
-public class ExtensionNode {
+@LinkURI("https://schemas.incenp.org/ngmf/v1/base/BaseExtensionObject")
+public class BaseExtensionObject {
 
     @Identifier(isGlobal = false)
     @TypeDesignator
     @SlotName("extension_type")
     @Required
-    @LinkURI("https://schemas.incenp.org/extension/v1/extension_type")
+    @LinkURI("https://schemas.incenp.org/ngmf/v1/base/extension_type")
     private URI extensionType;
 
     @ExtensionHolder
@@ -57,23 +57,24 @@ public class ExtensionNode {
 
     @Override
     public String toString() {
-        return "ExtensionNode(extension_type=" + this.getExtensionType() + ")";
+        return "BaseExtensionObject(extension_type=" + this.getExtensionType() + ")";
     }
 
     @Override
     public boolean equals(final Object o) {
         if ( o == this ) return true;
-        if ( !(o instanceof ExtensionNode) ) return false;
-        final ExtensionNode other = (ExtensionNode) o;
+        if ( !(o instanceof BaseExtensionObject) ) return false;
+        final BaseExtensionObject other = (BaseExtensionObject) o;
         if ( !other.canEqual((Object) this)) return false;
         final Object this$extensionType = this.getExtensionType();
         final Object other$extensionType = other.getExtensionType();
-        if ( this$extensionType == null ? other$extensionType != null : !this$extensionType.equals(other$extensionType)) return false;
+        if ( this$extensionType == null ? other$extensionType != null : !this$extensionType.equals(other$extensionType) ) return false;
+        if ( this.extraSlots == null ? other.extraSlots != null : !this.extraSlots.equals(other.extraSlots) ) return false;
         return true;
     }
 
     protected boolean canEqual(final Object other) {
-        return other instanceof ExtensionNode;
+        return other instanceof BaseExtensionObject;
     }
 
     @Override
@@ -82,6 +83,7 @@ public class ExtensionNode {
         int result = 1;
         final Object $extensionType = this.getExtensionType();
         result = result * PRIME + ($extensionType == null ? 43 : $extensionType.hashCode());
+        result = result * PRIME + (this.extraSlots == null ? 43 : this.extraSlots.hashCode());
         return result;
     }
 }

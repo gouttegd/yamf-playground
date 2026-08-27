@@ -31,8 +31,8 @@ public class PIDInstDate {
     private PIDInstDateType type;
 
     @Inlined
-    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
-    private List<ExtensionNode> extensions;
+    @LinkURI("https://schemas.incenp.org/ngmf/v1/base/extensions")
+    private List<BaseExtensionObject> extensions;
 
     public void setValue(LocalDate value) {
         this.value = value;
@@ -50,15 +50,15 @@ public class PIDInstDate {
         return this.type;
     }
 
-    public void setExtensions(List<ExtensionNode> extensions) {
+    public void setExtensions(List<BaseExtensionObject> extensions) {
         this.extensions = extensions;
     }
 
-    public List<ExtensionNode> getExtensions() {
+    public List<BaseExtensionObject> getExtensions() {
         return this.extensions;
     }
 
-    public List<ExtensionNode> getExtensions(boolean set) {
+    public List<BaseExtensionObject> getExtensions(boolean set) {
         if ( this.extensions == null && set ) {
             this.extensions = new ArrayList<>();
         }
@@ -97,13 +97,13 @@ public class PIDInstDate {
         if ( !other.canEqual((Object) this)) return false;
         final Object this$value = this.getValue();
         final Object other$value = other.getValue();
-        if ( this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
+        if ( this$value == null ? other$value != null : !this$value.equals(other$value) ) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
-        if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
+        if ( this$type == null ? other$type != null : !this$type.equals(other$type) ) return false;
         final Object this$extensions = this.getExtensions();
         final Object other$extensions = other.getExtensions();
-        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions) ) return false;
         return true;
     }
 

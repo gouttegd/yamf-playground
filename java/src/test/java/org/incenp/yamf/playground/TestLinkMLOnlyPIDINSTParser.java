@@ -10,7 +10,7 @@ import org.incenp.linkml.core.ClassInfo;
 import org.incenp.linkml.core.LinkMLRuntimeException;
 import org.incenp.linkml.core.Slot;
 import org.incenp.linkml.ext.ObjectLoader;
-import org.incenp.yamf.playground.pidinst.model.ExtensionNode;
+import org.incenp.yamf.playground.pidinst.model.BaseExtensionObject;
 import org.incenp.yamf.playground.pidinst.model.Foo;
 import org.incenp.yamf.playground.pidinst.model.FooInstrument;
 import org.incenp.yamf.playground.pidinst.model.FooInstrumentExtension;
@@ -51,8 +51,9 @@ public class TestLinkMLOnlyPIDINSTParser {
         
         Assertions.assertEquals("Alice", ins.getName());
 
-        Map<String, ExtensionNode> extensions = getExtensionMap(ins);
-        ExtensionNode fooNode = extensions.get("https://example.org/pidinst-foo-extension/FooInstrumentExtension");
+        Map<String, BaseExtensionObject> extensions = getExtensionMap(ins);
+        BaseExtensionObject fooNode = extensions
+                .get("https://schemas.incenp.org/ngmf/v1/pidinst-foo-extension/FooInstrumentExtension");
         Assertions.assertNotNull(fooNode);
         Assertions.assertInstanceOf(FooInstrumentExtension.class, fooNode);
 
@@ -74,8 +75,9 @@ public class TestLinkMLOnlyPIDINSTParser {
         // The default LinkML converter is not aware of the extension mechanism, so the
         // extension data should still be in the "extensions" attribute.
         Assertions.assertNull(ins.getFoo());
-        Map<String, ExtensionNode> extensions = getExtensionMap(ins);
-        ExtensionNode fooNode = extensions.get("https://example.org/pidinst-foo-extension/FooInstrumentExtension");
+        Map<String, BaseExtensionObject> extensions = getExtensionMap(ins);
+        BaseExtensionObject fooNode = extensions
+                .get("https://schemas.incenp.org/ngmf/v1/pidinst-foo-extension/FooInstrumentExtension");
         Assertions.assertNotNull(fooNode);
         Assertions.assertInstanceOf(FooInstrumentExtension.class, fooNode);
 
@@ -114,15 +116,15 @@ public class TestLinkMLOnlyPIDINSTParser {
         roundtrip(FooInstrument.class, ins);
     }
 
-    private Map<String, ExtensionNode> getExtensionMap(Object o) throws LinkMLRuntimeException {
-        Map<String, ExtensionNode> extensions = new HashMap<>();
+    private Map<String, BaseExtensionObject> getExtensionMap(Object o) throws LinkMLRuntimeException {
+        Map<String, BaseExtensionObject> extensions = new HashMap<>();
 
         ClassInfo ci = ClassInfo.get(o.getClass());
         Slot extensionSlot = ci.getSlot("extensions");
         @SuppressWarnings("unchecked")
-        List<ExtensionNode> extensionList = (List<ExtensionNode>) extensionSlot.getValue(o);
+        List<BaseExtensionObject> extensionList = (List<BaseExtensionObject>) extensionSlot.getValue(o);
 
-        for ( ExtensionNode node : extensionList ) {
+        for ( BaseExtensionObject node : extensionList ) {
             extensions.put(node.getExtensionType().toString(), node);
         }
 

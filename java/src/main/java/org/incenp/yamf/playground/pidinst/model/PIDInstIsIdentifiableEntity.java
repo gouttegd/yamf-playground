@@ -89,13 +89,13 @@ public class PIDInstIsIdentifiableEntity {
         if ( !other.canEqual((Object) this)) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        if ( this$name == null ? other$name != null : !this$name.equals(other$name) ) return false;
         final Object this$identifier = this.getIdentifier();
         final Object other$identifier = other.getIdentifier();
-        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
+        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier) ) return false;
         final Object this$identifierType = this.getIdentifierType();
         final Object other$identifierType = other.getIdentifierType();
-        if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType)) return false;
+        if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType) ) return false;
         return true;
     }
 

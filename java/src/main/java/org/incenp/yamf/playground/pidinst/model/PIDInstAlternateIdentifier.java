@@ -34,8 +34,8 @@ public class PIDInstAlternateIdentifier {
     private String name;
 
     @Inlined
-    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
-    private List<ExtensionNode> extensions;
+    @LinkURI("https://schemas.incenp.org/ngmf/v1/base/extensions")
+    private List<BaseExtensionObject> extensions;
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -61,15 +61,15 @@ public class PIDInstAlternateIdentifier {
         return this.name;
     }
 
-    public void setExtensions(List<ExtensionNode> extensions) {
+    public void setExtensions(List<BaseExtensionObject> extensions) {
         this.extensions = extensions;
     }
 
-    public List<ExtensionNode> getExtensions() {
+    public List<BaseExtensionObject> getExtensions() {
         return this.extensions;
     }
 
-    public List<ExtensionNode> getExtensions(boolean set) {
+    public List<BaseExtensionObject> getExtensions(boolean set) {
         if ( this.extensions == null && set ) {
             this.extensions = new ArrayList<>();
         }
@@ -113,16 +113,16 @@ public class PIDInstAlternateIdentifier {
         if ( !other.canEqual((Object) this)) return false;
         final Object this$identifier = this.getIdentifier();
         final Object other$identifier = other.getIdentifier();
-        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
+        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier) ) return false;
         final Object this$type = this.getType();
         final Object other$type = other.getType();
-        if ( this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
+        if ( this$type == null ? other$type != null : !this$type.equals(other$type) ) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        if ( this$name == null ? other$name != null : !this$name.equals(other$name) ) return false;
         final Object this$extensions = this.getExtensions();
         final Object other$extensions = other.getExtensions();
-        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions) ) return false;
         return true;
     }
 

@@ -97,8 +97,8 @@ public class PIDInstInstrument {
     private String identifierType;
 
     @Inlined
-    @LinkURI("https://schemas.incenp.org/extension/v1/extensions")
-    private List<ExtensionNode> extensions;
+    @LinkURI("https://schemas.incenp.org/ngmf/v1/base/extensions")
+    private List<BaseExtensionObject> extensions;
 
     @ExtensionHolder
     private Map<String, Object> extraSlots;
@@ -309,15 +309,15 @@ public class PIDInstInstrument {
         return this.identifierType;
     }
 
-    public void setExtensions(List<ExtensionNode> extensions) {
+    public void setExtensions(List<BaseExtensionObject> extensions) {
         this.extensions = extensions;
     }
 
-    public List<ExtensionNode> getExtensions() {
+    public List<BaseExtensionObject> getExtensions() {
         return this.extensions;
     }
 
-    public List<ExtensionNode> getExtensions(boolean set) {
+    public List<BaseExtensionObject> getExtensions(boolean set) {
         if ( this.extensions == null && set ) {
             this.extensions = new ArrayList<>();
         }
@@ -352,58 +352,59 @@ public class PIDInstInstrument {
         if ( !other.canEqual((Object) this)) return false;
         final Object this$schemaVersion = this.getSchemaVersion();
         final Object other$schemaVersion = other.getSchemaVersion();
-        if ( this$schemaVersion == null ? other$schemaVersion != null : !this$schemaVersion.equals(other$schemaVersion)) return false;
+        if ( this$schemaVersion == null ? other$schemaVersion != null : !this$schemaVersion.equals(other$schemaVersion) ) return false;
         final Object this$landingPage = this.getLandingPage();
         final Object other$landingPage = other.getLandingPage();
-        if ( this$landingPage == null ? other$landingPage != null : !this$landingPage.equals(other$landingPage)) return false;
+        if ( this$landingPage == null ? other$landingPage != null : !this$landingPage.equals(other$landingPage) ) return false;
         final Object this$owners = this.getOwners();
         final Object other$owners = other.getOwners();
-        if ( this$owners == null ? other$owners != null : !this$owners.equals(other$owners)) return false;
+        if ( this$owners == null ? other$owners != null : !this$owners.equals(other$owners) ) return false;
         final Object this$manufacturers = this.getManufacturers();
         final Object other$manufacturers = other.getManufacturers();
-        if ( this$manufacturers == null ? other$manufacturers != null : !this$manufacturers.equals(other$manufacturers)) return false;
+        if ( this$manufacturers == null ? other$manufacturers != null : !this$manufacturers.equals(other$manufacturers) ) return false;
         final Object this$model = this.getModel();
         final Object other$model = other.getModel();
-        if ( this$model == null ? other$model != null : !this$model.equals(other$model)) return false;
+        if ( this$model == null ? other$model != null : !this$model.equals(other$model) ) return false;
         final Object this$description = this.getDescription();
         final Object other$description = other.getDescription();
-        if ( this$description == null ? other$description != null : !this$description.equals(other$description)) return false;
+        if ( this$description == null ? other$description != null : !this$description.equals(other$description) ) return false;
         final Object this$types = this.getTypes();
         final Object other$types = other.getTypes();
-        if ( this$types == null ? other$types != null : !this$types.equals(other$types)) return false;
+        if ( this$types == null ? other$types != null : !this$types.equals(other$types) ) return false;
         final Object this$measuredVariables = this.getMeasuredVariables();
         final Object other$measuredVariables = other.getMeasuredVariables();
-        if ( this$measuredVariables == null ? other$measuredVariables != null : !this$measuredVariables.equals(other$measuredVariables)) return false;
+        if ( this$measuredVariables == null ? other$measuredVariables != null : !this$measuredVariables.equals(other$measuredVariables) ) return false;
         final Object this$dates = this.getDates();
         final Object other$dates = other.getDates();
-        if ( this$dates == null ? other$dates != null : !this$dates.equals(other$dates)) return false;
+        if ( this$dates == null ? other$dates != null : !this$dates.equals(other$dates) ) return false;
         final Object this$relatedIdentifiers = this.getRelatedIdentifiers();
         final Object other$relatedIdentifiers = other.getRelatedIdentifiers();
-        if ( this$relatedIdentifiers == null ? other$relatedIdentifiers != null : !this$relatedIdentifiers.equals(other$relatedIdentifiers)) return false;
+        if ( this$relatedIdentifiers == null ? other$relatedIdentifiers != null : !this$relatedIdentifiers.equals(other$relatedIdentifiers) ) return false;
         final Object this$alternateIdentifiers = this.getAlternateIdentifiers();
         final Object other$alternateIdentifiers = other.getAlternateIdentifiers();
-        if ( this$alternateIdentifiers == null ? other$alternateIdentifiers != null : !this$alternateIdentifiers.equals(other$alternateIdentifiers)) return false;
+        if ( this$alternateIdentifiers == null ? other$alternateIdentifiers != null : !this$alternateIdentifiers.equals(other$alternateIdentifiers) ) return false;
         final Object this$measuredQuantities = this.getMeasuredQuantities();
         final Object other$measuredQuantities = other.getMeasuredQuantities();
-        if ( this$measuredQuantities == null ? other$measuredQuantities != null : !this$measuredQuantities.equals(other$measuredQuantities)) return false;
+        if ( this$measuredQuantities == null ? other$measuredQuantities != null : !this$measuredQuantities.equals(other$measuredQuantities) ) return false;
         final Object this$measurementTechniques = this.getMeasurementTechniques();
         final Object other$measurementTechniques = other.getMeasurementTechniques();
-        if ( this$measurementTechniques == null ? other$measurementTechniques != null : !this$measurementTechniques.equals(other$measurementTechniques)) return false;
+        if ( this$measurementTechniques == null ? other$measurementTechniques != null : !this$measurementTechniques.equals(other$measurementTechniques) ) return false;
         final Object this$subjects = this.getSubjects();
         final Object other$subjects = other.getSubjects();
-        if ( this$subjects == null ? other$subjects != null : !this$subjects.equals(other$subjects)) return false;
+        if ( this$subjects == null ? other$subjects != null : !this$subjects.equals(other$subjects) ) return false;
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        if ( this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+        if ( this$name == null ? other$name != null : !this$name.equals(other$name) ) return false;
         final Object this$identifier = this.getIdentifier();
         final Object other$identifier = other.getIdentifier();
-        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier)) return false;
+        if ( this$identifier == null ? other$identifier != null : !this$identifier.equals(other$identifier) ) return false;
         final Object this$identifierType = this.getIdentifierType();
         final Object other$identifierType = other.getIdentifierType();
-        if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType)) return false;
+        if ( this$identifierType == null ? other$identifierType != null : !this$identifierType.equals(other$identifierType) ) return false;
         final Object this$extensions = this.getExtensions();
         final Object other$extensions = other.getExtensions();
-        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions)) return false;
+        if ( this$extensions == null ? other$extensions != null : !this$extensions.equals(other$extensions) ) return false;
+        if ( this.extraSlots == null ? other.extraSlots != null : !this.extraSlots.equals(other.extraSlots) ) return false;
         return true;
     }
 
@@ -451,6 +452,7 @@ public class PIDInstInstrument {
         result = result * PRIME + ($identifierType == null ? 43 : $identifierType.hashCode());
         final Object $extensions = this.getExtensions();
         result = result * PRIME + ($extensions == null ? 43 : $extensions.hashCode());
+        result = result * PRIME + (this.extraSlots == null ? 43 : this.extraSlots.hashCode());
         return result;
     }
 }
