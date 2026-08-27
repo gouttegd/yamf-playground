@@ -1,0 +1,292 @@
+id: https://example.invalid/limi/v1/base/
+name: limi-base
+title: LiMi Base Schema
+description: >-
+  This schema is part of the set of LinkML schemas for the QUAREP Light
+  Microscopy Model (hereafter referred to as “LiMi”).
+
+  It defines some “base” entities that are expected to be used
+  throughout the overall set of schemas.
+created_by: orcid:0000-0002-6095-8718
+see_also:
+  - https://quarep.org
+  - https://github.com/WU-BIMAC/NBOMicroscopyMetadataSpecs
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  limibase: https://example.invalid/limi/v1/base/
+  orcid: https://orcid.org/
+imports:
+  - linkml:types
+default_prefix: limibase
+default_range: string
+
+
+slots:
+
+  id:
+    description: A Unique Identifier for this entity.
+    identifier: true
+
+  name:
+    description: A User-defined Name for this entity.
+
+
+classes:
+
+  LiMiObjectMixin:
+    description: A mixin used by all objects defined in the LiMi Schema.
+    notes:
+      - >-
+        This mixin is intended to facilitate customization of the LiMi
+        Schema, by allowing another schema to (i) import any of the
+        schemas that make up the LiMi Schema and (ii) redefine this
+        as needed.
+    mixin: true
+
+  LiMiManufacturerSpecs:
+    description: >-
+      This describes the Manufacturer specifications for a component.
+    mixins:
+      - LiMiObjectMixin
+    attributes:
+      manufacturer:
+        description: >-
+          The company, research group or individual who built or
+          manufactured this hardware.
+      model:
+        description: >-
+          The Model name or any other designation the Manufacturer uses
+          for this component.
+      catalog_number:
+        description: >-
+          The Catalog, Part of Serial Number used by the Manufacturer to
+          uniquely identify this component.
+      lot_number:
+        description: >-
+          The Lot Number used by the Manufacturer to refer to a specific
+          production batch or lot for this component.
+
+
+enums:
+
+  LiMiPowerUnit:
+    description: >-
+      Available values to describe the unit of a value that represents a
+      power.
+    notes:
+      - >-
+        This comes directly from the OME model. The NBO v02-01
+        specification mentions a "unit:IlluminationPowerUnit" but,
+        AFAICT, does not define it anywhere.
+    permissible_values:
+      YW:
+        title: yotta watt
+      ZW:
+        title: zetta watt
+      EW:
+        title: exa watt
+      PW:
+        title: peta watt
+      TW:
+        title: tera watt
+      GW:
+        title: giga watt
+      MW:
+        title: mega watt
+      kW:
+        title: kilo watt
+      hW:
+        title: hecto watt
+      daW:
+        title: deca watt
+      W:
+        title: watt
+      dW:
+        title: deci watt
+      cW:
+        title: centi watt
+      mW:
+        title: milli watt
+      μW:
+        title: micro watt
+      nW:
+        title: nano watt
+      pW:
+        title: pico watt
+      fW:
+        title: femto watt
+      aW:
+        title: atto watt
+      zW:
+        title: zepto watt
+      yW:
+        title: yocto watt
+
+  LiMiLengthUnit:
+    description: >-
+      Available values to describe the unit of a value that represents a
+      length.
+    permissible_values:
+      Ym:
+        title: yotta meter
+      Zm:
+        title: zetta metter
+      Em:
+        title: exa meter
+      Pm:
+        title: peta meter
+      Tm:
+        title: tera meter
+      Gm:
+        title: giga meter
+      Mm:
+        title: mega meter
+      km:
+        title: kilo meter
+      hm:
+        title: hecto meter
+      dam:
+        title: deca meter
+      m:
+        title: meter
+      dm:
+        title: deci meter
+      cm:
+        title: centi meter
+      mm:
+        title: milli meter
+      µm:
+        title: micro meter
+      nm:
+        title: nano meter
+      pm:
+        title: pico meter
+      fm:
+        title: femto meter
+      am:
+        title: atto metter
+      zm:
+        title: zepto meter
+      ym:
+        title: yocto meter
+      Å:
+        title: angstrom
+      thou:
+        title: imperial thou
+      li:
+        title: imperial line
+      in:
+        title: imperial inch
+      ft:
+        title: imperial feet
+      yd:
+        title: imperial yard
+      mi:
+        title: imperial mile
+      ua:
+        title: astronomical unit
+      ly:
+        title: light year
+      pc:
+        title: parsec
+      pt:
+        title: typography point
+      pixel:
+      reference frame:
+
+  LiMiFrequencyUnit:
+    description: >-
+      Available values to describe the unit of a value that represents
+      a frequency.
+    permissible_values:
+      YHz:
+        title: yotta hertz
+      ZHz:
+        title: zetta hertz
+      EHz:
+        title: exa hertz
+      PHz:
+        title: peta hertz
+      THz:
+        title: tera hertz
+      GHz:
+        title: giga hertz
+      MHz:
+        title: mega hertz
+      kHz:
+        title: kilo hertz
+      hHz:
+        title: hecto hertz
+      daHz:
+        title: deca hertz
+      Hz:
+        title: hertz
+      dHz:
+        title: deci hertz
+      cHz:
+        title: centi hertz
+      mHz:
+        title: milli hertz
+      µHz:
+        title: micro hertz
+      nHz:
+        title: nano hertz
+      pHz:
+        title: pico hertz
+      fHz:
+        title: femto hertz
+      aHz:
+        title: atto hertz
+      zHz:
+        title: zepto hertz
+      yHz:
+        title: yocto hertz
+
+  LiMiTimeUnit:
+    description: >-
+      Available values to describe the unit of a value that represents
+      a duration.
+    permissible_values:
+      Ys:
+        title: yotta second
+      Zs:
+        title: zetta second
+      Es:
+        title: exa second
+      Ps:
+        title: peta second
+      Ts:
+        title: tera second
+      Gs:
+        title: giga second
+      Ms:
+        title: mega second
+      ks:
+        title: kilo second
+      hs:
+        title: hecto second
+      das:
+        title: deca second
+      s:
+        title: second
+      ds:
+        title: deci second
+      cs:
+        title: centi second
+      ms:
+        title: milli second
+      µs:
+        title: micro second
+      ns:
+        title: nano second
+      ps:
+        title: pico second
+      fs:
+        title: femto second
+      as:
+        title: atto second
+      zs:
+        title: zepto second
+      ys:
+        title: yocto second

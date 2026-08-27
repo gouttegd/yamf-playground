@@ -1,0 +1,506 @@
+id: https://example.invalid/limi/v1/core/
+name: limi-core
+title: LiMi Core Schema
+description: >-
+  This schema is part of the set of LinkML schemas for the QUAREP Light
+  Microscopy Model (hereafter referred to as “LiMi”).
+
+  It defines the entities that belong to the “Core” part of the LiMi
+  model.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  limicore: https://example.invalid/limi/v1/core/
+imports:
+  - limi-base
+default_prefix: limicore
+default_range: string
+
+
+classes:
+
+  LiMiCoreInstrument:
+    description: >-
+      This class describes the Instrument used to capture an image. It
+      is primarily a container referring to the list of hardware
+      components in a given Microscope.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+    attributes:
+      stand:
+        description: >-
+          The core structure of this Microscope, which might also be
+          referred to as its Body.
+        range: LiMiCoreMicroscopeStand
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        notes:
+          - >-
+            Should that attribute really be multi-valued? Can a
+            microscope have more than one stand.
+      light_sources:
+        description: The Light Source(s) available for this Instrument.
+        range: LiMiCoreLightSource
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  LiMiCoreMicroscopeStand:
+    description: The core structure of a Microscope.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+    attributes:
+      type:
+        description: >-
+          The general category to which this Microscope belongs.
+        range: LiMiCoreMicroscopeType
+        required: true
+        notes:
+          - >-
+            Shouldn’t that be an attribute of the Instrument rather than
+            of the MicroscopeStand?
+      origin:
+        description: The origin of this microscope stand.
+        range: LiMiCoreMicroscopeOriginType
+      eyepiece_field_number:
+        description: >-
+          The diaphragm size of the Microscope eyepiece expressed in mm.
+        range: float
+      subtype:
+        description: >-
+          Identifies the precise subtype of Microscope Stand.
+        designates_type: true
+        range: uri
+
+  LiMiCoreInvertedMicroscope:
+    description: An inverted Microscope Stand.
+    is_a: LiMiCoreMicroscopeStand
+
+  LiMiCoreLightSource:
+    description: A Light Source on an Instrument.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+    attributes:
+      purchase_date:
+        description: The Date in which this Light Source was purchased.
+        range: date
+      illumination_power_reporting_statistic:
+        description: >-
+          The statistic used by the Manufacturer to report the nominal
+          illumination power output emitted by this Light Source at Peak
+          Wavelength.
+        range: LiMiCoreIlluminationPowerReportingStatistic
+      illumination_power_reporting_position:
+        description: >-
+          The position where the reported Illumination Intensity value
+          was obtained as reported by the Manufacturer.
+        range: LiMiCoreIlluminationPowerReportingPosition
+      subtype:
+        description: >-
+          Identifies the precise type of Light Source.
+        designates_type: true
+        range: uri
+
+  LiMiCoreArcLightSource:
+    description: >-
+      Represents a Light Source that is an Arc lamp. An Arc lamp is a
+      discharge lamp that produces light by an electric arc (also
+      called a voltaic arc), which is typically generated between metal
+      electrodes and travels through an inert gas in in a glass bulb.
+      The inert gas can be Mercury (He), Xenon (Xe), or a mixture of the
+      two. The choice of the gas is important because its nature
+      determines the spectral behavior of the lamp.
+    is_a: LiMiCoreLightSource
+    attributes:
+      type:
+        description: The inert gas vapor contained in the Arc lamp bulb.
+        range: LiMiCoreArcLightSourceType
+      illumination_wavelength_ranges:
+        description: >-
+          The range(s) of wavelengths this device is designed for,
+          according to the Manufacturer.
+        range: LiMiCoreIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiCoreFilamentLightSource:
+    description: >-
+      Represents a Light Source that is a Filament lamp. A Filament lamp
+      is an incandescent Light Source with a wire filament (usually
+      tungsten), which is heated by the passage of an electric current
+      to such a high temperature that it flows with visible light
+      (incandescence). The emitted spectrum is continuous, and it
+      approximates that of a black-body radiator.
+    is_a: LiMiCoreLightSource
+    attributes:
+      type:
+        description: The type of Filament lamp Light Source.
+        range: LiMiCoreFilamentLightSourceType
+      illumination_wavelength_ranges:
+        description: >-
+          The range(s) of wavelengths this device is designed for,
+          according to the Manufacturer.
+        range: LiMiCoreIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiCoreLaserLightSource:
+    description: >-
+      A Light Source which emits coherent radiation at high spectral
+      concentrations of radiance and minimal solid angles. This includes
+      proper Light Amplification by Stimulated Emission of Radiation
+      (LASER) sources that emig light through a process of optical
+      amplification based on the stimulated emisssion of electromagnetic
+      radiations. It also includes Optical Parametric Oscillator (OPO)
+      sources that uses a kind of LASER resonator but based on optical
+      gain from parametric amplification in a nonlinear crystal rather
+      than from stimulated emision.
+    is_a: LiMiCoreLightSource
+    attributes:
+      type:
+        description: The general category of the laser.
+        range: LiMiCoreLaserLightSourceType
+      tunable:
+        description: >-
+          Whether this Laser is Tuneable to different Wavelengths.
+        range: boolean
+      pulse:
+        description: >-
+          Whether this Laser emits light in the form of optical pulses
+          (i.e., light flashes; True) or as a Continuous Wave (CW;
+          False).
+        range: boolean
+      laser_medium:
+        description: >-
+          The material out of which this Laser is constructed.
+        range: LiMiCoreLaserMedium
+      is_pumped:
+        description: Whether this Laser is a pumped Laser.
+        range: boolean
+      repetition_rate:
+        description: >-
+          In the case this is a pulsed Laser, this is the frequency of
+          the laser pulses.
+        range: float
+      repetition_rate_unit:
+        description: The unit associated with the Repetition Rate value.
+        range: LiMiFrequencyUnit
+        ifabsent: LiMiFrequencyUnit(Hz)
+      frequency_multiplication:
+        description: >-
+          The optical frequency multiplication factor that may be
+          specified for this Laser.
+        range: float
+      modulation_mechanism:
+        description: The modulation mechanism used for this Laser.
+        range: LiMiCoreLaserModulation
+      laser_class:
+        description: The Safety Class this Laser belongs to.
+        range: LiMiCoreLaserSafetyClass
+      is_pump:
+        description: >-
+          Whether this Laser serves as a Pump for a downstream Laser.
+      position:
+        description: The position of this Laser on a Multi Laser Engine.
+        range: integer
+        minimum_value: 1
+      pulse_duration:
+        description: >-
+          In the case this is a pulsed laser, this is the duration of
+          each Laser pulse.
+        range: float
+      pulse_duration_unit:
+        description: The unit associated with the Pulse Duration value.
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+      pump:
+        description: >-
+          In the case this is a Pumped Laser, this is a reference to the
+          upstream Laser used to pump this one.
+        range: LiMiCoreLaserLightSource
+        inlined: false
+      illumination_wavelength_ranges:
+        description: >-
+          The range(s) of wavelengths this device is designed for,
+          according to the Manufacturer.
+        range: LiMiCoreIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiCoreLightEmittingDiodeLightSource:
+    description: >-
+      A Light Emitting Diode (LED) is a solid-state semiconductor Light
+      Source that emits light when current flows through it. Electrons
+      in the semiconductor recombine with electron holes, releasing
+      energy in the form of photons. The color of the light (i.e., the
+      energy of the photons) is determined by the energy required for
+      electrons to cross the bandgap of the semiconductor. White light
+      may be obtained by using multiple semiconductors or a layer of
+      light-emitting phosphor on the semiconductor device.
+    is_a: LiMiCoreLightSource
+    attributes:
+      type:
+        description: The general category of this Light Emitting Diode.
+        range: LiMiCoreLightEmittingDiodeLightSourceType
+      led_modules:
+        description: >-
+          The individual LED modules that make up this Light Emitting
+          Diode Light Source.
+        range: LiMiCoreLEDModule
+        multivalued: true
+
+  LiMiCoreLEDModule:
+    description:
+      A single module within a Light Emitting Diode Light Source.
+    mixins:
+      - LiMiObjectMixin
+    attributes:
+      projection_angle:
+        description: >-
+          The angle at which this LED module projects the light beam.
+        range: float
+        notes:
+          - >-
+            FIXME: The spec associates to this value a
+            `unit:ProjectionAngleUnit` that is nowhere to be found.
+      illumination_wavelength_ranges:
+        description: >-
+          The range(s) of wavelengths this device is designed for,
+          according to the Manufacturer.
+        range: LiMiCoreIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiCoreIlluminationWavelengthRange:
+    description: >-
+      A range of wavelength a Light Source is designed for, according to
+      its Manufacturer.
+    mixins:
+      - LiMiObjectMixin
+    attributes:
+      illumination_power:
+        description: >-
+          The nominal Illumination Power (also known as Power Output or
+          Illumination Intensity) emitted at Peak Wavelength by the
+          Light Source, according to the Manufacturer.
+        range: float
+      illumination_power_unit:
+        description: >-
+          The unit associated with the Illumination Power value.
+        range: LiMiPowerUnit
+        ifabsent: LiMiPowerUnit(mW)
+      peak_wavelength:
+        description: >-
+          The nominal Wavelength associated with the peak response rate
+          of this device.
+        range: float
+      peak_wavelength_unit:
+        description: The unit associated with the Peak Wavelength value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      cut_on:
+        description: >-
+          The wavelength below which the response rate is below 50%.
+        range: float
+      cut_on_unit:
+        description: The unit associated with the Cut On value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      cut_off:
+        description: >-
+          The wavelength below which the response rate is below 50%.
+        range: float
+        notes:
+          - >-
+            FIXME: Shouldn’t that be the wavelength _above_ which the
+            response rate is below 50%?
+      cut_off_unit:
+        description: The unit associated with the Cut Off value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      wavelength_profile_file:
+        description: >-
+          A file containing the Wavelength profile of this hardware
+          component.
+        notes:
+          - >-
+            FIXME: The model describes that as a "File Annotation",
+            which is quite a OMERO-specific concept. We need a mechanism
+            to allow either storing arbitrary data or referring to
+            external files.
+
+
+enums:
+
+  LiMiCoreMicroscopeType:
+    description: >-
+      The general category to which a Microscope belongs.
+    permissible_values:
+      Compound:
+      Custom made:
+      Dissection:
+      Electrophysiology:
+      Light sheet:
+      Stereomicroscope:
+      Other:
+
+  LiMiCoreMicroscopeOriginType:
+    description: >-
+      This describes the origin of a Microscope Stand.
+    permissible_values:
+      Commercial-as is:
+        description: >-
+          The Microscope Stand was purchased from a Commercial vendor
+          and is being used as-is.
+      Commercial-custom modified:
+        description: >-
+          The Microscope Stand was purchased from a Commercial vendor
+          and subsequently Modified for a specialized application.
+      Custom-built:
+        description: >-
+          The Microscope Stand was entirely Custom-built from scratch.
+
+  LiMiCoreIlluminationPowerReportingStatistic:
+    description: >-
+      The statistic used by the Manufacturer of a Light Source to report
+      the nominal Illumination Power output emitted by the Light Source
+      at Peak Wavelength.
+    permissible_values:
+      Average:
+      Maximum:
+      Median:
+      Other:
+
+  LiMiCoreIlluminationPowerReportingPosition:
+    description: >-
+      The position where the reported Illumination Intensity value was
+      obtained as reported by the Manufacturer.
+    permissible_values:
+      Back of the Objective:
+      Back of the Microscope Stand:
+      Source:
+      Specimen:
+      Other:
+
+  LiMiCoreArcLightSourceType:
+    description: >-
+      The inert gas vapor contained in the bulb of an Arc lamp. The
+      nature of the gas determines the spectral behavior of the lamp. At
+      low pressure, Hg lamps emit a characteristic line spectrum, which
+      becomes more uniform as the lamp heats up. On the other hand, Xe
+      lamps emit light of high luminance, high color temperature, and an
+      almost continuous spectrum distributed from the ultraviolet to the
+      infrared.
+    permissible_values:
+      Hg:
+      Xe:
+      HgXe:
+      Other:
+
+  LiMiCoreFilamentLightSourceType:
+    description: >-
+      The type of Filament lamp Light Source. A Halogen lamp is a
+      Filament lamp whose envelope contains halogen vapor, which reduces
+      the loss of tungsten from the filament. This, in turn, allows to
+      reach a high filament temperature and consequent higher luminance,
+      higher color temperature, and longer operating life than a
+      Standard Filament lamp of the same input power.
+    permissible_values:
+      Standard:
+      Halogen:
+      Other:
+
+  LiMiCoreLaserLightSourceType:
+    description: >-
+      The general category of the laser in a Laser Light Source.
+    permissible_values:
+      Chemical:
+      DiodePumpedSolidState:
+      Dye:
+      Gas:
+      MetalVapor:
+      OpticalParametricOscillator:
+      SolidState:
+      SemiconductorLaserDiode:
+      Other:
+
+  LiMiCoreLaserMedium:
+    description: The material out of which a Laser is constructed.
+    permissible_values:
+      Ag:
+      Alexandrite:
+      Ar:
+      ArCl:
+      ArFl:
+      ArKr:
+      CO:
+      CO2:
+      CoumarinC30:
+      Cu:
+      EMinus:
+      ErGlass:
+      ErYAG:
+      GaAlAs:
+      GaAs:
+      H2O:
+      HeCd:
+      HeNe:
+      HFl:
+      HoYAG:
+      HoYLF:
+      Kr:
+      KrCl:
+      KrFl:
+      N:
+      NdGlass:
+      NdYAG:
+      Rhodamine6G:
+      Ruby:
+      TiSapphire:
+      Xe:
+      XeBr:
+      XeCl:
+      XeFl:
+      Other:
+
+  LiMiCoreLaserModulation:
+    description: The modulation mechanism used with a Laser.
+    permissible_values:
+      Acousto-Optical Beam Splitter:
+      Acousto-Optical Tunable Filter:
+      Acousto-Optical Modulator:
+      Direct:
+      None:
+      Other:
+
+  LiMiCoreLaserSafetyClass:
+    description: The safety class of a Laser.
+    permissible_values:
+      1:
+        title: class 1
+      1M:
+        title: class 1M
+      2:
+        title: class 2
+      2M:
+        title: class 2M
+      3R:
+        title: class 3R
+      3B:
+        title: class 3B
+      4:
+        title: class 4
+
+  LiMiCoreLightEmittingDiodeLightSourceType:
+    description: >-
+      The general category of a Light Emitting Diode Light Source.
+    permissible_values:
+      Collimated:
+      Mounted:
+      Unmounted:
+      Other:
