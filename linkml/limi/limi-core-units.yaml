@@ -1,71 +1,18 @@
-id: https://example.invalid/limi/v1/base/
-name: limi-base
-title: LiMi Base Schema
+id: https://example.invalid/limi/v1/core/units
+name: limi-core-units
+title: LiMi Core units
 description: >-
   This schema is part of the set of LinkML schemas for the QUAREP Light
-  Microscopy Model (hereafter referred to as “LiMi”).
+  Microscopy Model (hereafter referred to as “LiMi model”).
 
-  It defines some “base” entities that are expected to be used
-  throughout the overall set of schemas.
+  It defines defines the enumerations representing the units that are
+  used throughout the overall set of of schemas.
 created_by: orcid:0000-0002-6095-8718
-see_also:
-  - https://quarep.org
-  - https://github.com/WU-BIMAC/NBOMicroscopyMetadataSpecs
 
 prefixes:
-  linkml: https://w3id.org/linkml/
-  limibase: https://example.invalid/limi/v1/base/
+  limi: https://example.invalid/limi/v1/
   orcid: https://orcid.org/
-imports:
-  - linkml:types
-default_prefix: limibase
-default_range: string
-
-
-slots:
-
-  id:
-    description: A Unique Identifier for this entity.
-    identifier: true
-
-  name:
-    description: A User-defined Name for this entity.
-
-
-classes:
-
-  LiMiObjectMixin:
-    description: A mixin used by all objects defined in the LiMi Schema.
-    notes:
-      - >-
-        This mixin is intended to facilitate customization of the LiMi
-        Schema, by allowing another schema to (i) import any of the
-        schemas that make up the LiMi Schema and (ii) redefine this
-        as needed.
-    mixin: true
-
-  LiMiManufacturerSpecs:
-    description: >-
-      This describes the Manufacturer specifications for a component.
-    mixins:
-      - LiMiObjectMixin
-    attributes:
-      manufacturer:
-        description: >-
-          The company, research group or individual who built or
-          manufactured this hardware.
-      model:
-        description: >-
-          The Model name or any other designation the Manufacturer uses
-          for this component.
-      catalog_number:
-        description: >-
-          The Catalog, Part of Serial Number used by the Manufacturer to
-          uniquely identify this component.
-      lot_number:
-        description: >-
-          The Lot Number used by the Manufacturer to refer to a specific
-          production batch or lot for this component.
+default_prefix: limi
 
 
 enums:
@@ -290,3 +237,20 @@ enums:
         title: zepto second
       ys:
         title: yocto second
+
+  AngleUnit:
+    description: >-
+      Available values to describe the unit of a value that represents
+      an angle.
+    permissible_values:
+      deg:
+        title: degree
+      µrad:
+        title: micro radian
+      mrad:
+        title: milli radian
+      rad:
+        title: radian
+      gon:
+        title: gradian
+      

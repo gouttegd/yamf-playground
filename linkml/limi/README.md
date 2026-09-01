@@ -63,12 +63,7 @@ intended to be useful at the instance level, as a way to assess the
 
 The Schema will therefore be divided into the following files:
 
-* `limi-base.yaml`: Fundamental stuff that may be used everywhere else
-  (e.g., some commonly used enumerations or basic types). This does
-  _not_ correspond to a LiMi-defined “module”, this is purely a LinkML
-  artefact.
-* `limi-core.yaml`: All the definitions from the “Core” module. This
-  will import `limi-base`.
+* `limi-core.yaml`: All the definitions from the “Core” module.
 * `limi-basic`: All the definitions from the “Basic” module. This will
   import `limi-core` and add the definitions that are specific to the
   ”Basic” module.
@@ -86,14 +81,21 @@ simply use the `limi-basic.yaml` schema and ignore the
 
 Some modules _may_ be further broken down into more “logical areas” if
 we feel this is needed to prevent a single module file from becoming too
-large to be practical to maintain. For example, the “Basic” module _may_
-be broken down into `limi-basic-hardware.yaml` and
-`limi-basic-settings.yaml`. In this case, we will still have a
-`limi-basic.yaml` minimal schema that will import all the
-`limi-basic-*.yaml` schemas, so that implementations do not need to
-worry about such subdivisions (they can just use `limi-basic.yaml`
-without even having to know that the content of this module is spread
-into two other “sub-schemas”).
+large to be practical to maintain. For example, currently the “Core”
+module is broken down into:
+
+* `limi-core-units.yaml`: All the enumerations representing units.
+* `limi-core-light-sources.yaml`: All the classes representing light
+  sources (including any supporting enums as needed).
+* `limi-core.yaml`: Everything else from the “Core” module. This
+  imports `limi-core-units.yaml` and `limi-core-light-sources.yaml`.
+
+Importantly, “subschemas” such as `limi-core-light-sources.yaml` are
+_not_ intended to be usable on their own, as independent schemas. They
+exist merely to make the schemas more manageable by keeping the size of
+each schema under some reasonable limits. Only the “top-level” schemas
+(such as `limi-core.yaml` or `limi-basic.yaml`) are intended to be used
+directly.
 
 ## Naming conventions
 For now, we will as much as possible follow the LinkML conventions:
@@ -107,22 +109,35 @@ a LinkML schema, because they almost never appear in _instance data_
 slot/attribute names are the names that will end up being used in JSON-
 (or YAML-) formatted instance data.
 
-Because LinkML does not support namespacing for class or enumeration
-names, all class and enumeration names will be prefixed with a small
-keyword identifying the “module” that defines them. For example, the
-class representing the “Microscope Stand” object from the “Core” module
-will be named `LiMiCoreMicroscopeStand`; the class representing the same
-object from the “Advanced” module (with all the additional attributes
-defined in that module) will be named `LiMiAdvMicroscopeStand`.
+All class and enumeration names will be prefixed with the `LiMi`
+keyword, e.g. the “MicroscopeStand” class will be named
+`LiMiMicroscopeStand`. This is because LinkML does not support
+namespacing for class or enumeration names. Adding a schema-specific
+prefix will make it possible for a third-party wishing to reuse all or
+parts of the LiMi Schema to import the LiMi Schema in their own schemas
+without fearing possible name conflicts.
 
-## XML-to-LinkML notes
-The LiMi model was clearly initially designed with XML in mind (likely
-because it started with the aim of extending the OME model). This
-“XML-oriented” design has some implications for how the model is to be
-formalised in LinkML.
+## Class design
 
-TODO: explain the differences between XML/XSD and JSON/LinkML,
-especially regarding how objects are explicitly typed and the role of
-the name of an element (XML) or class (LinkML). Then explain the role
-of type designators in LinkML and how they are used to represent what
-the LiMi model calls “Abstract Parent Element“ (APE).
+### General pattern
+All classes within the Schema will be defined using the following
+pattern: For a given class _Foo_ defined in the _MOD_ module of the LiMi
+model, we will define:
+
+* a `LiMiFooMODMixin` mixin class that defines all the slots and
+  attributes expected for the _Foo_ class;
+* a `LiMiFoo` class that represents the actual _Foo_ class, and that
+  inherits from the `LiMiFooMODMixin`.
+
+This pattern has been designed so that the same class can be defined in
+several modules, each module adding its own set of attributes.
+
+### Representing “Abstract Parent Element” classes
+The LiMi model abundantly uses what it calls “Abstract Parent Element”
+classes or **APEs**. (As many other things in the model, the name
+reflects the XML origin of the model.)
+
+APEs are represented in LinkML using **type-designated classes**. That
+is, the APE is represented using a class that has a type designator.
+Members of the “substitution group” (which are expected to be used in
+place of the APE) are defined as subclasses of the APE class.
