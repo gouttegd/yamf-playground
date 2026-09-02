@@ -119,18 +119,21 @@ without fearing possible name conflicts.
 
 ## Class design
 
-### General pattern
-All classes within the Schema will be defined using the following
-pattern: For a given class _Foo_ defined in the _MOD_ module of the LiMi
-model, we will define:
+### class with attributes defined in several modules
+A few “elements” in the LiMi model have a definition that is spread over
+several modules. That is, the element is initially defined in either the
+“Core” or “Basic” modules, but its expected content is refined in a
+higher-level module (adding more sub-elements).
 
-* a `LiMiFooMODMixin` mixin class that defines all the slots and
-  attributes expected for the _Foo_ class;
-* a `LiMiFoo` class that represents the actual _Foo_ class, and that
-  inherits from the `LiMiFooMODMixin`.
+For example, the _Instrument_ element is initially defined in the “Core”
+module, but several sub-elements are added in the “Basic” and “Advanced”
+modules.
 
-This pattern has been designed so that the same class can be defined in
-several modules, each module adding its own set of attributes.
+To formalize such an element in LinkML, the attributes are defined in
+module-specific “mixins”, where each mixin only defines the attributes
+that belong to a given module. The actual class representing the element
+is then assembled simply by composing all the module-specific mixins
+together.
 
 ### Representing “Abstract Parent Element” classes
 The LiMi model abundantly uses what it calls “Abstract Parent Element”

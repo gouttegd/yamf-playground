@@ -1,4 +1,4 @@
-id: https://example.invalid/limi/v1/core/light-sources
+id: https://example.invalid/limi/v02-10/core/light-sources
 name: limi-core-light-sources
 title: LiMi Core Light Sources
 description: >-
@@ -10,7 +10,7 @@ description: >-
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
-  limi: https://example.invalid/limi/v1/
+  limi: https://example.invalid/limi/v02-10/
   linkml: https://w3id.org/linkml/
   orcid: https://orcid.org/
 imports:
@@ -24,12 +24,6 @@ classes:
   LiMiLightSource:
     description: A Light Source on an Instrument.
     is_a: LiMiManufacturerSpecs
-    mixins:
-      - LiMiLightSourceCoreMixin
-
-  LiMiLightSourceCoreMixin:
-    description: Attributes for the LiMiLightSource class.
-    mixin: true
     slots:
       - id
       - name
@@ -60,12 +54,6 @@ classes:
       two. The choice of the gas is important because its nature
       determines the spectral behavior of the lamp.
     is_a: LiMiLightSource
-    mixins:
-      - LiMiArcCoreMixin
-
-  LiMiArcCoreMixin:
-    description: Attributes for the LiMiArc class.
-    mixin: true
     attributes:
       type:
         description: The inert gas vapor contained in the Arc lamp bulb.
@@ -86,12 +74,6 @@ classes:
       (incandescence). The emitted spectrum is continuous, and it
       approximates that of a black-body radiator.
     is_a: LiMiLightSource
-    mixins:
-      - LiMiFilamentCoreMixin
-
-  LiMiFilamentCoreMixin:
-    description: Attributes for the LiMiFilament class.
-    mixin: true
     attributes:
       type:
         description: The type of Filament lamp Light Source.
@@ -115,12 +97,6 @@ classes:
       gain from parametric amplification in a nonlinear crystal rather
       than from stimulated emision.
     is_a: LiMiLightSource
-    mixins:
-      - LiMiLaserCoreMixin
-
-  LiMiLaserCoreMixin:
-    description: Attributes for the LiMiLaser class.
-    mixin: true
     attributes:
       type:
         description: The general category of the laser.
@@ -202,12 +178,6 @@ classes:
       may be obtained by using multiple semiconductors or a layer of
       light-emitting phosphor on the semiconductor device.
     is_a: LiMiLightSource
-    mixins:
-      - LiMiLightEmittingDiodeCoreMixin
-
-  LiMiLightEmittingDiodeCoreMixin:
-    description: Attributes for the LiMiLightEmittingDiode class.
-    mixin: true
     attributes:
       type:
         description: The general category of this Light Emitting Diode.
@@ -223,12 +193,6 @@ classes:
     description:
       A single module within a Light Emitting Diode Light Source.
     is_a: LiMiObject
-    mixins:
-      - LiMiLEDModuleCoreMixin
-
-  LiMiLEDModuleCoreMixin:
-    description: Attributes for the LiMiLEDModule class.
-    mixin: true
     attributes:
       projection_angle:
         description: >-
@@ -249,12 +213,6 @@ classes:
       A range of wavelength a Light Source is designed for, according to
       its Manufacturer.
     is_a: LiMiWavelengthRange
-    mixins:
-      - LiMiIlluminationWavelengthRangeCoreMixin
-
-  LiMiIlluminationWavelengthRangeCoreMixin:
-    description: Attributes for the LiMiIlluminationWavelengthRange class.
-    mixin: true
     attributes:
       illumination_power:
         description: >-
@@ -267,6 +225,7 @@ classes:
           The unit associated with the Illumination Power value.
         range: LiMiPowerUnit
         ifabsent: LiMiPowerUnit(mW)
+
 
 enums:
 

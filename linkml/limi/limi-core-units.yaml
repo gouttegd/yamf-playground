@@ -1,4 +1,4 @@
-id: https://example.invalid/limi/v1/core/units
+id: https://example.invalid/limi/v02-10/core/units
 name: limi-core-units
 title: LiMi Core units
 description: >-
@@ -10,7 +10,7 @@ description: >-
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
-  limi: https://example.invalid/limi/v1/
+  limi: https://example.invalid/limi/v02-10/
   orcid: https://orcid.org/
 default_prefix: limi
 
@@ -23,7 +23,7 @@ enums:
       power.
     notes:
       - >-
-        This comes directly from the OME model. The NBO v02-01
+        This comes directly from the OME model. The NBO v02-10
         specification mentions a "unit:IlluminationPowerUnit" but,
         AFAICT, does not define it anywhere.
     permissible_values:

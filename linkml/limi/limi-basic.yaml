@@ -1,4 +1,4 @@
-id: https://example.invalid/limi/v1/basic/
+id: https://example.invalid/limi/v02-10/basic/
 name: limi-basic
 title: LiMi Basic Schema
 description: >-
@@ -10,7 +10,7 @@ description: >-
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
-  limi: https://example.invalid/limi/v1/
+  limi: https://example.invalid/limi/v02-10/
   linkml: https://w3id.org/linkml/
   orcid: https://orcid.org/
 imports:
@@ -23,27 +23,16 @@ classes:
   LiMiUprightMicroscope:
     description: An upright Microscope Stand.
     is_a: LiMiMicroscopeStand
-    mixins:
-      - LiMiUprightMicroscopeBasicMixin
-
-  LiMiUprightMicroscopeBasicMixin:
-    description: Attributes for the LiMiUprightMicroscope class.
-    mixin: true
 
   LiMiSoftware:
     description: >-
       A commercial or open-source Software, script, macro, plugin or
       module utilized for any Image Acquisition or Quality Control task.
     is_a: LiMiObject
-    mixins:
-      - LiMiSoftareBasicMixin
-
-  LiMiSoftareBasicMixin:
-    description: Attributes for the LiMiSoftware class.
-    mixin: true
     slots:
       - id
       - name
+      - object_type
     attributes:
       version:
         description: The Version of this Software.
@@ -101,10 +90,6 @@ classes:
         range: LiMiSoftwareModule
         multivalued: true
         inlined: false
-      subtype:
-        description: Identifies the precise subtype of Software.
-        designates_type: true
-        range: uri
 
   LiMiAcquisitionSoftware:
     description: >-
@@ -112,30 +97,29 @@ classes:
       module utilized for driving this Instrument during Image
       Acquisition.
     is_a: LiMiSoftware
-    mixins:
-      - LiMiAcquisitionSoftwareBasicMixin
-
-  LiMiAcquisitionSoftwareBasicMixin:
-    description: Attributes for the LiMiAcquisitionSoftware class.
-    mixin: true
 
   LiMiSoftwareModule:
     description: >-
       A commercial or open-source software module utilized for any Image
       Acquisition, or Quality Control task.
     is_a: LiMiSoftware
-    mixins:
-      - LiMiSoftwareModuleMixin
-
-  LiMiSoftwareModuleMixin:
-    description: Attributes for the LiMiSoftwareModule class.
-    mixin: true
 
   LiMiInstrument:
     description: >-
       This class describes the Instrument used to capture an image. It
       is primarily a container referring to the list of hardware
       components in a given Microscope.
+    notes:
+      - >-
+        This is a redefinition of the class already defined in the Core
+        module, to add the attributes specified in the Basic module.
+        As with the original definition, all the new attributes are in
+        fact defined in a separate mixin, that is inherited by this
+        class.
+      - >-
+        It is unclear whether such a redefinition is actually valid in
+        LinkML. According to the LinkML specification, strictly speaking
+        it is not, but LinkML’s own reference implementation says it is.
     is_a: LiMiManufacturerSpecs
     mixins:
       - LiMiInstrumentCoreMixin

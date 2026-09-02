@@ -1,4 +1,4 @@
-id: https://example.invalid/limi/v1/core
+id: https://example.invalid/limi/v2-10/core
 name: limi-core
 title: LiMi Core Schema
 description: >-
@@ -10,7 +10,7 @@ description: >-
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
-  limi: https://example.invalid/limi/v1/
+  limi: https://example.invalid/limi/v02-10/
   linkml: https://w3id.org/linkml/
   orcid: https://orcid.org/
 imports:
@@ -58,12 +58,6 @@ classes:
       This describes the Manufacturer specifications for a hardware
       component.
     is_a: LiMiObject
-    mixins:
-      - LiMiManufacturerSpecsCoreMixin
-
-  LiMiManufacturerSpecsCoreMixin:
-    description: Attributes for the LiMiManufacturerSpecs class.
-    mixin: true
     attributes:
       manufacturer:
         description: >-
@@ -87,12 +81,18 @@ classes:
       This class describes the Instrument used to capture an image. It
       is primarily a container referring to the list of hardware
       components in a given Microscope.
+    notes:
+      - >-
+        The attributes for this class are described in a separate mixin
+        because the entire class is defined across several LiMi modules.
     is_a: LiMiManufacturerSpecs
     mixins:
       - LiMiInstrumentCoreMixin
+    extra_slots:
+      allowed: true
 
   LiMiInstrumentCoreMixin:
-    description: Attributes for the LiMiInstrument class.
+    description: Core-level attributes for the LiMiInstrument class.
     mixin: true
     slots:
       - id
@@ -118,12 +118,6 @@ classes:
   LiMiMicroscopeStand:
     description: The core structure of a Microscope.
     is_a: LiMiManufacturerSpecs
-    mixins:
-      - LiMiMicroscopeStandCoreMixin
-
-  LiMiMicroscopeStandCoreMixin:
-    description: Attributes for the LiMiMicroscopeStand class.
-    mixin: true
     slots:
       - id
       - name
@@ -149,24 +143,12 @@ classes:
   LiMiInvertedMicroscope:
     description: An inverted Microscope Stand.
     is_a: LiMiMicroscopeStand
-    mixins:
-      - LiMiInvertedMicroscopeCoreMixin
-
-  LiMiInvertedMicroscopeCoreMixin:
-    description: Attributes for the LiMiInvertedMicroscope class.
-    mixin: true
 
   LiMiWavelengthRange:
     description: >-
       A range of Wavelength a device is designed for, according to its
       Manufacturer.
     is_a: LiMiObject
-    mixins:
-      - LiMiWavelengthRangeCoreMixin
-
-  LiMiWavelengthRangeCoreMixin:
-    description: Attributes for the LiMiWavelengthRange class.
-    mixin: true
     attributes:
       peak_wavelength:
         description: >-
@@ -207,6 +189,7 @@ classes:
             which is quite a OMERO-specific concept. We need a mechanism
             to allow either storing arbitrary data or referring to
             external files.
+
 
 enums:
 
