@@ -5,8 +5,8 @@ description: >-
   This schema is part of the set of LinkML schemas for the QUAREP Light
   Microscopy Model (hereafter referred to as “LiMi model”).
 
-  It defines the Light Source objects that are part of the “Core” part
-  of the LiMi model.
+  It defines the Light Source objects that are part of the “Core” part of the
+  LiMi model.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -18,9 +18,7 @@ imports:
 default_prefix: limi
 default_range: string
 
-
 classes:
-
   LiMiLightSource:
     description: A Light Source on an Instrument.
     is_a: LiMiManufacturerSpecs
@@ -40,19 +38,18 @@ classes:
         range: LiMiIlluminationPowerReportingStatistic
       illumination_power_reporting_position:
         description: >-
-          The position where the reported Illumination Intensity value
-          was obtained as reported by the Manufacturer.
+          The position where the reported Illumination Intensity value was
+          obtained as reported by the Manufacturer.
         range: LiMiIlluminationPowerReportingPosition
 
   LiMiArc:
     description: >-
-      Represents a Light Source that is an Arc lamp. An Arc lamp is a
-      discharge lamp that produces light by an electric arc (also
-      called a voltaic arc), which is typically generated between metal
-      electrodes and travels through an inert gas in in a glass bulb.
-      The inert gas can be Mercury (He), Xenon (Xe), or a mixture of the
-      two. The choice of the gas is important because its nature
-      determines the spectral behavior of the lamp.
+      Represents a Light Source that is an Arc lamp. An Arc lamp is a discharge
+      lamp that produces light by an electric arc (also called a voltaic arc),
+      which is typically generated between metal electrodes and travels through
+      an inert gas in in a glass bulb. The inert gas can be Mercury (He), Xenon
+      (Xe), or a mixture of the two. The choice of the gas is important because
+      its nature determines the spectral behavior of the lamp.
     is_a: LiMiLightSource
     attributes:
       type:
@@ -60,19 +57,18 @@ classes:
         range: LiMiArcType
       illumination_wavelength_ranges:
         description: >-
-          The range(s) of wavelengths this device is designed for,
-          according to the Manufacturer.
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
         range: LiMiIlluminationWavelengthRange
         multivalued: true
 
   LiMiFilament:
     description: >-
-      Represents a Light Source that is a Filament lamp. A Filament lamp
-      is an incandescent Light Source with a wire filament (usually
-      tungsten), which is heated by the passage of an electric current
-      to such a high temperature that it flows with visible light
-      (incandescence). The emitted spectrum is continuous, and it
-      approximates that of a black-body radiator.
+      Represents a Light Source that is a Filament lamp. A Filament lamp is an
+      incandescent Light Source with a wire filament (usually tungsten), which
+      is heated by the passage of an electric current to such a high temperature
+      that it flows with visible light (incandescence). The emitted spectrum is
+      continuous, and it approximates that of a black-body radiator.
     is_a: LiMiLightSource
     attributes:
       type:
@@ -80,22 +76,21 @@ classes:
         range: LiMiFilamentType
       illumination_wavelength_ranges:
         description: >-
-          The range(s) of wavelengths this device is designed for,
-          according to the Manufacturer.
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
         range: LiMiIlluminationWavelengthRange
         multivalued: true
 
   LiMiLaser:
     description: >-
       A Light Source which emits coherent radiation at high spectral
-      concentrations of radiance and minimal solid angles. This includes
-      proper Light Amplification by Stimulated Emission of Radiation
-      (LASER) sources that emig light through a process of optical
-      amplification based on the stimulated emisssion of electromagnetic
-      radiations. It also includes Optical Parametric Oscillator (OPO)
-      sources that uses a kind of LASER resonator but based on optical
-      gain from parametric amplification in a nonlinear crystal rather
-      than from stimulated emision.
+      concentrations of radiance and minimal solid angles. This includes proper
+      Light Amplification by Stimulated Emission of Radiation (LASER) sources
+      that emig light through a process of optical amplification based on the
+      stimulated emisssion of electromagnetic radiations. It also includes
+      Optical Parametric Oscillator (OPO) sources that uses a kind of LASER
+      resonator but based on optical gain from parametric amplification in a
+      nonlinear crystal rather than from stimulated emision.
     is_a: LiMiLightSource
     attributes:
       type:
@@ -107,9 +102,8 @@ classes:
         range: boolean
       pulse:
         description: >-
-          Whether this Laser emits light in the form of optical pulses
-          (i.e., light flashes; True) or as a Continuous Wave (CW;
-          False).
+          Whether this Laser emits light in the form of optical pulses (i.e.,
+          light flashes; True) or as a Continuous Wave (CW; False).
         range: boolean
       laser_medium:
         description: >-
@@ -120,8 +114,8 @@ classes:
         range: boolean
       repetition_rate:
         description: >-
-          In the case this is a pulsed Laser, this is the frequency of
-          the laser pulses.
+          In the case this is a pulsed Laser, this is the frequency of the laser
+          pulses.
         range: float
       repetition_rate_unit:
         description: The unit associated with the Repetition Rate value.
@@ -129,8 +123,8 @@ classes:
         ifabsent: LiMiFrequencyUnit(Hz)
       frequency_multiplication:
         description: >-
-          The optical frequency multiplication factor that may be
-          specified for this Laser.
+          The optical frequency multiplication factor that may be specified for
+          this Laser.
         range: float
       modulation_mechanism:
         description: The modulation mechanism used for this Laser.
@@ -147,8 +141,8 @@ classes:
         minimum_value: 1
       pulse_duration:
         description: >-
-          In the case this is a pulsed laser, this is the duration of
-          each Laser pulse.
+          In the case this is a pulsed laser, this is the duration of each Laser
+          pulse.
         range: float
       pulse_duration_unit:
         description: The unit associated with the Pulse Duration value.
@@ -162,21 +156,21 @@ classes:
         inlined: false
       illumination_wavelength_ranges:
         description: >-
-          The range(s) of wavelengths this device is designed for,
-          according to the Manufacturer.
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
         range: LiMiIlluminationWavelengthRange
         multivalued: true
 
   LiMiLightEmittingDiode:
     description: >-
-      A Light Emitting Diode (LED) is a solid-state semiconductor Light
-      Source that emits light when current flows through it. Electrons
-      in the semiconductor recombine with electron holes, releasing
-      energy in the form of photons. The color of the light (i.e., the
-      energy of the photons) is determined by the energy required for
-      electrons to cross the bandgap of the semiconductor. White light
-      may be obtained by using multiple semiconductors or a layer of
-      light-emitting phosphor on the semiconductor device.
+      A Light Emitting Diode (LED) is a solid-state semiconductor Light Source
+      that emits light when current flows through it. Electrons in the
+      semiconductor recombine with electron holes, releasing energy in the form
+      of photons. The color of the light (i.e., the energy of the photons) is
+      determined by the energy required for electrons to cross the bandgap of
+      the semiconductor. White light may be obtained by using multiple
+      semiconductors or a layer of light-emitting phosphor on the semiconductor
+      device.
     is_a: LiMiLightSource
     attributes:
       type:
@@ -184,14 +178,13 @@ classes:
         range: LiMiLightEmittingDiodeType
       led_modules:
         description: >-
-          The individual LED modules that make up this Light Emitting
-          Diode Light Source.
+          The individual LED modules that make up this Light Emitting Diode
+          Light Source.
         range: LiMiLEDModule
         multivalued: true
 
   LiMiLEDModule:
-    description:
-      A single module within a Light Emitting Diode Light Source.
+    description: A single module within a Light Emitting Diode Light Source.
     is_a: LiMiObject
     attributes:
       projection_angle:
@@ -203,22 +196,22 @@ classes:
         range: AngleUnit
       illumination_wavelength_ranges:
         description: >-
-          The range(s) of wavelengths this device is designed for,
-          according to the Manufacturer.
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
         range: LiMiIlluminationWavelengthRange
         multivalued: true
 
   LiMiIlluminationWavelengthRange:
     description: >-
-      A range of wavelength a Light Source is designed for, according to
-      its Manufacturer.
+      A range of wavelength a Light Source is designed for, according to its
+      Manufacturer.
     is_a: LiMiWavelengthRange
     attributes:
       illumination_power:
         description: >-
           The nominal Illumination Power (also known as Power Output or
-          Illumination Intensity) emitted at Peak Wavelength by the
-          Light Source, according to the Manufacturer.
+          Illumination Intensity) emitted at Peak Wavelength by the Light
+          Source, according to the Manufacturer.
         range: float
       illumination_power_unit:
         description: >-
@@ -226,14 +219,12 @@ classes:
         range: LiMiPowerUnit
         ifabsent: LiMiPowerUnit(mW)
 
-
 enums:
-
   LiMiIlluminationPowerReportingStatistic:
     description: >-
-      The statistic used by the Manufacturer of a Light Source to report
-      the nominal Illumination Power output emitted by the Light Source
-      at Peak Wavelength.
+      The statistic used by the Manufacturer of a Light Source to report the
+      nominal Illumination Power output emitted by the Light Source at Peak
+      Wavelength.
     permissible_values:
       Average:
       Maximum:
@@ -242,24 +233,23 @@ enums:
 
   LiMiIlluminationPowerReportingPosition:
     description: >-
-      The position where the reported Illumination Intensity value was
-      obtained as reported by the Manufacturer.
+      The position where the reported Illumination Intensity value was obtained
+      as reported by the Manufacturer.
     permissible_values:
-      Back of the Objective:
-      Back of the Microscope Stand:
+      ? Back of the Objective
+      ? Back of the Microscope Stand
       Source:
       Specimen:
       Other:
 
   LiMiArcType:
     description: >-
-      The inert gas vapor contained in the bulb of an Arc lamp. The
-      nature of the gas determines the spectral behavior of the lamp. At
-      low pressure, Hg lamps emit a characteristic line spectrum, which
-      becomes more uniform as the lamp heats up. On the other hand, Xe
-      lamps emit light of high luminance, high color temperature, and an
-      almost continuous spectrum distributed from the ultraviolet to the
-      infrared.
+      The inert gas vapor contained in the bulb of an Arc lamp. The nature of
+      the gas determines the spectral behavior of the lamp. At low pressure, Hg
+      lamps emit a characteristic line spectrum, which becomes more uniform as
+      the lamp heats up. On the other hand, Xe lamps emit light of high
+      luminance, high color temperature, and an almost continuous spectrum
+      distributed from the ultraviolet to the infrared.
     permissible_values:
       Hg:
       Xe:
@@ -268,12 +258,12 @@ enums:
 
   LiMiFilamentType:
     description: >-
-      The type of Filament lamp Light Source. A Halogen lamp is a
-      Filament lamp whose envelope contains halogen vapor, which reduces
-      the loss of tungsten from the filament. This, in turn, allows to
-      reach a high filament temperature and consequent higher luminance,
-      higher color temperature, and longer operating life than a
-      Standard Filament lamp of the same input power.
+      The type of Filament lamp Light Source. A Halogen lamp is a Filament lamp
+      whose envelope contains halogen vapor, which reduces the loss of tungsten
+      from the filament. This, in turn, allows to reach a high filament
+      temperature and consequent higher luminance, higher color temperature, and
+      longer operating life than a Standard Filament lamp of the same input
+      power.
     permissible_values:
       Standard:
       Halogen:
@@ -335,9 +325,9 @@ enums:
   LiMiLaserModulation:
     description: The modulation mechanism used with a Laser.
     permissible_values:
-      Acousto-Optical Beam Splitter:
-      Acousto-Optical Tunable Filter:
-      Acousto-Optical Modulator:
+      ? Acousto-Optical Beam Splitter
+      ? Acousto-Optical Tunable Filter
+      ? Acousto-Optical Modulator
       Direct:
       None:
       Other:
@@ -368,4 +358,3 @@ enums:
       Mounted:
       Unmounted:
       Other:
-

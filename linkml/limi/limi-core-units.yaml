@@ -5,8 +5,8 @@ description: >-
   This schema is part of the set of LinkML schemas for the QUAREP Light
   Microscopy Model (hereafter referred to as “LiMi model”).
 
-  It defines defines the enumerations representing the units that are
-  used throughout the overall set of of schemas.
+  It defines defines the enumerations representing the units that are used
+  throughout the overall set of of schemas.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -14,18 +14,15 @@ prefixes:
   orcid: https://orcid.org/
 default_prefix: limi
 
-
 enums:
-
   LiMiPowerUnit:
     description: >-
-      Available values to describe the unit of a value that represents a
-      power.
+      Available values to describe the unit of a value that represents a power.
     notes:
       - >-
-        This comes directly from the OME model. The NBO v02-10
-        specification mentions a "unit:IlluminationPowerUnit" but,
-        AFAICT, does not define it anywhere.
+        This comes directly from the OME model. The NBO v02-10 specification
+        mentions a "unit:IlluminationPowerUnit" but, AFAICT, does not define it
+        anywhere.
     permissible_values:
       YW:
         title: yotta watt
@@ -72,8 +69,7 @@ enums:
 
   LiMiLengthUnit:
     description: >-
-      Available values to describe the unit of a value that represents a
-      length.
+      Available values to describe the unit of a value that represents a length.
     permissible_values:
       Ym:
         title: yotta meter
@@ -140,12 +136,12 @@ enums:
       pt:
         title: typography point
       pixel:
-      reference frame:
+      ? reference frame
 
   LiMiFrequencyUnit:
     description: >-
-      Available values to describe the unit of a value that represents
-      a frequency.
+      Available values to describe the unit of a value that represents a
+      frequency.
     permissible_values:
       YHz:
         title: yotta hertz
@@ -192,8 +188,8 @@ enums:
 
   LiMiTimeUnit:
     description: >-
-      Available values to describe the unit of a value that represents
-      a duration.
+      Available values to describe the unit of a value that represents a
+      duration.
     permissible_values:
       Ys:
         title: yotta second
@@ -240,8 +236,7 @@ enums:
 
   AngleUnit:
     description: >-
-      Available values to describe the unit of a value that represents
-      an angle.
+      Available values to describe the unit of a value that represents an angle.
     permissible_values:
       deg:
         title: degree
@@ -253,4 +248,3 @@ enums:
         title: radian
       gon:
         title: gradian
-      

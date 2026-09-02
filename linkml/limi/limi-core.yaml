@@ -5,8 +5,7 @@ description: >-
   This schema is part of the set of LinkML schemas for the QUAREP Light
   Microscopy Model (hereafter referred to as “LiMi model”).
 
-  It defines the entities that belong to the “Core” part of the LiMi
-  model.
+  It defines the entities that belong to the “Core” part of the LiMi model.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -20,9 +19,7 @@ imports:
 default_prefix: limi
 default_range: string
 
-
 slots:
-
   id:
     description: A Unique identifier for this entity.
     identifier: true
@@ -36,37 +33,33 @@ slots:
     range: uri
     notes:
       - >-
-        This must be a global slot rather than a class-level attribute
-        because of bugs in some components of LinkML-Py.
-
+        This must be a global slot rather than a class-level attribute because
+        of bugs in some components of LinkML-Py.
 
 classes:
-
   LiMiObject:
     description: >-
       The base class for all classes defined in the LiMi Schema.
     abstract: true
     notes:
       - >-
-        This class is intended to facilitate customization of the LiMi
-        Schema, by allowing another schema to (i) import this schema (or
-        another schema that imports it) and (ii) redefine this class as
-        needed.
+        This class is intended to facilitate customization of the LiMi Schema,
+        by allowing another schema to (i) import this schema (or another schema
+        that imports it) and (ii) redefine this class as needed.
 
   LiMiManufacturerSpecs:
     description: >-
-      This describes the Manufacturer specifications for a hardware
-      component.
+      This describes the Manufacturer specifications for a hardware component.
     is_a: LiMiObject
     attributes:
       manufacturer:
         description: >-
-          The company, research group or individual who built or
-          manufactured this hardware.
+          The company, research group or individual who built or manufactured
+          this hardware.
       model:
         description: >-
-          The Model name or any other designation the Manufacturer uses
-          for this component.
+          The Model name or any other designation the Manufacturer uses for this
+          component.
       catalog_number:
         description: >-
           The Catalog, Part of Serial Number used by the Manufacturer to
@@ -78,13 +71,13 @@ classes:
 
   LiMiInstrument:
     description: >-
-      This class describes the Instrument used to capture an image. It
-      is primarily a container referring to the list of hardware
-      components in a given Microscope.
+      This class describes the Instrument used to capture an image. It is
+      primarily a container referring to the list of hardware components in a
+      given Microscope.
     notes:
       - >-
-        The attributes for this class are described in a separate mixin
-        because the entire class is defined across several LiMi modules.
+        The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
     is_a: LiMiManufacturerSpecs
     mixins:
       - LiMiInstrumentCoreMixin
@@ -100,8 +93,8 @@ classes:
     attributes:
       stand:
         description: >-
-          The core structure of this Microscope, which might also be
-          referred to as its Body.
+          The core structure of this Microscope, which might also be referred to
+          as its Body.
         range: LiMiMicroscopeStand
         required: true
         multivalued: true
@@ -130,8 +123,8 @@ classes:
         required: true
         notes:
           - >-
-            Shouldn’t that be an attribute of the Instrument rather than
-            of the MicroscopeStand?
+            Shouldn’t that be an attribute of the Instrument rather than of the
+            MicroscopeStand?
       origin:
         description: The origin of this microscope stand.
         range: LiMiMicroscopeOriginType
@@ -152,8 +145,8 @@ classes:
     attributes:
       peak_wavelength:
         description: >-
-          The nominal Wavelength associated with the peak response rate
-          of this device.
+          The nominal Wavelength associated with the peak response rate of this
+          device.
         range: float
       peak_wavelength_unit:
         description: The unit associated with the Peak Wavelength value.
@@ -173,31 +166,28 @@ classes:
         range: float
         notes:
           - >-
-            FIXME: Shouldn’t that be the wavelength _above_ which the
-            response rate is below 50%?
+            FIXME: Shouldn’t that be the wavelength _above_ which the response
+            rate is below 50%?
       cut_off_unit:
         description: The unit associated with the Cut Off value.
         range: LiMiLengthUnit
         ifabsent: LiMiLengthUnit(nm)
       wavelength_profile_file:
         description: >-
-          A file containing the Wavelength profile of this hardware
-          component.
+          A file containing the Wavelength profile of this hardware component.
         notes:
           - >-
-            FIXME: The model describes that as a "File Annotation",
-            which is quite a OMERO-specific concept. We need a mechanism
-            to allow either storing arbitrary data or referring to
-            external files.
+            FIXME: The model describes that as a "File Annotation", which is
+            quite a OMERO-specific concept. We need a mechanism to allow either
+            storing arbitrary data or referring to external files.
 
   LiMiObjective:
     description: >-
-      The Microscope's Objective lens consists of a lens, its mount, and
-      any associated parts. It is the part of the imaging system, which
-      forms a primary image of the object, either alone or in conjunction
-      with a tube lens. The Objective typically consists of a compound
-      lens consisting of several simple lenses (elements), usually
-      arranged along a common axis.
+      The Microscope's Objective lens consists of a lens, its mount, and any
+      associated parts. It is the part of the imaging system, which forms a
+      primary image of the object, either alone or in conjunction with a tube
+      lens. The Objective typically consists of a compound lens consisting of
+      several simple lenses (elements), usually arranged along a common axis.
     is_a: LiMiManufacturerSpecs
     slots:
       - id
@@ -206,21 +196,21 @@ classes:
       magnification:
       lens_na:
         description: >-
-          The Magnification of the Objective as specified by the
-          Manufacturer - i.e., 60 represents a 60X lens.
+          The Magnification of the Objective as specified by the Manufacturer -
+          i.e., 60 represents a 60X lens.
         range: float
       correction:
         description: >-
-          The type of optical correction (i.e. chromatic correction, or
-          flatness correction, etc.) associated with this Objective.
+          The type of optical correction (i.e. chromatic correction, or flatness
+          correction, etc.) associated with this Objective.
         range: LiMiObjectiveCorrectionType
       immersion_type:
       working_distance:
         description: >-
           The Working Distance of this Objective under normal operating
-          conditions. The Working Distance is the distance (in air, or
-          in the specified immersion liquid) between the front of an
-          Objective and the surface of the cover glass or of th
+          conditions. The Working Distance is the distance (in air, or in the
+          specified immersion liquid) between the front of an Objective and the
+          surface of the cover glass or of th
            specimen if uncovered.
         range: float
       working_distance_unit:
@@ -233,12 +223,11 @@ classes:
       contrast_modulation:
       dic:
         description: >-
-          Whether (True) the Objective is designed for Differential
-          Interference Contrast (DIC) or not (False). DIC is a contrast
-          modality due to double-beam interference in which two waves
-          that fall on the object plane or image plane are separated
-          laterally by a distance similar to the minimum resolvable
-          distance.
+          Whether (True) the Objective is designed for Differential Interference
+          Contrast (DIC) or not (False). DIC is a contrast modality due to
+          double-beam interference in which two waves that fall on the object
+          plane or image plane are separated laterally by a distance similar to
+          the minimum resolvable distance.
         range: boolean
       light_type:
       correction_collar:
@@ -253,61 +242,57 @@ classes:
 
   LiMiTransmittanceRange:
     description: >-
-      A range of wavelength (also known as a Band) that are transmitted
-      by an optical component. This also includes the maximum amount of
-      light transmitted.
+      A range of wavelength (also known as a Band) that are transmitted by an
+      optical component. This also includes the maximum amount of light
+      transmitted.
     is_a: LiMiObject
     attributes:
       wavelength:
         description: >-
-          The key Wavelength that characterizes this Transmittance Range
-          (also known as Transmission Band). In the case of Bandpass,
-          Bandstop, Multipass, or Notch Filters, Wavelength often refers
-          to the Central Wavelength of each of the transmission band(s);
-          alternatively, in case of a Longpass or a Shortpass Filter,
-          Wavelength refers to the CutOn Wavelength (i.e., below which
-          there is less then 50% transmittance) or the CutOff Wavelength
-          (i.e., above which there is less than 50% transmittance)
-          respectively. In the case of Dichroics, Wavelength most
-          commonly refers to the Edge Wavelength which might be either
-          the CutOn or the CutOff Wavelength depending on individual
-          cases.
+          The key Wavelength that characterizes this Transmittance Range (also
+          known as Transmission Band). In the case of Bandpass, Bandstop,
+          Multipass, or Notch Filters, Wavelength often refers to the Central
+          Wavelength of each of the transmission band(s); alternatively, in case
+          of a Longpass or a Shortpass Filter, Wavelength refers to the CutOn
+          Wavelength (i.e., below which there is less then 50% transmittance) or
+          the CutOff Wavelength (i.e., above which there is less than 50%
+          transmittance) respectively. In the case of Dichroics, Wavelength most
+          commonly refers to the Edge Wavelength which might be either the CutOn
+          or the CutOff Wavelength depending on individual cases.
         range: float
       wavelength_unit:
         description: Unit associated with the Wavelength value.
         range: LiMiLengthUnit
       transmittance:
         description: >-
-          The maximum of light this optical component is capable of
-          transmitting in this Wavelength Range, at the Peak Wavelength.
-          It is represented as a fractional value from 0.0 to 1.0.
+          The maximum of light this optical component is capable of transmitting
+          in this Wavelength Range, at the Peak Wavelength. It is represented as
+          a fractional value from 0.0 to 1.0.
         range: float
         minimum_value: 0.0
         maximum_value: 1.0
       FWHM_bandwidth:
         description: >-
-          The width of this Transmittance Range. Specifcally, the Full
-          Width at Half Maximum (FWHM) represents the bandwidth of the
-          Wavelength spectrum curve mesured between those points whose
-          transmission amplitude is 50% of the maximum.
+          The width of this Transmittance Range. Specifcally, the Full Width at
+          Half Maximum (FWHM) represents the bandwidth of the Wavelength
+          spectrum curve mesured between those points whose transmission
+          amplitude is 50% of the maximum.
         range: float
         minimum_value: 0.0
       FWHM_bandwidth_unit:
         description: Unit associated with the FWHM Bandwidth value.
         range: LiMiLengthUnit
 
-
 enums:
-
   LiMiMicroscopeType:
     description: >-
       The general category to which a Microscope belongs.
     permissible_values:
       Compound:
-      Custom made:
+      ? Custom made
       Dissection:
       Electrophysiology:
-      Light sheet:
+      ? Light sheet
       Stereomicroscope:
       Other:
 
@@ -317,20 +302,20 @@ enums:
     permissible_values:
       Commercial-as is:
         description: >-
-          The Microscope Stand was purchased from a Commercial vendor
-          and is being used as-is.
+          The Microscope Stand was purchased from a Commercial vendor and is
+          being used as-is.
       Commercial-custom modified:
         description: >-
-          The Microscope Stand was purchased from a Commercial vendor
-          and subsequently Modified for a specialized application.
+          The Microscope Stand was purchased from a Commercial vendor and
+          subsequently Modified for a specialized application.
       Custom-built:
         description: >-
           The Microscope Stand was entirely Custom-built from scratch.
 
   LiMiObjectiveCorrectionType:
     description: >-
-      The type of optical correction (i.e. chromatic correction, or
-      flatness correction, etc.) associated with an Objective.
+      The type of optical correction (i.e. chromatic correction, or flatness
+      correction, etc.) associated with an Objective.
     permissible_values:
       Achro:
       Achromat:
