@@ -190,6 +190,112 @@ classes:
             to allow either storing arbitrary data or referring to
             external files.
 
+  LiMiObjective:
+    description: >-
+      The Microscope's Objective lens consists of a lens, its mount, and
+      any associated parts. It is the part of the imaging system, which
+      forms a primary image of the object, either alone or in conjunction
+      with a tube lens. The Objective typically consists of a compound
+      lens consisting of several simple lenses (elements), usually
+      arranged along a common axis.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+    attributes:
+      magnification:
+      lens_na:
+        description: >-
+          The Magnification of the Objective as specified by the
+          Manufacturer - i.e., 60 represents a 60X lens.
+        range: float
+      correction:
+        description: >-
+          The type of optical correction (i.e. chromatic correction, or
+          flatness correction, etc.) associated with this Objective.
+        range: LiMiObjectiveCorrectionType
+      immersion_type:
+      working_distance:
+        description: >-
+          The Working Distance of this Objective under normal operating
+          conditions. The Working Distance is the distance (in air, or
+          in the specified immersion liquid) between the front of an
+          Objective and the surface of the cover glass or of th
+           specimen if uncovered.
+        range: float
+      working_distance_unit:
+        description: Unit associated with the Working Distance value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+      iris:
+      calibrated_magnification:
+      infinity_corrected:
+      contrast_modulation:
+      dic:
+        description: >-
+          Whether (True) the Objective is designed for Differential
+          Interference Contrast (DIC) or not (False). DIC is a contrast
+          modality due to double-beam interference in which two waves
+          that fall on the object plane or image plane are separated
+          laterally by a distance similar to the minimum resolvable
+          distance.
+        range: boolean
+      light_type:
+      correction_collar:
+      correction_collar_type:
+      dipping_medium:
+      phase_contrast_designation:
+      objective_view_field:
+      image_distance:
+      front_local_length:
+      back_local_length:
+      parfocalizing_distance:
+
+  LiMiTransmittanceRange:
+    description: >-
+      A range of wavelength (also known as a Band) that are transmitted
+      by an optical component. This also includes the maximum amount of
+      light transmitted.
+    is_a: LiMiObject
+    attributes:
+      wavelength:
+        description: >-
+          The key Wavelength that characterizes this Transmittance Range
+          (also known as Transmission Band). In the case of Bandpass,
+          Bandstop, Multipass, or Notch Filters, Wavelength often refers
+          to the Central Wavelength of each of the transmission band(s);
+          alternatively, in case of a Longpass or a Shortpass Filter,
+          Wavelength refers to the CutOn Wavelength (i.e., below which
+          there is less then 50% transmittance) or the CutOff Wavelength
+          (i.e., above which there is less than 50% transmittance)
+          respectively. In the case of Dichroics, Wavelength most
+          commonly refers to the Edge Wavelength which might be either
+          the CutOn or the CutOff Wavelength depending on individual
+          cases.
+        range: float
+      wavelength_unit:
+        description: Unit associated with the Wavelength value.
+        range: LiMiLengthUnit
+      transmittance:
+        description: >-
+          The maximum of light this optical component is capable of
+          transmitting in this Wavelength Range, at the Peak Wavelength.
+          It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+      FWHM_bandwidth:
+        description: >-
+          The width of this Transmittance Range. Specifcally, the Full
+          Width at Half Maximum (FWHM) represents the bandwidth of the
+          Wavelength spectrum curve mesured between those points whose
+          transmission amplitude is 50% of the maximum.
+        range: float
+        minimum_value: 0.0
+      FWHM_bandwidth_unit:
+        description: Unit associated with the FWHM Bandwidth value.
+        range: LiMiLengthUnit
+
 
 enums:
 
@@ -220,3 +326,39 @@ enums:
       Custom-built:
         description: >-
           The Microscope Stand was entirely Custom-built from scratch.
+
+  LiMiObjectiveCorrectionType:
+    description: >-
+      The type of optical correction (i.e. chromatic correction, or
+      flatness correction, etc.) associated with an Objective.
+    permissible_values:
+      Achro:
+      Achromat:
+      Achroplan:
+      Acroplan:
+      Apo:
+      Apochromat:
+      C-Achroplan:
+      EF:
+      Fl:
+      Fluar:
+      Fluor:
+      Fluotar:
+      Lambda:
+      N:
+      Neofluar:
+      NPL:
+      Pl:
+      Plan:
+      Plano:
+      PlanApo:
+      PlanApochromat:
+      PlanFluor:
+      PlanNeofluar:
+      SuperFluor:
+      UPLAN:
+      UPlanApo:
+      UPlanFl:
+      UV:
+      VioletCorrected:
+      Other:
