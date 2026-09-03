@@ -2,35 +2,30 @@ id: https://schemas.incenp.org/ngmf/v1/pidinst-foo/
 name: pidinst-foo
 title: NGMF PIDInst schema with the Foo extension
 description: >-
-  A version of the NGMF-enabled PIDInst Schema that bundles the Foo
-  extension.
+  A version of the NGMF-enabled PIDInst Schema that bundles the Foo extension.
 
-  This version can be used by an implementation that wants to support
-  the Foo extension at compile-time.
+  This version can be used by an implementation that wants to support the Foo
+  extension at compile-time.
 created_by: orcid:0000-0002-6095-8718
 
 imports:
   - pidinst-ngmf
   - foo
 
-
 classes:
-
   PIDInstObjectMixin:
     is_a: IsExtensibleMixin
     notes:
-      - >-
-        We should not have to redefine this mixin here – it is already
-        redefined in pidinst-ngmf. But LinkML-Py’s behaviour with regard
-        to redefinitions in imports seems a bit… erratic. If
-        pidinst-ngmf is _not_ imported, then the redefinition becomes
-        unnecessary.
+      - We should not have to redefine this mixin here – it is already redefined
+        in pidinst-ngmf. But LinkML-Py’s behaviour with regard to redefinitions
+        in imports seems a bit… erratic. If pidinst-ngmf is _not_ imported, then
+        the redefinition becomes unnecessary.
 
   FooInstrument:
-    description: >-
-      The PIDInstInstrument class extended with the Foo extension. This
-      class is constructed simply by (1) inheriting from the base
-      PIDInstInstrument class and (2) adding the FooInstrumentMixin.
+    description:
+      The PIDInstInstrument class extended with the Foo extension. This class is
+      constructed simply by (1) inheriting from the base PIDInstInstrument class
+      and (2) adding the FooInstrumentMixin.
     is_a: PIDInstInstrument
     mixins:
       - FooInstrumentMixin

@@ -1,8 +1,8 @@
 id: https://example.org/tag-types/adjacent
 name: adjacent-tag
 description: >-
-  A schema that illustrates how to emulate Serde’s “adjacently tagged
-  enums” in LinkML.
+  A schema that illustrates how to emulate Serde’s “adjacently tagged enums” in
+  LinkML.
 created_by: orcid:0000-0002-6095-8718
 see_also:
   - https://serde.rs/enum-representations.html#adjacently-tagged
@@ -17,10 +17,8 @@ imports:
 default_range: string
 
 classes:
-
   MessageList:
-    description: >-
-      An object that holds a list of messages of variable types.
+    description: An object that holds a list of messages of variable types.
     tree_root: true
     attributes:
       messages:
@@ -28,18 +26,16 @@ classes:
         range: MessageWrapper
         multivalued: true
         notes:
-          - >-
-            The range cannot be directly a Message object. We need an
-            intermediate “wrapping” class to allow the type designator
-            (“tag”) to be “adjacent” to the actual data structure rather
-            than “internal” to it.
+          - The range cannot be directly a Message object. We need an
+            intermediate “wrapping” class to allow the type designator (“tag”)
+            to be “adjacent” to the actual data structure rather than “internal”
+            to it.
 
   Message:
     description: This is the base class for all messages.
     notes:
-      - >-
-        This class could be abstract, but it does not really matter for
-        this demonstration.
+      - This class could be abstract, but it does not really matter for this
+        demonstration.
     attributes:
       id:
         description: The ID of this message.
@@ -64,11 +60,9 @@ classes:
   MessageWrapper:
     description: A wrapper object for a message.
     notes:
-      - >-
-        This class does not represent any “real” object in the modelled
-        domain. Its only purpose is to allow the message list to be
-        serialized as an “adjacently tagged enum”. Likewise for all its
-        descendants.
+      - This class does not represent any “real” object in the modelled domain.
+        Its only purpose is to allow the message list to be serialized as an
+        “adjacently tagged enum”. Likewise for all its descendants.
     attributes:
       type:
         description: The type designator
@@ -84,9 +78,8 @@ classes:
       content:
         range: WrappedRequest
         notes:
-          - >-
-            We refine the range so that a Request wrapper can only
-            contain (“wrap“) a message of type WrappedRequest.
+          - We refine the range so that a Request wrapper can only contain
+            (“wrap“) a message of type WrappedRequest.
 
   Response:
     description: A wrapper object for a response message.
@@ -95,6 +88,5 @@ classes:
       content:
         range: WrappedResponse
         notes:
-          - >-
-            We refine the range so that a Response wrapper can only
-            contain (“wrap“) a message of type WrappedResponse.
+          - We refine the range so that a Response wrapper can only contain
+            (“wrap“) a message of type WrappedResponse.

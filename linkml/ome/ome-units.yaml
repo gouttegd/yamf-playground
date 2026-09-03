@@ -2,8 +2,8 @@ id: https://schemas.incenp.org/ome/v1/units/
 name: ome-units
 title: OME Units Schema
 description: >-
-  A schema that provides enumerations for the various types of units
-  used throughout the OME model.
+  A schema that provides enumerations for the various types of units used
+  throughout the OME model.
 created_by: orcid:0000-0002-6095-8718
 
 prefixes:
@@ -12,11 +12,10 @@ prefixes:
 default_prefix: omeunits
 
 enums:
-
   ElectricPotentialUnit:
-    description: >-
-      Available values to describe the unit of a value that represents
-      an electric potential.
+    description:
+      Available values to describe the unit of a value that represents an
+      electric potential.
     permissible_values:
       YV:
         title: yotta volt
@@ -62,9 +61,8 @@ enums:
         title: yocto volt
 
   LengthUnit:
-    description: >-
-      Available values to describe the unit of a value that represents a
-      length.
+    description:
+      Available values to describe the unit of a value that represents a length.
     permissible_values:
       Ym:
         title: yotta meter
@@ -131,12 +129,11 @@ enums:
       pt:
         title: typography point
       pixel:
-      reference frame:
+      ? reference frame
 
   PowerUnit:
-    description: >-
-      Available values to describe the unit of a value that represents a
-      power.
+    description:
+      Available values to describe the unit of a value that represents a power.
     permissible_values:
       YW:
         title: yotta watt
@@ -182,9 +179,9 @@ enums:
         title: yocto watt
 
   FrequencyUnit:
-    description: >-
-      Available values to describe the unit of a value that represents
-      a frequency.
+    description:
+      Available values to describe the unit of a value that represents a
+      frequency.
     permissible_values:
       YHz:
         title: yotta hertz

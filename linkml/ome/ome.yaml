@@ -4,9 +4,8 @@ title: OME Core Schema
 description: >-
   A representation of the OME model as a LinkML schema.
 comments:
-  - >-
-    So far this schema (1) is limited to the “Instrument” branch of the
-    original OME model, and (2) does not represent “Annotations”.
+  - So far this schema (1) is limited to the “Instrument” branch of the original
+    OME model, and (2) does not represent “Annotations”.
 created_by: orcid:0000-0002-6095-8718
 see_also:
   - https://www.openmicroscopy.org/Schemas/Documentation/Generated/OME-2016-06/ome.html
@@ -21,11 +20,9 @@ imports:
 default_prefix: ome
 default_range: string
 
-
 slots:
-
   id:
-    description: >-
+    description:
       The identifier slot for most of the classes within the OME model.
     range: uri
     identifier: true
@@ -33,27 +30,23 @@ slots:
   light_source_type:
     description: The type designator for light source objects.
     notes:
-      - >-
-        This is only ever used in the `MicroscopeComponent` class, but
-        must be declared as a schema-wide slot all the same (rather than
-        as a class-specific attribute) because some parts of LinkML-Py
-        don’t correctly handle type designators when they are declared
-        as attributes.
+      - This is only ever used in the `MicroscopeComponent` class, but must be
+        declared as a schema-wide slot all the same (rather than as a
+        class-specific attribute) because some parts of LinkML-Py don’t
+        correctly handle type designators when they are declared as attributes.
     range: uri
     designates_type: true
 
-
 classes:
-
   OMEObject:
-    description: >-
-      The base class for all classes defined in this schema.
+    description: The base class for all classes defined in this schema.
     abstract: true
 
   ManufacturerSpec:
-    description: The base class for instrument hardware components.
-      This mixin provides attributes to record common properties among
-      the various hardware components that make up a microscope.
+    description:
+      The base class for instrument hardware components. This mixin provides
+      attributes to record common properties among the various hardware
+      components that make up a microscope.
     is_a: OMEObject
     attributes:
       lot_number:
@@ -66,22 +59,21 @@ classes:
         description: The serial number of the component.
 
   Microscope:
-    description: >-
-      The manufacturer’s specification for a microscope.
+    description: The manufacturer’s specification for a microscope.
 
-      This only provides basic information about a microscope. The
-      `Instrument` class is the main class that aims to fully describe
-      a microscope with all its hardware components.
+      This only provides basic information about a microscope. The `Instrument`
+      class is the main class that aims to fully describe a microscope with all
+      its hardware components.
     is_a: ManufacturerSpec
     slots:
       - id
     attributes:
       type:
-        description: >-
+        description:
           A value from a controlled vocabulary describing the type of
           microscope.
         range: MicroscopeType
-  
+
   Detector:
     description: The type of detector used to capture an image.
     is_a: ManufacturerSpec
@@ -104,10 +96,9 @@ classes:
         description: The fixed Zoom for a detector.
         range: float
       amplification_gain:
-        description: >-
-          Gain applied to the detector signal. This is the electronic
-          gain (as opposed to the inherent gain) that is set for the
-          detector.
+        description:
+          Gain applied to the detector signal. This is the electronic gain (as
+          opposed to the inherent gain) that is set for the detector.
         range: float
       type:
         description: The type of detector (e.g. CCD, PMT, EMCCD, etc.).
@@ -126,36 +117,34 @@ classes:
         description: The immersion medium the lens is designed for.
         range: ImmersionType
       lens_na:
-        description: >-
-          The numerical aperture of the lens. Expected range is between
-          0.02 and 1.5.
+        description:
+          The numerical aperture of the lens. Expected range is between 0.02 and
+          1.5.
         range: float
       nominal_magnification:
-        description: >-
-          The magnification of the lens as specified by the
-          manufacturer.
+        description:
+          The magnification of the lens as specified by the manufacturer.
         range: float
       calibrated_magnification:
-        description: >-
-          The magnification of the lens as measured by a calibration
-          process.
+        description:
+          The magnification of the lens as measured by a calibration process.
         range: float
       working_distance:
         description: The working distance of the lens.
         range: float
       working_distance_unit:
-        description: >-
+        description:
           Unit associated with the value of the working_distance slot.
         range: LengthUnit
       iris:
-        description: >-
+        description:
           Records whether or not the objective was fitted with an iris.
         range: boolean
 
   FilterSet:
-    description: >-
-      A set of filter. This is merely a container for references to the
-      filter objects.
+    description:
+      A set of filter. This is merely a container for references to the filter
+      objects.
     is_a: ManufacturerSpec
     slots:
       - id
@@ -165,9 +154,9 @@ classes:
         range: Filter
         multivalued: true
       dichroic:
-        description: >-
-          The dichromatic beamsplitter or dichroic mirror used for this
-          filter combination.
+        description:
+          The dichromatic beamsplitter or dichroic mirror used for this filter
+          combination.
         range: Dichroic
       excitation_filters:
         description: The filters placed in the excitation light path.
@@ -175,9 +164,9 @@ classes:
         multivalued: true
 
   Filter:
-    description: >-
-      A filter that may be placed in either the excitation or the
-      emission light path.
+    description:
+      A filter that may be placed in either the excitation or the emission light
+      path.
     is_a: ManufacturerSpec
     slots:
       - id
@@ -186,36 +175,34 @@ classes:
         description: The type of filter.
         range: FilterType
       filter_wheel:
-        description: >-
-          A filter “wheel” is OME can refer to any arrangement of
-          filters in a filter holder of any shape. It could, for
-          example, be a filter slider.
+        description:
+          A filter “wheel” is OME can refer to any arrangement of filters in a
+          filter holder of any shape. It could, for example, be a filter slider.
       transmittance_range:
-        description: >-
-          This records the range of wavelengths that are transmitted by
-          the filter. It also records the maximum amount of light
-          transmitted.
+        description:
+          This records the range of wavelengths that are transmitted by the
+          filter. It also records the maximum amount of light transmitted.
         range: TransmittanceRange
 
   Dichroic:
-    description: >-
-      The dichromatic beamsplitter or dichroic mirror used for this
-      filter combination.
+    description:
+      The dichromatic beamsplitter or dichroic mirror used for this filter
+      combination.
     is_a: ManufacturerSpec
     slots:
       - id
 
   Instrument:
-    description: >-
-      This class describes the instrument used to capture the image. It
-      is primarily a container for manufacturer’s model and catalog
-      numbers for the microscope itself and its various components.
+    description:
+      This class describes the instrument used to capture the image. It is
+      primarily a container for manufacturer’s model and catalog numbers for the
+      microscope itself and its various components.
     is_a: OMEObject
     slots:
       - id
     attributes:
       microscope:
-        description: >-
+        description:
           The description of the microscope itself, without its various
           components.
         range: Microscope
@@ -251,18 +238,18 @@ classes:
         inlined: true
         inlined_as_list: true
       dichroics:
-        description: >-
-          The dichromatic beamsplitters or dichroic mirrors available on
-          this instrument.
+        description:
+          The dichromatic beamsplitters or dichroic mirrors available on this
+          instrument.
         range: Dichroic
         multivalued: true
         inlined: true
         inlined_as_list: true
 
   LightSource:
-    description: >-
-      A light source on an instrument. This class has several subclasses
-      that each represent a different type of light source.
+    description:
+      A light source on an instrument. This class has several subclasses that
+      each represent a different type of light source.
     is_a: ManufacturerSpec
     slots:
       - id
@@ -276,7 +263,7 @@ classes:
         range: PowerUnit
 
   ArcLightSource:
-    description: >-
+    description:
       A light source that is some kind of arc lamp (Hg, Xe, HgXe, etc.).
     is_a: LightSource
     attributes:
@@ -285,7 +272,7 @@ classes:
         range: ArcLightSourceType
 
   FilamentLightSource:
-    description:  A light source that is is some kind of filament bulb.
+    description: A light source that is is some kind of filament bulb.
     is_a: LightSource
     attributes:
       type:
@@ -320,14 +307,14 @@ classes:
         description: The pulse mode of the laser.
         range: LaserPulseType
       pockel_cell:
-        description: >-
-          Whether or not the laser has a PocketCell to rotate the
-          polarization of the beam.
+        description:
+          Whether or not the laser has a PocketCell to rotate the polarization
+          of the beam.
         range: boolean
       repetition_rate:
-        description: >-
-          This is the rate in Hz at which the laser pulses if the pulse
-          type is `Repetitive`.
+        description:
+          This is the rate in Hz at which the laser pulses if the pulse type is
+          `Repetitive`.
         range: float
       repetition_unit:
         description: Unit associated with the repetition_rate slot.
@@ -335,28 +322,27 @@ classes:
       pump:
         description: The light source used to pump the laser.
         range: LightSource
-  
+
   LightEmittingDiodeLightSource:
     description: A light source that is some kind od LED lamp.
     is_a: LightSource
 
   GenericExcitationSource:
-    description: >-
-      An arbitrary light source, that is not described by any of the
-      other subclass of `LightSource` but that is described instead by
-      key/value pairs.
+    description:
+      An arbitrary light source, that is not described by any of the other
+      subclass of `LightSource` but that is described instead by key/value
+      pairs.
     notes:
-      - >-
-        We include this type for compatibility with existing
-        OME-compliant data, but its use should be discouraged in favour
-        of custom new subclasses of `OMELightSource` that could be added
-        by schemas that extend the present schema.
+      - We include this type for compatibility with existing OME-compliant data,
+        but its use should be discouraged in favour of custom new subclasses of
+        `OMELightSource` that could be added by schemas that extend the present
+        schema.
     is_a: LightSource
     attributes:
       map:
-        description: >-
-          A list of arbitrary key/value pairs that can be used to
-          describe a light source not covered by this model.
+        description:
+          A list of arbitrary key/value pairs that can be used to describe a
+          light source not covered by this model.
         range: MapEntry
         multivalued: true
         inlined: true
@@ -372,27 +358,28 @@ classes:
         description: The value of the entry.
 
   TransmittanceRange:
-    description: >-
-      This records the range of wavelengths that are transitted by a
-      filter. It also records the maximum amount of light transmitted.
+    description:
+      This records the range of wavelengths that are transitted by a filter. It
+      also records the maximum amount of light transmitted.
     is_a: OMEObject
     attributes:
       cutin:
-        description: >-
-          The wavelength below which there is less than 50%
-          transmittance for a filter.
+        description:
+          The wavelength below which there is less than 50% transmittance for a
+          filter.
         range: float
-        # FIXME: LinkML seemingly does not support exclusive boundaries,
-        # so we can't mandate that the value must be strictly superior.
-        # See: https://github.com/linkml/linkml/issues/1648
+        notes:
+          - FIXME LinkML seemingly does not support exclusive boundaries, so we
+            can't mandate that the value must be strictly superior. See
+            https://github.com/linkml/linkml/issues/1648.
         minimum_value: 0.0
       cutin_unit:
         description: Unit associated with the value of the cutin slot.
         range: LengthUnit
       cutout:
-        description: >-
-          The wavelength above which there is less than 50%
-          transmittance for a filter.
+        description:
+          The wavelength above which there is less than 50% transmittance for a
+          filter.
         range: float
         minimum_value: 0.0
       cutout_unit:
@@ -403,20 +390,18 @@ classes:
         range: float
         minimum_value: 0.0
       cutin_tolerance_unit:
-        description: >-
-          Unit associated with the value of the cutin_tolerance slot.
+        description: Unit associated with the value of the cutin_tolerance slot.
         range: LengthUnit
       cutout_tolerance:
         description: CutOut tolerance.
         range: float
         minimum_value: 0.0
       cutout_tolerance_unit:
-        description: >-
+        description:
           Unit associated with the value of the cutout_tolerance slot.
         range: LengthUnit
       transmittance:
-        description: >-
-          The amount of light the filter transmits at a maximum.
+        description: The amount of light the filter transmits at a maximum.
         range: float
         minimum_value: 0.0
         maximum_value: 1.0
@@ -444,8 +429,7 @@ classes:
         range: float
         minimum_value: 0.0
       wavelength_unit:
-        description: >-
-          Unit associated with the value of the wavelength slot.
+        description: Unit associated with the value of the wavelength slot.
         range: LengthUnit
 
   DetectorSettings:
@@ -470,27 +454,24 @@ classes:
         description: Unit associated with the value of the voltage slot.
         range: ElectricPotentialUnit
       zoom:
-        description: >-
-          The zoom or “confocal zoom” or “scan zoom” for a detector.
+        description: The zoom or “confocal zoom” or “scan zoom” for a detector.
         range: float
       read_out_rate:
-        description: >-
-          The speed at which the detector can count pixels. This is the
-          bytes per second that can be read from the detector (like a
-          baud rate).
+        description:
+          The speed at which the detector can count pixels. This is the bytes
+          per second that can be read from the detector (like a baud rate).
         range: float
       read_out_rate_unit:
-        description: >-
-          Unit associated with the value of the read_out_rate slot.
+        description: Unit associated with the value of the read_out_rate slot.
         range: FrequencyUnit
       binning:
-        description: >-
+        description:
           Indicates how many pixels are combined to form larger pixels.
         range: BinningType
       integration:
-        description: >-
-          The number of sequential frames that get averaged, to improve
-          the signal-to-noise ratio.
+        description:
+          The number of sequential frames that get averaged, to improve the
+          signal-to-noise ratio.
         range: integer
         minimum_value: 0
 
@@ -504,23 +485,21 @@ classes:
         inlined: false
         required: true
       correction_collar:
-        description: >-
-          The correction collar is normally an adjustable ring on the
-          objective. Each has an arbitrary scale on it so the value is
-          unit-less.
+        description:
+          The correction collar is normally an adjustable ring on the objective.
+          Each has an arbitrary scale on it so the value is unit-less.
         range: float
       refractive_index:
-        description: >-
-          The refractive index is that of the immersion medium. This is
-          a ratio and the value is therefore unit-less.
+        description:
+          The refractive index is that of the immersion medium. This is a ratio
+          and the value is therefore unit-less.
         range: float
       medium:
         description: The immersion medium used.
         range: ImmersionType
 
   LightPath:
-    description: >-
-      A description of the light path used for a given channel.
+    description: A description of the light path used for a given channel.
     is_a: OMEObject
     attributes:
       excitation_filters:
@@ -537,7 +516,6 @@ classes:
         description: The dichromatic beamsplitter or dichroic mirror.
         range: Dichroic
         inlined: false
-      
 
 enums:
   MicroscopeType:
@@ -568,8 +546,7 @@ enums:
       Other:
 
   CorrectionType:
-    description: >-
-      Available values to describe the type of correction on a lens.
+    description: Available values to describe the type of correction on a lens.
     permissible_values:
       UV:
       PlanApo:
@@ -588,8 +565,7 @@ enums:
       Other:
 
   ImmersionType:
-    description: >-
-      Available values to describe the type of immersion medium.
+    description: Available values to describe the type of immersion medium.
     permissible_values:
       Oil:
       Water:
@@ -612,8 +588,7 @@ enums:
       Other:
 
   ArcLightSourceType:
-    description: >-
-      Available values to describe the type of a arc-based lamp.
+    description: Available values to describe the type of a arc-based lamp.
     permissible_values:
       Hg:
       Xe:
@@ -621,16 +596,14 @@ enums:
       Other:
 
   FilamentLightSourceType:
-    description: >-
-      Available values to describe the type of a filament-based lamp.
+    description: Available values to describe the type of a filament-based lamp.
     permissible_values:
       Incandescent:
       Halogen:
       Other:
-  
+
   LaserLightSourceType:
-    description: >-
-      Available values to describe the type of a laser.
+    description: Available values to describe the type of a laser.
     permissible_values:
       Excimer:
       Gas:
@@ -642,8 +615,7 @@ enums:
       Other:
 
   LaserMedium:
-    description: >-
-      Available values to describe the type of lasing medium.
+    description: Available values to describe the type of lasing medium.
     permissible_values:
       Cu:
       Ag:
@@ -681,8 +653,7 @@ enums:
       Other:
 
   LaserPulseType:
-    description: >-
-      Available values to describe the pulse modes of a laser.
+    description: Available values to describe the pulse modes of a laser.
     permissible_values:
       CW:
       Single:
@@ -692,9 +663,9 @@ enums:
       Other:
 
   BinningType:
-    description: >-
-      Available values to describe how many pixels are combined to form
-      larger pixels.
+    description:
+      Available values to describe how many pixels are combined to form larger
+      pixels.
     permissible_values:
       1x1:
         title: no binning

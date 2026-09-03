@@ -1,8 +1,8 @@
 id: https://example.org/tag-types/internal
 name: internal-tag
 description: >-
-  A schema that illustrates how to emulate Serde’s “internally tagged
-  enums” in LinkML.
+  A schema that illustrates how to emulate Serde’s “internally tagged enums” in
+  LinkML.
 created_by: orcid:0000-0002-6095-8718
 see_also:
   - https://serde.rs/enum-representations.html#internally-tagged
@@ -17,10 +17,8 @@ imports:
 default_range: string
 
 classes:
-
   MessageList:
-    description: >-
-      An object that holds a list of messages of variable types.
+    description: An object that holds a list of messages of variable types.
     tree_root: true
     attributes:
       messages:
@@ -31,19 +29,16 @@ classes:
   Message:
     description: This is the base class for all messages.
     notes:
-      - >-
-        This class could be abstract, but it does not really matter for
-        this demonstration.
+      - This class could be abstract, but it does not really matter for this
+        demonstration.
     attributes:
       id:
         description: The ID of this message.
       type:
         description: The type designator.
         notes:
-          - >-
-            The presence of this slot is all that is needed to support
-            “internally tagged enums” in LinkML. The slot is the
-            “internal tag”.
+          - The presence of this slot is all that is needed to support
+            “internally tagged enums” in LinkML. The slot is the “internal tag”.
         designates_type: true
 
   Request:

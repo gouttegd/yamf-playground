@@ -14,24 +14,19 @@ imports:
 default_prefix: ngmf
 default_range: string
 
-
 slots:
-
   extension_type:
     description: The type designator for a class extension object.
     range: uri
     designates_type: true
     key: true
 
-
 classes:
-
   IsExtensibleMixin:
-    description: >-
-      An object that can carry arbitrary class extension objects.
+    description: An object that can carry arbitrary class extension objects.
 
-      Reuse this mixin in any class to allow the class to be extended
-      with class extensions.
+      Reuse this mixin in any class to allow the class to be extended with class
+      extensions.
     mixin: true
     attributes:
       extensions:
@@ -42,10 +37,9 @@ classes:
         inlined_as_list: false
 
   BaseExtensionObject:
-    description: >-
-      Represents a class extension object, that is a fragment of an
-      object that is defined by an extension rather than by the base
-      schema.
+    description:
+      Represents a class extension object, that is a fragment of an object that
+      is defined by an extension rather than by the base schema.
     slots:
       - extension_type
     extra_slots:
