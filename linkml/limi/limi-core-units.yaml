@@ -16,11 +16,10 @@ default_prefix: limi
 
 enums:
   LiMiPowerUnit:
-    description: >-
+    description:
       Available values to describe the unit of a value that represents a power.
     notes:
-      - >-
-        This comes directly from the OME model. The NBO v02-10 specification
+      - This comes directly from the OME model. The NBO v02-10 specification
         mentions a "unit:IlluminationPowerUnit" but, AFAICT, does not define it
         anywhere.
     permissible_values:
@@ -68,7 +67,7 @@ enums:
         title: yocto watt
 
   LiMiLengthUnit:
-    description: >-
+    description:
       Available values to describe the unit of a value that represents a length.
     permissible_values:
       Ym:
@@ -139,7 +138,7 @@ enums:
       ? reference frame
 
   LiMiFrequencyUnit:
-    description: >-
+    description:
       Available values to describe the unit of a value that represents a
       frequency.
     permissible_values:
@@ -187,7 +186,7 @@ enums:
         title: yocto hertz
 
   LiMiTimeUnit:
-    description: >-
+    description:
       Available values to describe the unit of a value that represents a
       duration.
     permissible_values:
@@ -234,8 +233,8 @@ enums:
       ys:
         title: yocto second
 
-  AngleUnit:
-    description: >-
+  LiMiAngleUnit:
+    description:
       Available values to describe the unit of a value that represents an angle.
     permissible_values:
       deg:

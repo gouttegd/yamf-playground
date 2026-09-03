@@ -1,0 +1,921 @@
+id: https://example.invalid/limi/v2-10/core/hardware
+name: limi-core-hardware
+title: LiMi Core Schema – Hardware Specifications
+description: >-
+  This schema is part of the set of LinkML schemas for the QUAREP Light
+  Microscopy Model (hereafter referred to as “LiMi model”).
+
+  It defines the entities that belong to the “Hardware Specifications” section
+  of the “Core” module of the LiMi model.
+notes:
+  - This schema is not intended to be used on its own. Use limi-core instead.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  limi: https://example.invalid/limi/v02-10/
+  orcid: https://orcid.org/
+default_prefix: limi
+default_range: string
+
+classes:
+  LiMiManufacturerSpecs:
+    description:
+      This describes the Manufacturer specifications for a hardware component.
+    notes:
+      - This is the base class for most classes in this schema.
+    is_a: LiMiObject
+    attributes:
+      manufacturer:
+        description:
+          The company, research group or individual who built or manufactured
+          this hardware.
+      model:
+        description:
+          The Model name or any other designation the Manufacturer uses for this
+          component.
+      catalog_number:
+        description:
+          The Catalog, Part of Serial Number used by the Manufacturer to
+          uniquely identify this component.
+      lot_number:
+        description:
+          The Lot Number used by the Manufacturer to refer to a specific
+          production batch or lot for this component.
+
+  LiMiInstrument:
+    description:
+      This class describes the Instrument used to capture an image. It is
+      primarily a container referring to the list of hardware components in a
+      given Microscope.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+      - Essentially, the rest of this entire schema serves to describe the
+        attributes of this class.
+    is_a: LiMiManufacturerSpecs
+    mixins:
+      - LiMiInstrumentCoreMixin
+    extra_slots:
+      allowed: true
+
+  LiMiInstrumentCoreMixin:
+    description: Core-level attributes for the LiMiInstrument class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      stand:
+        description:
+          The core structure of this Instrument, which might also be referred to
+          as its Body.
+        range: LiMiMicroscopeStand
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      light_sources:
+        description: The Light Source(s) available for this Instrument.
+        range: LiMiLightSource
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      objectives:
+        description: The Objective(s) available for this Instrument.
+        range: LiMiObjective
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+      filters:
+        description: The Filter(s) available for this Instrument.
+        range: LiMiFilter
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  ####################
+  # Microscope stand #
+  ####################
+
+  LiMiMicroscopeStand:
+    description: The core structure of a Microscope.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+      - object_type
+    attributes:
+      type:
+        description: The general category to which this Microscope belongs.
+        range: LiMiMicroscopeType
+        required: true
+        notes:
+          - FIXME Shouldn’t that be an attribute of the Instrument rather than
+            of the MicroscopeStand?
+      origin:
+        description: The origin of this microscope stand.
+        range: LiMiMicroscopeOriginType
+      eyepiece_field_number:
+        description:
+          The diaphragm size of the Microscope eyepiece expressed in mm.
+        range: float
+
+  LiMiInvertedMicroscope:
+    description: An inverted Microscope Stand.
+    is_a: LiMiMicroscopeStand
+
+  #################
+  # Light sources #
+  #################
+
+  LiMiLightSource:
+    description: A Light Source on an Instrument.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+      - object_type
+    attributes:
+      purchase_date:
+        description: The Date in which this Light Source was purchased.
+        range: date
+      illumination_power_reporting_statistic:
+        description:
+          The statistic used by the Manufacturer to report the nominal
+          illumination power output emitted by this Light Source at Peak
+          Wavelength.
+        range: LiMiIlluminationPowerReportingStatistic
+      illumination_power_reporting_position:
+        description:
+          The position where the reported Illumination Intensity value was
+          obtained as reported by the Manufacturer.
+        range: LiMiIlluminationPowerReportingPosition
+
+  LiMiArc:
+    description:
+      Represents a Light Source that is an Arc lamp. An Arc lamp is a discharge
+      lamp that produces light by an electric arc (also called a voltaic arc),
+      which is typically generated between metal electrodes and travels through
+      an inert gas in in a glass bulb. The inert gas can be Mercury (He), Xenon
+      (Xe), or a mixture of the two. The choice of the gas is important because
+      its nature determines the spectral behavior of the lamp.
+    is_a: LiMiLightSource
+    attributes:
+      type:
+        description: The inert gas vapor contained in the Arc lamp bulb.
+        range: LiMiArcType
+      illumination_wavelength_ranges:
+        description:
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
+        range: LiMiIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiFilament:
+    description:
+      Represents a Light Source that is a Filament lamp. A Filament lamp is an
+      incandescent Light Source with a wire filament (usually tungsten), which
+      is heated by the passage of an electric current to such a high temperature
+      that it flows with visible light (incandescence). The emitted spectrum is
+      continuous, and it approximates that of a black-body radiator.
+    is_a: LiMiLightSource
+    attributes:
+      type:
+        description: The type of Filament lamp Light Source.
+        range: LiMiFilamentType
+      illumination_wavelength_ranges:
+        description:
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
+        range: LiMiIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiLaser:
+    description:
+      A Light Source which emits coherent radiation at high spectral
+      concentrations of radiance and minimal solid angles. This includes proper
+      Light Amplification by Stimulated Emission of Radiation (LASER) sources
+      that emig light through a process of optical amplification based on the
+      stimulated emisssion of electromagnetic radiations. It also includes
+      Optical Parametric Oscillator (OPO) sources that uses a kind of LASER
+      resonator but based on optical gain from parametric amplification in a
+      nonlinear crystal rather than from stimulated emision.
+    is_a: LiMiLightSource
+    attributes:
+      type:
+        description: The general category of the laser.
+        range: LiMiLaserType
+      tunable:
+        description: Whether this Laser is Tuneable to different Wavelengths.
+        range: boolean
+      pulse:
+        description:
+          Whether this Laser emits light in the form of optical pulses (i.e.,
+          light flashes; True) or as a Continuous Wave (CW; False).
+        range: boolean
+      laser_medium:
+        description: The material out of which this Laser is constructed.
+        range: LiMiLaserMedium
+      is_pumped:
+        description: Whether this Laser is a pumped Laser.
+        range: boolean
+      repetition_rate:
+        description:
+          In the case this is a pulsed Laser, this is the frequency of the laser
+          pulses.
+        range: float
+      repetition_rate_unit:
+        description: Unit associated with the Repetition Rate value.
+        range: LiMiFrequencyUnit
+        ifabsent: LiMiFrequencyUnit(Hz)
+      frequency_multiplication:
+        description:
+          The optical frequency multiplication factor that may be specified for
+          this Laser.
+        range: float
+      modulation_mechanism:
+        description: The modulation mechanism used for this Laser.
+        range: LiMiLaserModulation
+      laser_class:
+        description: The Safety Class this Laser belongs to.
+        range: LiMiLaserSafetyClass
+      is_pump:
+        description: Whether this Laser serves as a Pump for a downstream Laser.
+      position:
+        description: The position of this Laser on a Multi Laser Engine.
+        range: integer
+        minimum_value: 1
+      pulse_duration:
+        description:
+          In the case this is a pulsed laser, this is the duration of each Laser
+          pulse.
+        range: float
+      pulse_duration_unit:
+        description: Unit associated with the Pulse Duration value.
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+      pump:
+        description:
+          In the case this is a Pumped Laser, this is a reference to the
+          upstream Laser used to pump this one.
+        range: LiMiLaser
+        inlined: false
+      illumination_wavelength_ranges:
+        description:
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
+        range: LiMiIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiLightEmittingDiode:
+    description:
+      A Light Emitting Diode (LED) is a solid-state semiconductor Light Source
+      that emits light when current flows through it. Electrons in the
+      semiconductor recombine with electron holes, releasing energy in the form
+      of photons. The color of the light (i.e., the energy of the photons) is
+      determined by the energy required for electrons to cross the bandgap of
+      the semiconductor. White light may be obtained by using multiple
+      semiconductors or a layer of light-emitting phosphor on the semiconductor
+      device.
+    is_a: LiMiLightSource
+    attributes:
+      type:
+        description: The general category of this Light Emitting Diode.
+        range: LiMiLightEmittingDiodeType
+      led_modules:
+        description:
+          The individual LED modules that make up this Light Emitting Diode
+          Light Source.
+        range: LiMiLEDModule
+        multivalued: true
+
+  LiMiLEDModule:
+    description: A single module within a Light Emitting Diode Light Source.
+    is_a: LiMiObject
+    attributes:
+      projection_angle:
+        description: The angle at which this LED module projects the light beam.
+        range: float
+      projection_angle_unit:
+        description: Unit associated with the Projection Angle value.
+        range: LiMiAngleUnit
+      illumination_wavelength_ranges:
+        description:
+          The range(s) of wavelengths this device is designed for, according to
+          the Manufacturer.
+        range: LiMiIlluminationWavelengthRange
+        multivalued: true
+
+  LiMiWavelengthRange:
+    description:
+      A range of Wavelength a device is designed for, according to its
+      Manufacturer.
+    is_a: LiMiObject
+    attributes:
+      peak_wavelength:
+        description:
+          The nominal Wavelength associated with the peak response rate of this
+          device.
+        range: float
+      peak_wavelength_unit:
+        description: Unit associated with the Peak Wavelength value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      cut_on:
+        description: The wavelength below which the response rate is below 50%.
+        range: float
+      cut_on_unit:
+        description: Unit associated with the Cut On value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      cut_off:
+        description: The wavelength below which the response rate is below 50%.
+        range: float
+        notes:
+          - FIXME Shouldn’t that be the wavelength _above_ which the response
+            rate is below 50%?
+      cut_off_unit:
+        description: Unit associated with the Cut Off value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      wavelength_profile_file:
+        description:
+          A file containing the Wavelength profile of this hardware component.
+        notes:
+          - FIXME The model describes that as a "File Annotation", which is
+            quite a OMERO-specific concept. We need a mechanism to allow either
+            storing arbitrary data or referring to external files.
+
+  LiMiIlluminationWavelengthRange:
+    description:
+      A range of wavelength a Light Source is designed for, according to its
+      Manufacturer.
+    is_a: LiMiWavelengthRange
+    attributes:
+      illumination_power:
+        description:
+          The nominal Illumination Power (also known as Power Output or
+          Illumination Intensity) emitted at Peak Wavelength by the Light
+          Source, according to the Manufacturer.
+        range: float
+      illumination_power_unit:
+        description: Unit associated with the Illumination Power value.
+        range: LiMiPowerUnit
+        ifabsent: LiMiPowerUnit(mW)
+
+  #############
+  # Objective #
+  #############
+
+  LiMiObjective:
+    description:
+      The Microscope's Objective lens consists of a lens, its mount, and any
+      associated parts. It is the part of the imaging system, which forms a
+      primary image of the object, either alone or in conjunction with a tube
+      lens. The Objective typically consists of a compound lens consisting of
+      several simple lenses (elements), usually arranged along a common axis.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+    attributes:
+      magnification:
+        description:
+          The Magnification of the Objective as specified by the Manufacturer -
+          i.e., 60 represents a 60X lens.
+        range: float
+      lens_na:
+        description:
+          The nominal Numerical Aperture (NA) of this Objective as specified by
+          the Manufacturer, expressed as a real number. NA is a number that was
+          defined initially by Abbe to characterize Objectives and Condensers.
+          NA can be calculated by the expression "n sin alpha", where n is the
+          Refractive Index of the medium between the Lens and the Sample, and
+          alpha is half the Angular Aperture of the Lens. NA is a measure of how
+          much of the illumination that leaves the specimen actually passes
+          through the Lens. The larger the NA, the more information the lens can
+          transmit. Expected range 0.02 – 1.5.
+        range: float
+      correction:
+        description:
+          The type of optical correction (i.e. chromatic correction, or flatness
+          correction, etc.) associated with this Objective.
+        range: LiMiObjectiveCorrectionType
+      immersion_type:
+        description:
+          The general category of the Immersion Liquid this Objective is
+          designed for, according to the Manufacturer. If the general category
+          is not "Air", the actual Immersion Liquid that was used during the
+          Acquisition of a specific Image must be specified in Objective
+          Settings.
+        range: LiMiImmersionType
+      working_distance:
+        description:
+          The Working Distance of this Objective under normal operating
+          conditions. The Working Distance is the distance (in air, or in the
+          specified immersion liquid) between the front of an Objective and the
+          surface of the cover glass or of th specimen if uncovered.
+        range: float
+      working_distance_unit:
+        description: Unit associated with the Working Distance value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+      iris:
+        description:
+          Whether this Objective was fitted with an Iris. Manufacturers offer
+          high NA Objectives, which are equipped with an internal Iris Diaphragm
+          that increases image contrast during digital imaging to compensate for
+          image flare artifacts due to light emitted from areas outside of the
+          focal plane. Opening or closing the Iris Diaphragm determines the size
+          of the Objective rear aperture yielding a variable NA range between
+          0.5 and the Objective’s upper limit.
+        range: boolean
+      calibrated_magnification:
+        description:
+          The Magnification of the Objective as measured via a calibration
+          process.
+        range: float
+      infinity_corrected:
+        description:
+          Whether this Objective is infinity corrected. An infinity-corrected
+          Objective is corrected for an infinite sample to primary image
+          distance and needs to be used with a Tube Lens of appropriate focal
+          length to obtain its nominal magnification.
+        range: boolean
+      contrast_modulation:
+        description:
+          The type of contrast modulation plate present in this Objective, if
+          any.
+        range: LiMiContrastModulationPlate
+      dic:
+        description:
+          Whether (True) the Objective is designed for Differential Interference
+          Contrast (DIC) or not (False). DIC is a contrast modality due to
+          double-beam interference in which two waves that fall on the object
+          plane or image plane are separated laterally by a distance similar to
+          the minimum resolvable distance.
+        range: boolean
+      light_type:
+        description:
+          Whether this Objective is designed for a special Light application
+          (e.g., IR or UV).
+        range: LiMiObjectiveLightType
+      correction_collar:
+        description: Whether this Objective is fitted with a Correction Collar.
+        range: boolean
+        notes:
+          - FIXME This should not be needed? If there is no Correction Collar,
+            then the correction_collar_type attribute can simply be left unset.
+      correction_collar_type:
+        description:
+          The type of Correction Collar this Objective is fitted with, if any.
+        range: LiMiCorrectionCollarType
+      dipping_medium:
+        description:
+          The Dipping Medium this Objective is compatible with (when the
+          Immersion Type is set to "Dipping").
+        range: LiMiDippingType
+        notes:
+          - FIXME Add a rule to forbid the use of this attribute when Immersion
+            Type is _not_ "Dipping"?
+      phase_contrast_designation:
+        description:
+          If this Objective is designed for Phase, this is the Phase Contrast
+          designation of the Phase Plate found in this Objective. This
+          designation has to match the Phase Number of the Phase Ring associated
+          with the front focal plane of the Condenser.
+        range: LiMiPhaseContrastDesignationType
+        see_also:
+          - https://www.microscopyu.com/techniques/phase-contrast/phase-contrast-Microscope-configuration
+      objective_view_field:
+        description:
+          The maximal diameter of the view field allowed by this Objective,
+          expressed in mm, and measured at the intermediate image plane.
+        range: float
+      image_distance:
+        description:
+          The distance in air between the rear principal plane of this Objective
+          and the primary Image plane.
+        range: float
+      image_distance_unit:
+        description: Unit associated with the Image Distance value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+      front_local_length:
+        description:
+          The distance measured along the optical axis from the front principal
+          plane of this Lens to the front focal plane.
+        range: float
+      front_local_length_unit:
+        description: Unit associated with the Front Focal Length value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+      back_focal_length:
+        description:
+          The distance measured along the optical axis from the read principal
+          plane of this Lens to the rear focal plane.
+        range: float
+      back_focal_length_unit:
+        description: Unit associated with the Back Focal Length value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+      parfocalizing_distance:
+        description:
+          The distance between the mounting plane of this Objective and the
+          specimen plane.
+        range: float
+      parfocalizing_distance_unit:
+        description: Unit associated with the Parfocalizing Distance value.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+
+  ###########
+  # Filters #
+  ###########
+
+  LiMiFilter:
+    description:
+      An optical Filter positioned in the Light Path for one or more Channels
+      available for an Instrument. An optical Filter is a device designed to
+      selectively control the Wavelengths, color temperature, vibration
+      direction, and/or intensity of the radiation which it transmits or
+      reflects.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+      - object_type
+    attributes:
+      # Arnica to fill
+
+  LiMiExcitationFilter:
+    description:
+      A Filter whose purpose is to selectively attenuate the Light that is
+      utilized to Excite the Sample depending on Wavelength.
+    is_a: LiMiFilter
+
+  LiMiEmissionFilter:
+    description:
+      A Filter whose purpose is to selectively attenuate the Fluorescent Light
+      that is emitted by the Sample dependent on Wavelength.
+    is_a: LiMiFilter
+
+  LiMiGenericFilter:
+    description:
+      A generic Filter positioned along the Light Path in addition to the
+      canonical fluorescence Excitation and Emission Filters.
+    notes:
+      - FIXME Should not be needed, because in this schema the parent Filter
+        class is _not_ abstract, so a "generic" filter can simply be a Filter.
+    is_a: LiMiFilter
+
+  LiMiTransmittanceRange:
+    description:
+      A range of wavelength (also known as a Band) that are transmitted by an
+      optical component. This also includes the maximum amount of light
+      transmitted.
+    is_a: LiMiObject
+    attributes:
+      wavelength:
+        description:
+          The key Wavelength that characterizes this Transmittance Range (also
+          known as Transmission Band). In the case of Bandpass, Bandstop,
+          Multipass, or Notch Filters, Wavelength often refers to the Central
+          Wavelength of each of the transmission band(s); alternatively, in case
+          of a Longpass or a Shortpass Filter, Wavelength refers to the CutOn
+          Wavelength (i.e., below which there is less then 50% transmittance) or
+          the CutOff Wavelength (i.e., above which there is less than 50%
+          transmittance) respectively. In the case of Dichroics, Wavelength most
+          commonly refers to the Edge Wavelength which might be either the CutOn
+          or the CutOff Wavelength depending on individual cases.
+        range: float
+      wavelength_unit:
+        description: Unit associated with the Wavelength value.
+        range: LiMiLengthUnit
+      transmittance:
+        description:
+          The maximum of light this optical component is capable of transmitting
+          in this Wavelength Range, at the Peak Wavelength. It is represented as
+          a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+      FWHM_bandwidth:
+        description:
+          The width of this Transmittance Range. Specifcally, the Full Width at
+          Half Maximum (FWHM) represents the bandwidth of the Wavelength
+          spectrum curve mesured between those points whose transmission
+          amplitude is 50% of the maximum.
+        range: float
+        minimum_value: 0.0
+      FWHM_bandwidth_unit:
+        description: Unit associated with the FWHM Bandwidth value.
+        range: LiMiLengthUnit
+
+  ############
+  # Detector #
+  ############
+
+  LiMiDetector:
+    description:
+      A Detector available for this Instrument. An Instrument may have more than
+      one Detector of different types, such as a Photomultiplier, or a Camera.
+      The Detector ID can be used as a reference within the Channel element. The
+      values stored in Detector represent the fixed values, variable values
+      modified during the Acquisition go in DetectorSettings.
+    is_a: LiMiManufacturerSpecs
+    slots:
+      - id
+      - name
+      - object_type
+    attributes:
+      # Arnica to fill
+
+enums:
+  LiMiMicroscopeType:
+    description: The general category to which a Microscope belongs.
+    notes:
+      - FIXME Enums in the original model are inconsistently cased. For now, we
+        follow the model, so some enums have values that contain spaces while
+        others have values that use PascalCase.
+    permissible_values:
+      Compound:
+      ? Custom made
+      Dissection:
+      Electrophysiology:
+      ? Light sheet
+      Stereomicroscope:
+      Other:
+
+  LiMiMicroscopeOriginType:
+    description: This describes the origin of a Microscope Stand.
+    permissible_values:
+      Commercial-as is:
+        description:
+          The Microscope Stand was purchased from a Commercial vendor and is
+          being used as-is.
+      Commercial-custom modified:
+        description:
+          The Microscope Stand was purchased from a Commercial vendor and
+          subsequently Modified for a specialized application.
+      Custom-built:
+        description:
+          The Microscope Stand was entirely Custom-built from scratch.
+
+  LiMiObjectiveCorrectionType:
+    description:
+      The type of optical correction (i.e. chromatic correction, or flatness
+      correction, etc.) associated with an Objective.
+    permissible_values:
+      Achro:
+      Achromat:
+      Achroplan:
+      Acroplan:
+      Apo:
+      Apochromat:
+      C-Achroplan:
+      EF:
+      Fl:
+      Fluar:
+      Fluor:
+      Fluotar:
+      Lambda:
+      N:
+      Neofluar:
+      NPL:
+      Pl:
+      Plan:
+      Plano:
+      PlanApo:
+      PlanApochromat:
+      PlanFluor:
+      PlanNeofluar:
+      SuperFluor:
+      UPLAN:
+      UPlanApo:
+      UPlanFl:
+      UV:
+      VioletCorrected:
+      Other:
+
+  LiMiImmersionType:
+    description:
+      The general category of the Immersion Liquid an Objective has been
+      designed for, according to its Manufacturer.
+    permissible_values:
+      Air:
+      Dipping:
+      Glycerol:
+      Multi:
+      ? Mineral Oil
+      ? Silicone Oil
+      Water:
+      Other:
+
+  LiMiContrastModulationPlate:
+    description:
+      The type of contrast modulation plate that may be present within an
+      Objective.
+    notes:
+      - FIXME The "None" value should not be needed. If an Objective does not
+        have a contrast modulation plate, then the corresponding slot should
+        simply be left empty.
+      - FIXME Several values would deserve a minimal explanation of what they
+        are.
+    permissible_values:
+      None:
+      Ph1:
+      Ph2:
+      Ph3:
+      Hoffman:
+      VAREL:
+      Other:
+
+  LiMiObjectiveLightType:
+    description: The type of Light an Objective is designed for.
+    permissible_values:
+      Infrared:
+      Ultraviolet:
+      Visible:
+
+  LiMiCorrectionCollarType:
+    description: The type of Correction Collar fitted on a Objective.
+    permissible_values:
+      ? Coverglass Thickness
+      ? Immersion Liquid
+      ? Numerical Aperture
+      Temperature:
+      Multi:
+
+  LiMiDippingType:
+    description: The type of Dipping Medium an Objective is compatible with.
+    permissible_values:
+      Organic-based:
+      Water-based:
+      Other:
+
+  LiMiPhaseContrastDesignationType:
+    description:
+      The type of Phase Contrast designation of the Phase Plate found in an
+      Objective.
+    permissible_values:
+      Phase:
+      PHACO:
+      PC:
+      PhL:
+      Ph1:
+      Ph2:
+      Ph3:
+      Ph4:
+      DL:
+      DLL:
+      DM:
+      ADL:
+      PL:
+      PLL:
+      PM:
+      PH:
+      NL:
+      NM:
+      BM:
+      NH:
+
+  LiMiIlluminationPowerReportingStatistic:
+    description:
+      The statistic used by the Manufacturer of a Light Source to report the
+      nominal Illumination Power output emitted by the Light Source at Peak
+      Wavelength.
+    permissible_values:
+      Average:
+      Maximum:
+      Median:
+      Other:
+
+  LiMiIlluminationPowerReportingPosition:
+    description:
+      The position where the reported Illumination Intensity value was obtained
+      as reported by the Manufacturer.
+    permissible_values:
+      ? Back of the Objective
+      ? Back of the Microscope Stand
+      Source:
+      Specimen:
+      Other:
+
+  LiMiArcType:
+    description:
+      The inert gas vapor contained in the bulb of an Arc lamp. The nature of
+      the gas determines the spectral behavior of the lamp. At low pressure, Hg
+      lamps emit a characteristic line spectrum, which becomes more uniform as
+      the lamp heats up. On the other hand, Xe lamps emit light of high
+      luminance, high color temperature, and an almost continuous spectrum
+      distributed from the ultraviolet to the infrared.
+    permissible_values:
+      Hg:
+      Xe:
+      HgXe:
+      Other:
+
+  LiMiFilamentType:
+    description:
+      The type of Filament lamp Light Source. A Halogen lamp is a Filament lamp
+      whose envelope contains halogen vapor, which reduces the loss of tungsten
+      from the filament. This, in turn, allows to reach a high filament
+      temperature and consequent higher luminance, higher color temperature, and
+      longer operating life than a Standard Filament lamp of the same input
+      power.
+    permissible_values:
+      Standard:
+      Halogen:
+      Other:
+
+  LiMiLaserType:
+    description: The general category of the laser in a Laser Light Source.
+    permissible_values:
+      Chemical:
+      DiodePumpedSolidState:
+      Dye:
+      Gas:
+      MetalVapor:
+      OpticalParametricOscillator:
+      SolidState:
+      SemiconductorLaserDiode:
+      Other:
+
+  LiMiLaserMedium:
+    description: The material out of which a Laser is constructed.
+    permissible_values:
+      Ag:
+      Alexandrite:
+      Ar:
+      ArCl:
+      ArFl:
+      ArKr:
+      CO:
+      CO2:
+      CoumarinC30:
+      Cu:
+      EMinus:
+      ErGlass:
+      ErYAG:
+      GaAlAs:
+      GaAs:
+      H2O:
+      HeCd:
+      HeNe:
+      HFl:
+      HoYAG:
+      HoYLF:
+      Kr:
+      KrCl:
+      KrFl:
+      N:
+      NdGlass:
+      NdYAG:
+      Rhodamine6G:
+      Ruby:
+      TiSapphire:
+      Xe:
+      XeBr:
+      XeCl:
+      XeFl:
+      Other:
+
+  LiMiLaserModulation:
+    description: The modulation mechanism used with a Laser.
+    permissible_values:
+      ? Acousto-Optical Beam Splitter
+      ? Acousto-Optical Tunable Filter
+      ? Acousto-Optical Modulator
+      Direct:
+      None:
+      Other:
+
+  LiMiLaserSafetyClass:
+    description: The safety class of a Laser.
+    permissible_values:
+      1:
+        title: class 1
+      1M:
+        title: class 1M
+      2:
+        title: class 2
+      2M:
+        title: class 2M
+      3R:
+        title: class 3R
+      3B:
+        title: class 3B
+      4:
+        title: class 4
+
+  LiMiLightEmittingDiodeType:
+    description: The general category of a Light Emitting Diode Light Source.
+    permissible_values:
+      Collimated:
+      Mounted:
+      Unmounted:
+      Other:

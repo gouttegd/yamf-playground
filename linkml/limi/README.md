@@ -85,15 +85,16 @@ practical to maintain. For example, currently the “Core” module is broken do
 into:
 
 - `limi-core-units.yaml`: All the enumerations representing units.
-- `limi-core-light-sources.yaml`: All the classes representing light sources
-  (including any supporting enums as needed).
-- `limi-core.yaml`: Everything else from the “Core” module. This imports
-  `limi-core-units.yaml` and `limi-core-light-sources.yaml`.
+- `limi-core-hardware.yaml`: All the classes representing the “Hardware
+  specifications” part of the “Core module”. (including any supporting enums as
+  needed).
+- `limi-core.yaml`: The “Core” module itself. This imports
+  `limi-core-units.yaml` and `limi-core-hardware.yaml`.
 
-Importantly, “subschemas” such as `limi-core-light-sources.yaml` are _not_
-intended to be usable on their own, as independent schemas. They exist merely to
-make the schemas more manageable by keeping the size of each schema under some
-reasonable limits. Only the “top-level” schemas (such as `limi-core.yaml` or
+Importantly, “subschemas” such as `limi-core-hardware.yaml` are _not_ intended
+to be usable on their own, as independent schemas. They exist merely to make the
+schemas more manageable by keeping the size of each schema under some reasonable
+limits. Only the “top-level” schemas (such as `limi-core.yaml` or
 `limi-basic.yaml`) are intended to be used directly.
 
 ## Formalizing the model in LinkML
