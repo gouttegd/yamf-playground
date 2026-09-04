@@ -47,6 +47,270 @@
 
 % Contents
 
+\section{On models and schemas}
+
+\begin{frame}
+  \frametitle{Data models}
+
+  A data model may describe
+  \begin{itemize}
+    \item How we \textcolor<2>{red}{think about the data}
+    \item How we \textcolor<3>{red}{represent the data in files} (or in a database or similar)
+    \item How we represent the data \textcolor<4>{red}{when transmitting them over a network}
+    \item How we manipulate the data \textcolor<5>{red}{in a computer program}
+  \end{itemize}
+
+  \only<1,6|handout:1>{\hspace{1em}}
+  \only<2|handout:0>{(The \textcolor<2>{red}{mental model})}
+  \only<3|handout:0>{(The \textcolor<3>{red}{storage model})}
+  \only<4|handout:0>{(The \textcolor<4>{red}{exchange model})}
+  \only<5|handout:0>{(The \textcolor<5>{red}{in-memory model})}
+
+  \bigskip
+  Those different descriptions may not necessarily be aligned
+  \begin{itemize}
+    \item Whether by choice or by circumstances
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The mental model}
+
+  \begin{itemize}
+    \item Ideally comes first
+      \begin{itemize}
+        \item And influences all other models (storage, exchange, memory)
+      \end{itemize}
+    \item But not always
+      \begin{itemize}
+        \item Sometimes the mental model is derived from an existing storage
+              model rather than the other way around
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The storage/exchange model(s)}
+
+  \begin{itemize}
+    \item May not necessarily be different
+    \item Those are the models that are important for \emph{interoperability}
+      \begin{itemize}
+        \item All software programs that need to manipulate the data files
+              and/or send/exchange data through the network must understand the
+              same storage/exchange model
+      \end{itemize}
+    \item This is what the specification for a file format or a network
+          protocol must describe
+  \end{itemize}
+
+  \bigskip
+  \begin{overlayarea}{\textwidth}{3cm}
+    \only<2,3,4,5,6|handout:1>{This is \emph{not} the same thing as a serialisation
+      format: The \emph{same} storage model can yield different files according
+      to different serialisation formats.}
+    
+    \only<3|handout:1>{
+      \begin{block}{Example data model: a point}
+\begin{semiverbatim}
+struct point \{ int x; int y; \};
+\end{semiverbatim}
+      \end{block}
+    }
+
+    \only<4|handout:0>{
+      \begin{block}{Possible serialisation in YAML}
+\begin{semiverbatim}
+point:
+
+\hspace{2em}x: 123
+
+\hspace{2em}y: 456
+\end{semiverbatim}
+      \end{block}
+    }
+
+    \only<5|handout:0>{
+      \begin{block}{Possible serialisation in XML}
+\begin{semiverbatim}
+<point>
+
+\hspace{2em}<x>123</x>
+
+\hspace{2em}<y>456</y>
+
+</point>
+\end{semiverbatim}
+      \end{block}
+    }
+
+    \only<6|handout:0>{
+      \begin{block}{Possible serialisation in X.690 BER}
+\begin{semiverbatim}
+30 07 02 01 7B 02 02 01 C8
+\end{semiverbatim}
+      \end{block}
+    }
+
+  \end{overlayarea}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The in-memory model}
+
+  \begin{itemize}
+    \item Only concerns one particular software program
+      \begin{itemize}
+        \item And its plugins, if any (e.g. ImageJ/Fiji)
+      \end{itemize}
+    \item Different programs can use different in-memory models to manipulate
+          the same underlying data
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How to define a data model}
+
+  \begin{block}{As plain human language}
+    ``A point has two integers $x$ and $y$, representing its coordinates on the
+    X and Y axis respectively.''
+  \end{block}
+
+  \begin{block}{As drawings}
+    \begin{itemize}
+      \item From rough sketches on a napkin to more rigorous schematics
+      \item Especially useful for the \emph{mental model} and/or in early design
+            phase
+      \item Can optionally be quite formal (e.g. \emph{Unified Modeling Language})
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{As en entirely formal description}
+    \begin{itemize}
+      \item Using any of several \emph{Schema Definition Languages} (SDLs)
+      \item Hereafter, \textcolor<2>{red}{``schema'' = ``a \emph{formal} definition of a data model''}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Benefits of a schema}
+
+  \begin{block}{Formality reduces ambiguity}
+    \begin{itemize}
+      \item Compared to a description in plain English, a schema may be harder
+            to understand at first...
+      \item But will avoid the ambiguities inherent to human languages
+      \item For that reason, a schema may be useful even for a purely mental
+            model
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Formal = machine-readable}
+    Machine-readibility means the schema can enable the partial / full
+    automatization of several tasks:
+    \begin{itemize}
+      \item Generate human-friendly documentation
+      \item Generate code (direct translation from mental model to in-memory model)
+      \item Validate data (checking that the data fit the model)
+    \end{itemize}
+    (Not all those features may be available depending on the SDL used)
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schema definition languages}
+
+  \begin{itemize}
+    \item Abstract Syntax Notation 1 (ASN.1)
+    \item Document Type Definition (DTD)
+    \item \textcolor<2>{red}{XML Schema}
+    \item Schematron
+    \item Relax-NG
+    \item Concise Data Definition Language (CDDL)
+    \item JSON-Schema
+    \item JSON Type Definition
+    \item \textcolor<2>{red}{LinkML}
+    \item ...
+  \end{itemize}
+\end{frame}
+
+\section{The QUAREP-LiMi model now}
+
+\begin{frame}
+  \frametitle{What is the QUAREP-LiMi model?}
+
+  \begin{itemize}
+    \item Primarily a \emph{mental model} for now
+    \item We want it to become also a storage/exchange model
+  \end{itemize}
+
+  \bigskip
+  But is it a \emph{model} or a \emph{schema}?
+  \begin{itemize}
+    \item It is a model...
+    \item for which one formal representation (XSD) is available
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How is the LiMi model maintained and edited?}
+
+  \begin{itemize}
+    \item The model is maintained as a \textcolor<2>{red}{set of Excel spreadsheets}
+      \begin{itemize}
+        \item Here: \url{https://github.com/WU-BIMAC/NBOMicroscopyMetadataSpecs}
+      \end{itemize}
+    \item Other representations must be \textcolor<3>{red}{manually kept in sync}
+          with the ``canonical'' spreadsheets
+      \begin{itemize}
+        \item Formal XML Schema representation
+        \item Informative ``Entity-relationship'' diagrams
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The ``canonical'' LiMi model}
+
+  \begin{center}
+    \includegraphics[width=.9\textwidth]{limi-spreadsheet}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Excel is not a Schema Definition Language}
+
+  Excel is reasonably easy to use and, with rigorous discipline, can allow a
+  certain degree of formalism.
+
+  \bigskip
+  However:
+  \begin{itemize}
+    \item The ease of use becomes relative when dealing with a large model
+    \item Even a highly formalized spreadsheet is not enough to make it \emph{machine-readable}
+      \begin{itemize}
+        \item Other representations \textcolor<2>{red}{cannot be automatically derived}
+              from the spreadsheet
+        \item \emph{De facto}, there isn't a single source of truth
+        \item Keeping the other representations in sync with the spreadsheets is essentially a
+              \textcolor<3>{red}{manual process} that is \textcolor<3>{red}{not sustainable}
+      \end{itemize}
+    \item No consistency checking of any kind
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why not using XML Schema as the source of truth?}
+
+  \begin{itemize}
+    \item XML Schemas are \emph{very} verbose
+    \item Specific to XML-formatted data
+    \item No easy path towards other representations
+  \end{itemize}
+\end{frame}
+
+\section{QUAREP-LiMi as a LinkML schema}
 
 
 % Backmatter
