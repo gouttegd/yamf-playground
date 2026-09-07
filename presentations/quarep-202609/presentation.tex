@@ -312,6 +312,358 @@ point:
 
 \section{QUAREP-LiMi as a LinkML schema}
 
+\begin{frame}
+  \frametitle{About LinkML}
+
+  LinkML aims to be the one true schema definition language.
+
+  \bigskip
+  \begin{overlayarea}{\textwidth}{4cm}
+    \only<2|handout:1>{
+      Mandatory \href{https://xkcd.com/927/}{XKCD:927}
+      \begin{center}
+        \includegraphics[width=.6\textwidth]{xkcd927}
+      \end{center}
+    }
+
+    \only<3|handout:0>{
+      \begin{itemize}
+        \item LinkML can be translated into several other SDLs
+          \begin{itemize}
+            \item We can use LinkML without irreversibly tying ourselves to it
+          \end{itemize}
+        \item Many SDLs are specific to a given type of serialisation formats, e.g.
+          \begin{itemize}
+            \item DTD: specific to SGML/XML
+            \item XML Schema, Relax-NG, Schematron: specific to XML
+            \item JSON Schema, JSON Type Definition: specific to JSON
+          \end{itemize}
+        \item LinkML is independent of any serialisation formats
+          \begin{itemize}
+            \item YAML/JSON
+            \item RDF
+            \item CSV
+            \item SQL
+            \item ...
+          \end{itemize}
+      \end{itemize}
+    }
+
+    \only<4|handout:0>{
+      \begin{itemize}
+        \item Software support
+          \begin{itemize}
+            \item Documentation generators
+            \item Code generators
+            \item Data parsers / writers
+            \item Data validators
+            \item Other helper tools (e.g. editor support)
+          \end{itemize}
+      \end{itemize}
+    }
+
+    \only<5|handout:0>{
+      \begin{itemize}
+        \item A reasonably large community has grown around LinkML
+          \begin{itemize}
+            \item Likely large enough to withstand a withdrawal of the
+                  group that created LinkML in the first place, should
+                  such a withdrawal ever happen\\
+                  (e.g. because of funding cuts)
+            \item Independently developed third-party implementations
+                  have started to appear
+          \end{itemize}
+        \item Strong momentum for LinkML in many bio* communities
+      \end{itemize}
+    }
+  \end{overlayarea}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Anatomy of a LinkML schema}
+
+  A LinkML schema is a YAML file organized in 4 sections:
+  \begin{itemize}
+    \item A preamble
+      \begin{itemize}
+        \item Schema-level metadata, e.g. what the schema is about and who
+              created it
+      \end{itemize}
+    \item Class definitions
+      \begin{itemize}
+        \item Each class represents a type of object in the model
+        \item Each class has its own \emph{attributes}
+      \end{itemize}
+    \item Slot definitions
+      \begin{itemize}
+        \item Essentially attributes that are used in more than one class,
+              and that are therefore declared separately to avoid repeated
+              definitions
+      \end{itemize}
+    \item Enum definitions
+      \begin{itemize}
+        \item Closed sets of values that can be used elsewhere in the schema
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Class definitions}
+
+\begin{semiverbatim}
+classes:
+
+\hspace{1em}LiMiObjective:
+
+\hspace{2em}description: The microscope's Objective lens consists of a
+
+\hspace{3em}lens, its mount, and any associated part [...]
+
+\hspace{2em}attributes:
+
+\hspace{3em}magnification:
+
+\hspace{4em}description: The magnification of the objective as
+
+\hspace{5em}specified by the manufacturer - i.e., 60 represents
+
+\hspace{5em}a 60X lens.
+
+\hspace{4em}range: float
+
+\hspace{3em}correction:
+
+\hspace{4em}description: The type of optical correction associated
+
+\hspace{5em}with this Objective.
+
+\hspace{4em}range: LiMiObjectiveCorrectionType
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Enum definitions}
+
+\begin{semiverbatim}
+enums:
+
+\hspace{1em}LiMiObjectiveCorrectionType:
+
+\hspace{2em}description: The type of optical correction associated
+
+\hspace{3em}associated with an objective.
+
+\hspace{2em}permissible\_values:
+
+\hspace{3em}Achro:
+
+\hspace{3em}Achromat:
+
+\hspace{3em}Achroplan:
+
+\hspace{3em}Apo:
+
+\hspace{3em}Apochromat:
+
+\hspace{3em}Plan:
+
+\hspace{3em}PlanApo:
+
+\hspace{3em}PlanApochromat:
+
+\hspace{3em}...
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{``Dynamic enumerations''}
+
+  Defining an enumeration using ontology terms.
+
+\begin{semiverbatim}
+enums:
+
+\hspace{1em}Organism:
+
+\hspace{2em}description: The organism a sample comes from.
+
+\hspace{2em}reachable\_from:
+
+\hspace{3em}source\_ontology: obo:NCBITaxon
+
+\hspace{3em}source\_nodes:
+
+\hspace{4em}- NCBITaxon:131567 \# cellular organism
+
+\medskip
+\hspace{1em}ImagingMethod:
+
+\hspace{2em}description: The method used to acquire an image.
+
+\hspace{2em}reachable\_from:
+
+\hspace{3em}source\_ontology: obo:FBbi
+
+\hspace{3em}source\_nodes:
+
+\hspace{4em}- FBbi:00000222 \# imaging method
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inline comments and notes}
+
+  \begin{itemize}
+    \item Comments: intended for the users of the schema
+    \item Notes: intended for the editors of the schema
+  \end{itemize}
+
+  \bigskip
+  \begin{overlayarea}{\textwidth}{3cm}
+    \only<1|handout:1>{
+\begin{semiverbatim}
+classes:
+
+\hspace{1em}LiMiObjective:
+
+\hspace{2em}attributes:
+
+\hspace{3em}lens\_na:
+
+\hspace{4em}description: The numerical aperture of this Objective.
+
+\hspace{4em}range: float
+
+\hspace{4em}comments:
+
+\hspace{5em}- The value is typically expected to be 0.02 - 1.5.
+\end{semiverbatim}}
+
+    \only<2|handout:0>{
+\begin{semiverbatim}
+classes:
+
+\hspace{1em}LiMiObjective:
+
+\hspace{2em}attributes:
+
+\hspace{3em}correction\_collar:
+
+\hspace{4em}description: Whether this Objective is fitter with
+
+\hspace{5em}a Correction Collar.
+
+\hspace{4em}range: boolean
+
+\hspace{4em}notes:
+
+\hspace{5em}- FIXME This should not be needed? If there is no
+
+\hspace{6em}Correction Collar, then the correction\_collar\_type
+
+\hspace{6em}attribute can simply be left unset.
+\end{semiverbatim}}
+  \end{overlayarea}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Custom annotations}
+
+  Any element in a LinkML schema can be annotated with custom,
+  structured annotations.
+
+\begin{semiverbatim}
+classes:
+
+\hspace{1em}LiMiObjective:
+
+\hspace{2em}description: The microscope's Objective lens consists [...]
+
+\hspace{2em}attributes:
+
+\hspace{3em}magnification:
+
+\hspace{4em}description: The magnification of the objective [...]
+
+\hspace{4em}range: float
+
+\hspace{4em}annotations:
+
+\hspace{5em}recommended\_in\_mm\_section: true
+\end{semiverbatim}
+
+  Annotations are an integral part of the schema and are
+  accessible by LinkML tools (e.g. documentation generators).
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sub-schemas}
+
+  Large models can be broken down into several individual LinkML schemas
+  (all imported into a ``master'' schema) that are more easily managed 
+  than a huge monolithic schema.
+
+  \bigskip
+  Current plan for the LiMi model:
+  \begin{itemize}
+    \item \texttt{limi-core}: ``Core'' LiMi module, broken down into
+      \begin{itemize}
+        \item \texttt{limi-core-hardware} (``hardware specifications'')
+        \item \texttt{limi-core-settings} (``image acquisition settings'')
+      \end{itemize}
+    \item \texttt{limi-basic}: ``Basic'' LiMi module, similarly broken down into
+      \begin{itemize}
+        \item \texttt{limi-basic-hardware} (``hardware specifications'')
+        \item \texttt{limi-basic-settings} (``image acquisition settings'')
+      \end{itemize}
+    \item \texttt{limi-advanced}: ``Advanced'' LiMi module
+    \item \texttt{limi-confocal}: ``Confocal microscopy'' module
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summary}
+
+  A LinkML schema
+  \begin{itemize}
+    \item is reasonably easy to read and edit
+    \item is amenable to collaborative editing through GitHub or
+          similar forges
+    \item can contain all the informations currently found in
+          the spreadsheets defining the LiMi model
+    \item can be transformed into (almost) anything\\
+          (other schemas, code, documentation...)
+  \end{itemize}
+
+  \begin{block}{}
+    can be the single source of truth defining the LiMi
+    model
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Is LinkML the perfect solution?}
+
+  No.
+
+  \bigskip
+  \visible<2,3>{
+    \begin{itemize}
+      \item Tooling support for languages other than Python is limited
+      \item Generated documentation is not necessarily nice to read
+      \item Many features are underspecified and therefore best avoided
+            for now
+    \end{itemize}
+  }
+
+  \bigskip
+  \visible<3>{
+    Those points are being adressed and LinkML can only get better.
+  }
+\end{frame}
+
 
 % Backmatter
 
