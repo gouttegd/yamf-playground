@@ -1,0 +1,207 @@
+id: https://example.invalid/limi/v02-10/core/settings
+name: limi-core-settings
+title: LLiMi Core Schema – Acquisition Settings Specifications
+description: >-
+  This schema is part of the set of LinkML schemas for the QUAREP Light
+  Microscopy Model (hereafter referred to as “LiMi model”).
+
+  It defines the entities that belong to the “Image Acquisition Settings”
+  section of the “Core module” of the LiMi model.
+notes:
+  - This schema is not intended to be used on its own. Use limi-core instead.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  limi: https://example.invalid/limi/v02-10/
+  orcid: https://orcid.org/
+default_prefix: limi
+default_range: string
+
+classes:
+  LiMiSettings:
+    description: This is the base class for all *Settings classes.
+    notes:
+      - FIXME Still need to figure out how we are going to represent
+        MapAnnotation, SpecsFile, and AdditionalVendorInformation.
+    is_a: LiMiObject
+
+  LiMiExperiment:
+    description: The experiment during which an Image was acquired.
+    is_a: LiMiObject
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiSample:
+    description: The Sample that was imaged in an Experiment.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+    is_a: LiMiObject
+    mixins:
+      - LiMiSampleCoreMixin
+    extra_slots:
+      allowed: true
+
+  LiMiSampleCoreMixin:
+    description: Core-level attributes for the LiMiSample class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiImage:
+    description: The actual Image that was acquired and its meta-data.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+      - FIXME The description is wrong, this class does not in fact represent
+        the image itself, it only represents its meta-data. This is a remnant of
+        the OME model.
+    is_a: LiMiObject
+    mixins:
+      - LiMiImageCoreMixin
+
+  LiMiImageCoreMixin:
+    description: Core-level attributes for the LiMiImage class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiImagingEnvironment:
+    description:
+      The environmental conditions in which the biological sample was kept
+      during the Acquisition of an Image.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+    is_a: LiMiObject
+    mixins:
+      - LiMiImagingEnvironmentCoreMixin
+
+  LiMiImagingEnvironmentCoreMixin:
+    description: Core-level attributes for the LiMiImagingEnvironment class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiObjectiveSettings:
+    description:
+      The settings that were applied to the Objective that was used for the
+      Acquisition of an Image.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+    is_a: LiMiSettings
+    mixins:
+      - LiMiObjectiveSettingsCoreMixin
+
+  LiMiObjectiveSettingsCoreMixin:
+    description: Core-level attributes for the LiMiObjectiveSettings class.
+    mixin: true
+    attributes:
+      # Arnica to fill
+
+  LiMiStageLabel:
+    description:
+      The Name and Position for a Stage position in the Microscope’s reference
+      frame.
+    is_a: LiMiObject
+    slots:
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiPixels:
+    notes:
+      - FIXME Described as something that should be "mixed into LiMiImage".
+    is_a: LiMiObject
+    slots:
+      - id
+    attributes:
+      # Arnica to fill
+
+  LiMiPlane:
+    description:
+      A Plane holds Microscope stage and image timing data for a given
+      channel/z-section/timepoint.
+    comments:
+      - Each image has to have at least one Plane and one Channel.
+      - The total number of Plane elements for a given Image must equal to SizeZ
+        x SizeC x sizeT.
+    is_a: LiMiObject
+    slots:
+      - id
+    attributes:
+      # Arnica to fill
+
+  LiMiChannel:
+    description:
+      A Channel holds information about how an image channel was acquired.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+    is_a: LiMiObject
+    mixins:
+      - LiMiChannelCoreMixin
+
+  LiMiChannelCoreMixin:
+    description: Core-level attributes for the LiMiChannel class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiLightPath:
+    description: The Light Path associated with the Acquisition of a Channel.
+    notes:
+      - The attributes for this class are described in a separate mixin because
+        the entire class is defined across several LiMi modules.
+    is_a: LiMiObject
+    mixins:
+      - LiMiLightPathCoreMixin
+
+  LiMiLightPathCoreMixin:
+    description: Core-level attributes for the LiMiLightPath class.
+    mixin: true
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill
+
+  LiMiLightSourceSettings:
+    description:
+      The Settings applied to a Light Source used in the Light Path during the
+      acquisition of a Channel.
+    is_a: LiMiSettings
+    attributes:
+      id:
+        description: The Light Source to which those settings apply.
+        notes:
+          - FIXME The description in the model spreadsheet is wrong. This is not
+            a "unique identifier for this component."
+        range: LiMiLightSource
+        inlined: false
+      # Arnica to fill
+
+  LiMiFilterSet:
+    description: A Filter Set that was used for the acquisition of a Channel.
+    is_a: LiMiObject
+    slots:
+      - id
+      - name
+    attributes:
+      # Arnica to fill

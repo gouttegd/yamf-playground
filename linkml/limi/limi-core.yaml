@@ -1,4 +1,4 @@
-id: https://example.invalid/limi/v2-10/core
+id: https://example.invalid/limi/v02-10/core
 name: limi-core
 title: LiMi Core Schema
 description: >-
@@ -16,6 +16,7 @@ imports:
   - linkml:types
   - limi-core-units
   - limi-core-hardware
+  - limi-core-settings
 default_prefix: limi
 default_range: string
 
