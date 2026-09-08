@@ -1,0 +1,60 @@
+id: https://example.invalid/limi/v02-10/core/annotations
+name: limi-core-annotations
+title: LiMi Core Schema – Annotations
+description: >-
+  This schema is part of the set of LinkML schemas for the QUAREP Light
+  Microscopy Model (hereafter referred to as “LiMi model”).
+
+  It defines the classes for the generic annotation system, that the model
+  inherited from the OME model.
+notes:
+  - This schema is not intended to be used on its own. Use limi-core instead.
+created_by: orcid:0000-0002-6095-8718
+
+prefixes:
+  limi: https://example.invalid/limi/v02-10/
+  orcid: https://orcid.org/
+default_prefix: limi
+default_range: string
+
+classes:
+  LiMiAnnotation:
+    description: The base class for all annotations.
+    slots:
+      - id
+      - object_type
+    attributes:
+      namespace:
+        description: A namespace assigned to the annotation.
+        recommended: true
+        range: uri
+      annotator:
+        description: The person who attached this annotation.
+        range: LiMiExperimenter
+        inlined: false
+      description:
+        description: A description of the annotation.
+      annotations:
+        description: Annotations carried by this annotation.
+        range: LiMiAnnotation
+        multivalued: true
+        inlined: false
+
+  LiMiCommentAnnotation:
+    description: A simple comment annotation.
+    is_a: LiMiAnnotation
+    attributes:
+      value:
+        description: The comment that makes up the annotation.
+        required: true
+
+  LiMiMapAnnotation:
+    description: An annotation that is a list of key/value pairs.
+    is_a: LiMiAnnotation
+    attributes:
+      value:
+        description: The list of key/value pairs.
+        range: LiMiMapEntry
+        multivalued: true
+        inlined: true
+        inlined_as_list: false

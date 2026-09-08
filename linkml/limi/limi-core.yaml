@@ -15,6 +15,7 @@ prefixes:
 imports:
   - linkml:types
   - limi-core-units
+  - limi-core-annotations
   - limi-core-hardware
   - limi-core-settings
 default_prefix: limi
@@ -44,3 +45,40 @@ classes:
       - This class is intended to facilitate customization of the LiMi Schema,
         by allowing another schema to (i) import this schema (or another schema
         that imports it) and (ii) redefine this class as needed.
+
+  LiMiExperimenter:
+    description: A person who performed an imaging experiment.
+    notes:
+      - FIXME It is unclear whether this class is actually desired. The LiMi
+        model’s spreadsheets do not define it, but many elements in there do
+        have an “ExperimenterRef”, which is supposed to reference an
+        “Experimenter” that has been described elsewhere. Those references seem
+        like another remnant of the OME model. For what it’s worth, my take is
+        that, if references to persons are still deemed useful, they should be
+        done using externally defined identifiers (typically ORCIDs) and NOT
+        using a class like this one.
+    slots:
+      - id
+    attributes:
+      first_name:
+        description:
+          First name, sometimes called christian name or given name or forename.
+      last_name:
+        description: Last name, sometimes called surname or family name.
+      middle_name:
+        description: Any other names.
+      email:
+        description: The person’s email address.
+      user_name:
+        description: The person’s user name (in a Unix or database sense).
+      institution:
+        description: The organizing structure the person belongs to.
+
+  LiMiMapEntry:
+    description: An entry in a generic table of key/value pairs.
+    attributes:
+      key:
+        description: The name of the entry.
+        key: true
+      value:
+        description: The value of the entry.

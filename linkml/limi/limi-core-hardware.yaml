@@ -41,6 +41,10 @@ classes:
         description:
           The Lot Number used by the Manufacturer to refer to a specific
           production batch or lot for this component.
+      map_annotations:
+        description: Arbitrary key/value pair annotations.
+        range: LiMiMapAnnotation
+        multivalued: true
 
   LiMiInstrument:
     description:
