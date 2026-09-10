@@ -206,3 +206,56 @@ is never expected to appear in serialised data (except in the case of
 type-designated classes, used to render Abstract Parent Elements as described
 above) – which is in fact why we can prepend the `LiMi` prefix in front of every
 class name – this is without any consequence on how the data is serialised.
+
+## Notes about OME and LiMi
+
+The LiMi model was initially designed strictly as an extension to the OME model.
+As such, it “inherits” a lots of things from the OME model, and it is in fact
+dubious whether many of those things are needed for a model that aims to
+describe **image acquisition metadata**.
+
+In particular, all the following top-level elements from the OME model are of
+dubious usefulness:
+
+- `Project`,
+- `Dataset`,
+- `Folder`,
+- `Plate`,
+- `Screen`,
+- `Experimenter`,
+- `ExperimenterGroup`,
+- `StructuredAnnotations`
+- `ROI`.
+
+Most of them are about project and image management, and make perfect sense in a
+model intended to serve as the basis for the OMERO software stack, but they are
+not relevant to describe image acquisition metadata. `ROI` is to describe region
+of interests in image – again something very much needed for OMERO (and other
+OME-compatible software), but not relevant for QUAREP-LiMi. As for
+`StructuredAnnotations`, this element is the main container for arbitrary
+annotations, and here again it is doubtful that the QUAREP-LiMi model needs
+that.
+
+The LiMi model really only needs the `Instrument` branch, and **part of** the
+`Image` branch. Within the `Image` branch, it really only needs the stuff about
+“settings”, “imaging environment” and the like, but _not_ everything that is
+about describing the image itself (in particular almost everything under
+`Pixels` – `Channel` and `Plane` should only be used as “containers” for
+settings describing how a plane or a channel was acquired, not to describe the
+planes or channels themselves).
+
+Importantly, it seems that MicroMetaApp itself only ever uses `Instrument` and
+`Image` as top-level objects (depending on whether it describes a microscope or
+the settings for a particular image). It never uses any of the elements related
+to project or image management, nor any annotation or ROI. The `Image` /
+`Instrument` split matches the split in the model between what the model calls
+“Hardware Specifications” and “Image Acquisition Settings”.
+
+Of note, the LiMi model also adds the concept of `Sample` (under `Experiment`).
+Assuming this is indeed wanted (though I believe this takes the model a bit too
+far away from being a model for image acquisition metadata), this suggests the
+model could/should be split in three logical sections, not two:
+
+- hardware specifications;
+- image acquisition settings;
+- experiment (or “experimental settings”).
