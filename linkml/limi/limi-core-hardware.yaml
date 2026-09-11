@@ -671,11 +671,6 @@ classes:
 
 
 
-
-
-
-
-
   LiMiExcitationFilter:
     description:
       A Filter whose purpose is to selectively attenuate the Light that is
@@ -730,7 +725,7 @@ classes:
         maximum_value: 1.0
       FWHM_bandwidth:
         description:
-          The width of this Transmittance Range. Specifcally, the Full Width at
+          The width of this Transmittance Range. Specifically, the Full Width at
           Half Maximum (FWHM) represents the bandwidth of the Wavelength
           spectrum curve measured between those points whose transmission
           amplitude is 50% of the maximum.
@@ -739,6 +734,7 @@ classes:
       FWHM_bandwidth_unit:
         description: Unit associated with the FWHM Bandwidth value.
         range: LiMiLengthUnit
+ ## AK: we miss the transmittance profile file ##
 
   ############
   # Detector #
