@@ -12,6 +12,7 @@ prefixes:
   limi: https://example.invalid/limi/v02-10/
   linkml: https://w3id.org/linkml/
   orcid: https://orcid.org/
+  xsd: http://www.w3.org/2001/XMLSchema#
 imports:
   - linkml:types
   - limi-core-units
@@ -82,3 +83,25 @@ classes:
         key: true
       value:
         description: The value of the entry.
+
+  LiMiBinData:
+    description:
+      A blob of arbitrary binary data, serialised as a Base64-encoded string.
+    is_a: LiMiObject
+    attributes:
+      compression:
+        description: The compression scheme used to encode this data, if any.
+      value:
+        description: The binary blob itself.
+        range: LiMiBase64Binary
+
+types:
+  LiMiBase64Binary:
+    description:
+      A blob of arbitrary binary data, serialized as a Base64-encoded string.
+    notes:
+      - Ideally this type should be a builtin type in LinkML.
+    see_also:
+      - https://github.com/linkml/linkml/issues/3977
+    uri: xsd:base64Binary
+    typeof: string

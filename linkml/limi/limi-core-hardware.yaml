@@ -45,6 +45,29 @@ classes:
         description: Arbitrary key/value pair annotations.
         range: LiMiMapAnnotation
         multivalued: true
+      additional_vendor_information:
+        description:
+          Vendor-specific additional information about this component.
+        comments:
+          - This attribute is intended as a last-resort solution to capture
+            information that cannot be captured using any other available model
+            elements or the map annotation feature.
+        range: LiMiAdditionalVendorInformation
+        inlined: true
+
+  LiMiAdditionalVendorInformation:
+    description:
+      Vendor-specific additional information about a hardware component.
+    is_a: LiMiObject
+    slots:
+      - id
+    attributes:
+      vendor_name:
+        description: The Name of the Vendor responsible for this Information.
+      bin_data:
+        description:
+          The additional information, as a blob of arbitrary raw data.
+        range: LiMiBase64Binary
 
   LiMiInstrument:
     description:
