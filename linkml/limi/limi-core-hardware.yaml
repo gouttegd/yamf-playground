@@ -464,6 +464,11 @@ classes:
           is not "Air", the actual Immersion Liquid that was used during the
           Acquisition of a specific Image must be specified in Objective
           Settings.
+          ####################
+          #AK: This description is a subset of the one in the spreadsheet
+          #NBO_MicroscopyMetadataSpecifications_ALL_v02-10
+          ####################
+
         range: LiMiImmersionType
       working_distance:
         description:
@@ -548,6 +553,7 @@ classes:
           The maximal diameter of the view field allowed by this Objective,
           expressed in mm, and measured at the intermediate image plane.
         range: float
+        ##AK: why not define default unit here##
       image_distance:
         description:
           The distance in air between the rear principal plane of this Objective
@@ -602,7 +608,73 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      type:
+        #AK wants to rename this to filter_type
+        description: This field captures the Type of Filter used in this Instrument.
+        range: FilterType
+        required: true
+
+      filter_holder_position:
+        description: This field records the position of this element in a Filter Holder of any kind, such as a Filter Slider, Turret or Wheel.
+        range: integer
+
+      coating_method:
+        description: This field records the type of Coating used in this case. An optical coating is one or more thin layers of material deposited on an optical component such as a Lens, Filter or Mirror, which alters the way in which the optic reflects and transmits light.
+        range: CoatingMethod
+        required: true
+
+      light_path_location:
+        description: This field records the location of this component in the Microscope Light Path.
+        range: LightPathLocation
+        required: true
+
+      technology:
+        description: This field records the filtering Technology utilized for this optical element. The main types of technologies used in fluorescence analysis are Absorption (aka colored) glass, Polymer or Thin-film coating.
+        range: FilterTechnology
+
+      attenuation_method:
+        description: This field records the means by which this optical element achieves out-of-band transmission attenuation.
+        range: AttenuationMethod
+        required: true
+
+      attenuation_coefficient:
+        description: This field records the Attenuation Coefficient (AC) of this optical element. The AC (aka blocking coefficient) is a material property that characterizes the degree to which light is being blocked (i.e., scattered or absorbed) by it. AC is used as a measure of the out-of-band blocking of an optical Lens, Filter, Dichroic mirror over an extended range of the spectrum. AC is often reported in units of optical density (OD), whereas OD= -log10(T), and T=Transmittance (0≤T≤1).
+        range: float
+
+      diameter:
+        description: This field describes the Diameter of this optical element
+        range: float
+      #AK: should we define this and all measures of distance as a slot, then we can also make a rule that a unit should be present if a value is present?
+      diameter_unit:
+        description: unit associated with the filter diameter
+        range: LiMiLengthUnit
+
+      thickness:
+        description: This field describes the Thickness of this optical element
+        range: float
+      thickness_unit:
+        description: unit associated with the filter thickness
+        range: LiMiLengthUnit
+
+      angle_of_incidence:
+        description: This field records the optimal angle of incidence (AOI) for this Filter. The AOI is the angle between the optical axis of the incident light and the axis normal to the surface of the Mirror. In specular reflection, AOI is by definition equal to the Angle Of Reflection (AOR).
+        range: float
+      angle_of_incidence_unit:
+        description: unit associated with the filter angle_of_incidence
+        #AK: this is not included in the model but SHOULD be
+        range: LiMiAngleUnit
+      #Ak:LiMiAngleUnit should be defined with enums degree, radian, steradian
+
+      polarization:
+        description: This field records the polarization effect of this optical element. Any thin-film interference Coating that is used at non-normal angles-of-incidence will cause some amount of polarization, the precise effect varying greatly with wavelength and with the particular Coating design.
+        range: Polarization
+
+
+
+
+
+
+
 
   LiMiExcitationFilter:
     description:
@@ -660,7 +732,7 @@ classes:
         description:
           The width of this Transmittance Range. Specifcally, the Full Width at
           Half Maximum (FWHM) represents the bandwidth of the Wavelength
-          spectrum curve mesured between those points whose transmission
+          spectrum curve measured between those points whose transmission
           amplitude is 50% of the maximum.
         range: float
         minimum_value: 0.0
