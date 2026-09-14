@@ -592,7 +592,7 @@ classes:
         ifabsent: LiMiLengthUnit(mm)
 
   ###########
-  # Filters #
+  # Filters AK Test #
   ###########
 
   LiMiFilter:
