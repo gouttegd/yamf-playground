@@ -208,6 +208,7 @@ classes:
 
   LiMiLightSource:
     description: A Light Source on an Instrument.
+    #This element describes one or more Light Source(s) available for this Instrument.  An Instrument may have several Light Sources of different types (Laser, Light Emitting Diode, Filament, Arc etc.). A typical fluorescence Microscope has two Light Sources, one for Transmitted light and one for Fluorescence light.
     is_a: LiMiManufacturerSpecs
     slots:
       - id
