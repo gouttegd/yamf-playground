@@ -198,10 +198,6 @@ classes:
     #This is a Microscope in which the object is observed from beneath the stage.
     is_a: LiMiMicroscopeStand
 
-  LiMiUprightMicroscope:
-    description: This is a Microscope in which the object is observed from above the stage.
-    is_a: LiMiMicroscopeStand
-
   #################
   # Light sources #
   #################
