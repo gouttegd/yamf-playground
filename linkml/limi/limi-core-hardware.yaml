@@ -609,7 +609,7 @@ classes:
       - object_type
     attributes:
       type:
-        #AK wants to rename this to filter_type
+        #AK wants to rename this to filter_type-
         description: This field captures the Type of Filter used in this Instrument.
         range: FilterType
         required: true
