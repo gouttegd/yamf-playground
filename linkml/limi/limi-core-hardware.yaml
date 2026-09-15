@@ -21,6 +21,7 @@ classes:
   LiMiManufacturerSpecs:
     description:
       This describes the Manufacturer specifications for a hardware component.
+    # This describes the Manufacturer specifications for this component (i.e., Manufacturer Name, Model designation and Catalog Number).
     notes:
       - This is the base class for most classes in this schema.
     is_a: LiMiObject
@@ -29,28 +30,33 @@ classes:
         description:
           The company, research group or individual who built or manufactured
           this hardware.
+        #This field refers to the company, research group or individual who built or manufactured this hardware component.
         annotations:
           recommended_in_methods: true
       model:
         description:
           The Model name or any other designation the Manufacturer uses for this
           component.
+        #This field refers to the Model name or any other designation the Manufacturer uses for this component.
         annotations:
           recommended_in_methods: true
       catalog_number:
         description:
           The Catalog, Part of Serial Number used by the Manufacturer to
           uniquely identify this component.
+        #This field records the Catalog, Part or Serial Number used by the Manufacturer to uniquely identify this component.
         annotations:
           recommended_in_methods: true
       lot_number:
         description:
           The Lot Number used by the Manufacturer to refer to a specific
           production batch or lot for this component.
+        #The Lot Number used by the Manufacturer to refer to a specific production batch or lot for this component.
         annotations:
           limi_tier: 3
       map_annotations:
         description: Arbitrary key/value pair annotations.
+        #AK didnt check
         annotations:
           limi_tier: 3
         range: LiMiMapAnnotation
@@ -59,6 +65,7 @@ classes:
         description:
           A PDF file that contains the specifications for this hardware
           component as provided by the Manufacturer.
+        #This element refers to a PDF file that contains the specifications for this hardware component as provided by the Manufacturer.
         annotations:
           limi_tier: 3
         range: LiMiFileAnnotation
@@ -74,6 +81,7 @@ classes:
           - This attribute is intended as a last-resort solution to capture
             information that cannot be captured using any other available model
             elements or the map annotation feature.
+          #This element is intended to be used as a last-resort solution to capture vendor-specific Additional Information about this hardware component, which cannot be described using either available model elements (Classes or Attributes) or the Map Annotation feature of the schema. The use of this feature should not be intended as a way to hide information that the Imaging Community has designated as essential to ensure rigor and reproducibility. In case this feature is used, the Vendor is fully responsible for this information, including but not limited to, making sure this information is appropriately recorded and kept up to date.
         range: LiMiAdditionalVendorInformation
         inlined: true
 
@@ -89,6 +97,7 @@ classes:
       bin_data:
         description:
           The additional information, as a blob of arbitrary raw data.
+        #AK did not check properly
         range: LiMiBase64Binary
 
   LiMiInstrument:
@@ -96,6 +105,7 @@ classes:
       This class describes the Instrument used to capture an image. It is
       primarily a container referring to the list of hardware components in a
       given Microscope.
+    #This element describes the Instrument used to capture the Image. It is primarily a container referring to the list of hardware components included in a given Microscope. The list consists of the Microscope Stand, Microscope Table, Light Source, Light Source Coupling, Sample Holder, Focusing, Objective, Filter, Dichroic, Additional Lens (including a commonly used Magnification Changer, also known as Optovar), Additional Mirroring Device, Polarization Optics, Prism, Optical Aperture, Optical Device, Detector and Calibration Tool. The Filter element can be either composed of separate Excitation, Emission filters, and Dichroic mirrors or a single Filter Set. An Instrument might have multiple Light Sources, Detectors, Objectives, and Filters, etc. Each of these has its own ID attribute, which can be referred to from the Image, Plane or more commonly Channel elements associated with a given Image Acquisition session. It is understood that the Light Path configuration can be different for each Channel, but cannot be different for each timepoint or each Plane of an XYZ stack.
     notes:
       - The attributes for this class are described in a separate mixin because
         the entire class is defined across several LiMi modules.
@@ -118,6 +128,7 @@ classes:
         description:
           The core structure of this Instrument, which might also be referred to
           as its Body.
+        #The core structure of this Microscope, which might also be referred to as Body, Frame, or Platform.
         range: LiMiMicroscopeStand
         required: true
         multivalued: true
@@ -151,6 +162,7 @@ classes:
 
   LiMiMicroscopeStand:
     description: The core structure of a Microscope.
+    #The core structure of this Microscope, which might also be referred to as Body, Frame, or Platform.
     is_a: LiMiManufacturerSpecs
     slots:
       - id
@@ -159,6 +171,7 @@ classes:
     attributes:
       type:
         description: The general category to which this Microscope belongs.
+        #The general category to which this Microscope belongs. Options include a Compound Microscope is a Microscope in which the primary image is generated by an objective or an objective and a tube-lens, and in which the Sample is observed through an eyepiece. A Custom Microscope is specially designed for specialized purposes. An Electrophysiology Microscope is a Microscope dedicated to electrophysiological observation and manipulation. A Lightsheet Microscope is a Microscope in which in contrast to epifluorescence microscopy only a thin slice (usually a few hundred nanometers to a few micrometers) of the sample is illuminated perpendicularly to the direction of observation. A Stereo Microscope (also known as Dissecting Microscope) is a low-power, binocular Microscope with long free working distance used for dissecting. Generally in this type of Microscope the object is observed by each eye from a slightly different angle, thus causing stereoscopic perception.
         annotations:
           recommended_in_methods: true
         range: LiMiMicroscopeType
@@ -168,18 +181,25 @@ classes:
             of the MicroscopeStand?
       origin:
         description: The origin of this microscope stand.
+        #This describes the origin of this microscope stand. Specifically it specifies whether this Microscope Stand was purchased from a Commercial vendor and is being used as-is (i.e., Commercial- as is), purchased from a Commercial vendor and subsequently Modified for a specialized application (i.e., Commercial- custom-modified) or entirely Custom-built from scratch (i.e., Custom-built).
         annotations:
           recommended_in_methods: true
         range: LiMiMicroscopeOriginType
       eyepiece_field_number:
         description:
           The diaphragm size of the Microscope eyepiece expressed in mm.
+        #The Field Number represents the diaphragm size of the Microscope eyepiece expressed in mm.
         annotations:
           limi_tier: 3
         range: float
 
   LiMiInvertedMicroscope:
     description: An inverted Microscope Stand.
+    #This is a Microscope in which the object is observed from beneath the stage.
+    is_a: LiMiMicroscopeStand
+
+  LiMiUprightMicroscope:
+    description: This is a Microscope in which the object is observed from above the stage.
     is_a: LiMiMicroscopeStand
 
   #################
