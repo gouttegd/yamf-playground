@@ -212,18 +212,21 @@ classes:
       - object_type
     attributes:
       purchase_date:
-        description: The Date in which this Light Source was purchased.
+        description: The Date on which this Light Source was purchased.
+        #This field records the Date in which this Light Source was purchased.
         range: date
       illumination_power_reporting_statistic:
         description:
           The statistic used by the Manufacturer to report the nominal
           illumination power output emitted by this Light Source at Peak
           Wavelength.
+        #This field reports the statistic used by the Manufacturer to report the nominal Illumination Power output emitted by this Light Source at Peak Wavelength.
         range: LiMiIlluminationPowerReportingStatistic
       illumination_power_reporting_position:
         description:
           The position where the reported Illumination Intensity value was
           obtained as reported by the Manufacturer.
+        #This field records the Position where the reported Illumination Intensity value was obtained as reported by the Manufacturer.
         range: LiMiIlluminationPowerReportingPosition
 
   LiMiArc:
@@ -234,6 +237,7 @@ classes:
       an inert gas in in a glass bulb. The inert gas can be Mercury (He), Xenon
       (Xe), or a mixture of the two. The choice of the gas is important because
       its nature determines the spectral behavior of the lamp.
+    #An Arc lamp is a discharge lamp that produces light by an electric arc (also called a voltaic arc), which is typically generated between metal electrodes and travels through an inert gas in a glass bulb. The inert gas can be Mercury (He), Xenon (Xe), or a mixture of the two. The choice of the gas is important because its nature determines the spectral behavior of the lamp. Refer to Type for more informations about this aspect.
     is_a: LiMiLightSource
     attributes:
       type:
@@ -257,6 +261,7 @@ classes:
     attributes:
       type:
         description: The type of Filament lamp Light Source.
+        #This field records the type of Filament lamp Light Source. A Halogen lamp is a Filament lamp whose envelope contains halogen vapor, which reduces the loss of tungsten from the filament. This, in turn, allows to reach a high filament temperature and consequent higher luminance, higher color temperature, and longer operating life than a Standard Filament lamp of the same input power.
         range: LiMiFilamentType
       illumination_wavelength_ranges:
         description:
@@ -270,15 +275,16 @@ classes:
       A Light Source which emits coherent radiation at high spectral
       concentrations of radiance and minimal solid angles. This includes proper
       Light Amplification by Stimulated Emission of Radiation (LASER) sources
-      that emig light through a process of optical amplification based on the
-      stimulated emisssion of electromagnetic radiations. It also includes
+      that emit light through a process of optical amplification based on the
+      stimulated emission of electromagnetic radiations. It also includes
       Optical Parametric Oscillator (OPO) sources that uses a kind of LASER
       resonator but based on optical gain from parametric amplification in a
-      nonlinear crystal rather than from stimulated emision.
+      nonlinear crystal rather than from stimulated emission.
     is_a: LiMiLightSource
     attributes:
       type:
         description: The general category of the laser.
+        #The general category of the laser used for this experiment (e.g., Semiconductor Laser Diode, Solid state, Gas, etc.).
         range: LiMiLaserType
       tunable:
         description: Whether this Laser is Tuneable to different Wavelengths.
