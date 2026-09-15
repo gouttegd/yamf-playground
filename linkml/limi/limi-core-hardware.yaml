@@ -284,10 +284,11 @@ classes:
     attributes:
       type:
         description: The general category of the laser.
-        #The general category of the laser used for this experiment (e.g., Semiconductor Laser Diode, Solid state, Gas, etc.).
+        # The general category of the laser used for this experiment (e.g., Semiconductor Laser Diode, Solid state, Gas, etc.).
         range: LiMiLaserType
       tunable:
         description: Whether this Laser is Tuneable to different Wavelengths.
+        # Whether (True) or not (False) this Laser is Tuneable to different Wavelengths
         range: boolean
       pulse:
         description:
@@ -296,9 +297,11 @@ classes:
         range: boolean
       laser_medium:
         description: The material out of which this Laser is constructed.
+        # This field captures the material out of which this Laser is constructed.
         range: LiMiLaserMedium
       is_pumped:
         description: Whether this Laser is a pumped Laser.
+        # Whether (True) or not (False) this is a pumped Laser.
         range: boolean
       repetition_rate:
         description:
