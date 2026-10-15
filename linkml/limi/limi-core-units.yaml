@@ -251,55 +251,54 @@ enums:
   LiMiTemperatureUnit:
     description: Available values to describe the unit of a value that represents a Temperature
     permissible_values:
-      #AK: DGG; how do we add a degree symbol before the C, F, and K.
       C:
-        title: degree celsius
+        title: celsius
       F:
-        title: Fahrenheit
+        title: fahrenheit
       K:
-        title: Kelvin
+        title: kelvin
 
   LiMiPressureUnit:
     description: Available values to describe the unit of a value that represents air pressure
     permissible_values:
       YPa:
-        title: yotta Pasccal
+        title: yotta pascal
       ZPa:
-        title: zetta Pascal
+        title: zetta pascal
       EPa:
-        title: exa Pascal
+        title: exa pascal
       PPa:
-        title: peta Pascal
+        title: peta pascal
       TPa:
-        title: tetra Pascal
+        title: tetra pascal
       GPa:
-        title: Giga Pascal
+        title: giga pascal
       MPa:
-        title: mega Pascal
+        title: mega pascal
       kPa:
-        title: kilo Pascal
+        title: kilo pascal
       hPa:
-        title: hecto Pascal
+        title: hecto pascal
       daPa:
-        title: deca Pascal
+        title: deca pascal
       cPa:
-        title: centi Pascal
+        title: centi pascal
       mPa:
-        title: milli Pascal
+        title: milli pascal
       µPa:
-        title: micro Pascal
+        title: micro pascal
       nPa:
-        title: nano Pascal
+        title: nano pascal
       pPa:
-        title: pico Pascal
+        title: pico pascal
       fPa:
-        title: femto Pascal
+        title: femto pascal
       aPa:
-        title: atto Pascal
+        title: atto pascal
       zPa:
-        title: zepto Pascal
+        title: zepto pascal
       yPa:
-        title: yocto Pascal
+        title: yocto pascal
       bar:
         title: bar
       Mbar:
@@ -311,27 +310,28 @@ enums:
       cbar:
         title: centi bar
       mbar:
-        title: millibar
+        title: milli bar
       atm:
         title: atmosphere
       psi:
         title: pound-force per square inch
       Torr:
-        title: Torr
+        title: torr
       mTorr:
-        title: milli Torr
+        title: milli torr
       mmHg:
-        title: mm of Mercury
+        title: mm of mercury
 
   LiMiElectricCurrentUnit:
     description: Available values to describe the unit of a value that represents electric current
     permissible_values:
       A:
-        title: Amperes
+        title: amperes
       e-/pixel/s:
         title: electrons per pixel per second
-      e-rms:
+      e- rms:
         title: root mean square electrons
+        #AK: This is not a unit of electric current. Current is always electrons/time. For now we leave it since this is how the xsd is right now.
 
   LiMiRatioUnit:
     description: Available values to describe the unit of a value that represents a Rate
@@ -345,81 +345,76 @@ enums:
     description: Available values to describe the unit of a value that represents Irradiance
     permissible_values:
       W/m2:
-        title: Watt per squared meter
+        title: watt per squared meter
       mW/µm2:
-        title: milli Watt per squared micro meter
+        title: milli watt per squared micro meter
       mW/nm2:
-        title: milli Watt per squared nano meter
+        title: milli watt per squared nano meter
       µW/µm2:
-        title: micro Watt per squared micro meter
+        title: micro watt per squared micro meter
       µW/nm2:
-        title: micro Watt per squared nano meter
+        title: micro watt per squared nano meter
 
   LiMiConcentrationUnit:
-    description: Available values to describe the unit of a value that
-    represents concentration
+    description: Available values to describe the unit of a value that represents concentration
     permissible_values:
       ng/µl:
         title: nano gram per micro liter
       µg/µl:
         title: micro gram per micro liter
-      \%(W/W):
-        title: per cent weight by weight
+      '%(W/V)':
+        title: per cent weight per volume
        # AK: how do we add a percentage sign without making it a comment?
-      \%(V/V):
-        title: per cent volume by volume
+      '%(V/V)':
+        title: per cent volume per volume
       Units/ml:
         title: units per milli liter
-      Other:
-        title: any other unit
-        ##AK: how do we declare other? And if we do it here, we should also do it for all others, right?
 
   LiMiPotentialUnit:
-    description: Available values to describe the unit of a value that
-    represents an electric potential
+    description: Available values to describe the unit of a value that represents an electric potential
     permissible_values:
       YV:
-        title: yotta Volt
+        title: yotta volt
       ZV:
-        title: zetta Volt
+        title: zetta volt
       EV:
-        title: exa Volt
+        title: exa volt
       PV:
-        title: peta Volt
+        title: peta volt
       TV:
-        title: tetra Volt
+        title: tetra volt
       GV:
-        title: giga Volt
+        title: giga volt
       MV:
-        title: mega Volt
+        title: mega volt
       kV:
-        title: kilo Volt
+        title: kilo volt
       hV:
-        title: Volt
+        title: volt
       daV:
-        title: deca Volt
+        title: deca volt
       V:
-        title: Volt
+        title: volt
       dV:
-        title: deci Volt
+        title: deci volt
       cV:
-        title: centi Volt
+        title: centi volt
       mV:
-        title: milli Volt
+        title: milli volt
       µV:
-        title: micro Volt
+        title: micro volt
       nV:
-        title: nano Volt
+        title: nano volt
       pV:
-        title: pico Volt
+        title: pico volt
       fV:
-        title: femto Volt
+        title: femto volt
       aV:
-        title: atto Volt
+        title: atto volt
       zV:
-        title: zepto Volt
+        title: zepto volt
       yW:
-        title: yocto Volt
+        title: yocto volt
 
 
 

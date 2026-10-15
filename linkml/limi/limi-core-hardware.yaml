@@ -14,9 +14,6 @@ created_by: orcid:0000-0002-6095-8718
 prefixes:
   limi: https://example.invalid/limi/v02-10/
   orcid: https://orcid.org/
-default_prefix: limi
-default_range: string
-
 classes:
   LiMiManufacturerSpecs:
     description:
@@ -923,7 +920,7 @@ classes:
       readout_noise_unit:
         description: Unit associated with readout noise.
         range: LiMiElectricCurrentUnit
-        ifabsent: LiMiElectricCurrentUnit(dB)
+        ifabsent: LiMiElectricCurrentUnit(e- rms)
         annotations:
           limi_tier: 2
       detector_noise_model:
@@ -941,7 +938,7 @@ classes:
       dark_current_rate_unit:
         description: Unit associated with the dark current rate value
         range: LiMiElectricCurrentUnit
-        ifabsent: LiMiElectricCurrentUnit(e-/px/s)
+        ifabsent: LiMiElectricCurrentUnit(e-/pixel/s)
         annotations:
           limi_tier: 2
       dynamic_range:
@@ -956,7 +953,6 @@ classes:
         ifabsent: LiMiRatioUnit(dB)
         annotations:
           limi_tier: 2
-
       ambient_operating_temperature:
         description: This field records the Ambient Temperature at which this
           Detector is designed to operate, according to the Manufacturer.
@@ -979,14 +975,11 @@ classes:
         description: This field contains a reference to a Lens positioned at the Mount connecting this Detector to the Microscope Stand.
         range: LiMiLens
         inlined: false
-
-  LiMiDetectorWavelengthRange:
-    description: This element records the Range of Wavelengths this device is designed for, according to the Manufacturer. Multiple of this element may be used.
-    is_a: LiMiWavelengthRange
-    annotations:
-      limi_tier: 2
-    #AK: still to add wavelengthprofilefile
-
+      wavelength_range:
+        description: This element records the Range of Wavelengths this device is designed for, according to the Manufacturer. Multiple of this element may be used.
+        range: LiMiWavelengthRange
+        annotations:
+          limi_tier: 2
 
 enums:
   LiMiMicroscopeType:
@@ -1333,8 +1326,7 @@ enums:
       Other:
 
   LiMiDetectorMount:
-    description: The type of mount used to connect this detector to the
-    microscope stand.
+    description: The type of mount used to connect this detector to the microscope stand.
     permissible_values:
       C-mount:
       D-SLR adapter:
@@ -1358,6 +1350,9 @@ enums:
       Gaussian:
       Poisson:
       Other:
+default_prefix: limi
+
+default_range: string
 
 
 
