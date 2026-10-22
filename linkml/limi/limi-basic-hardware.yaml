@@ -97,9 +97,8 @@ classes:
           used to refer to the individual developer, if known.
       website:
         description:
-          The URL address of any Website where the Software can be obtained. In
-          case of open-source Softare this field should record the URL for the
-          Git repository from which to obtain the source code.
+          The URL address of any Website where the Software can be obtained. 
+          In case of open-source Software this field should record the URL for the Git repository from which to obtain the source code.
         range: uri
       primary_publication_id:
         description:
@@ -152,7 +151,7 @@ classes:
   ####################
   # Microscope table #
   ####################
-
+ # Arnica has filled
   LiMiMicroscopeTable:
     description:
       The Table used to support the Instrument during Image Acquisition.
@@ -161,7 +160,45 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      multiple_microscopes:
+        description: This field records whether (True) or not (False) multiple Microscopes share this Microscope Table. This is relevant because multiple Microscopes using the same table might affect stability and vibrations during Image Acquisition.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      type:
+        description: This field describes the type of this microscope table
+        range: LiMiMicroscopeTableType
+        annotations:
+          limi_tier: 2
+        required: true
+      table_width:
+        description: The width of this microscope table
+        range: float
+        annotations:
+          limi_tier: 3
+      table_width_unit:
+        description: Unit associated with the value representing the width of
+          the microscope table
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      table_depth:
+        description: The depth of this microscope table
+        range: float
+        annotations:
+          limi_tier: 3
+      table_depth_unit:
+        description: Unit associated with the value representing the depth of
+          the microscope table
+        range: LiMiLengthUnit
+        if_absent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
 
   ################################
   # Environmental control device #
@@ -176,7 +213,89 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+       # Arnica has filled
+      temperature_control:
+        description: This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
+        range: LiMiEnvironmentalTemperatureControl
+        required: true
+      humidity_control:
+        description: This field captures whether this Environmental Control Device provides Humidity control and what type of control it provides. If no Humidity control is provided please enter "None".
+        range: LiMiEnvironmentalHumidityControl
+        required: true
+        co2_control:
+          description: This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+          range: LiMiEnvironmentalCO2Control
+          required: true
+        o2_control:
+          description: This field captures whether (True) or not (False) this
+            Environmental Control Device provides O2 control.
+          range: boolean
+          annotations:
+            limi_tier: 2
+          required: true
+        vibration_control:
+          description: This field captures whether (True) or not (False) this Environmental Control Device provides vibration control.
+          range: boolean
+          annotations:
+            limi_tier: 2
+        stand_compatibility:
+          description: This field captures what Microscope Stand type this Environmental Control Chamber is compatible with.
+          range: LiMiEnvironmentalControlStandCompatibility
+          annotations:
+            limi_tier: 2
+          required: true
+        perfusion:
+          description: This field captures whether (True) or not (False) this Environmental Control Device supports sample Perfusion.
+          range: boolean
+          annotations:
+            limi_tier: 2
+          required: true
+        lid_material:
+          description: In case this Environmental Control Device consists of a Sample Holder Chamber, this field captures the Material that constitutes the Lid of the Chamber.
+          annotations:
+            limi_tier: 2
+        max_temperature:
+          description: This field captures the Maximum Temperature that can be stably maintained by this Environmental Control Device.
+          range: float
+          annotations:
+            limi_tier: 3
+          required: true
+        max_temperature_unit:
+          description: This field captures the unit associated with the value representing the maximum temperature that can be stably maintained by this Environmental Control Device.
+          range: LiMiTemperatureUnit
+          ifabsent: LiMiTemperatureUnit(C)
+          annotations:
+            limi_tier: 3
+          required: true
+        min_temperature:
+          description: This field captures the Minimum Temperature that can be stably maintained by this Environmental Control Device.
+          range: float
+          annotations:
+            limi_tier: 3
+          required: true
+        min_temperature_unit:
+          description: This field captures the unit associated with the value representing the minimum temperature that can be stably maintained by this Environmental Control Device.
+          range: LiMiTemperatureUnit
+          ifabsent: LiMiTemperatureUnit(C)
+          annotations:
+            limi_tier: 3
+          required: true
+        temperature_accuracy:
+          description: This field captures the Temperature control Accuracy provided by this Environmental Control Device.
+          range: float
+          annotations:
+            limi_tier: 3
+        temperature_accuracy_unit:
+          description: This field captures the unit associated with the temperature control accuracy provided by this Environmental Control Chamber
+          range: LiMiTemperatureUnit
+          ifabsent: LiMiTemperatureUnit(C)
+          annotations:
+            limi_tier: 3
+        TTL:
+          description: This field captures whether (True) or not (False) this Environmental Control Device can be controlled by a TTL signal.
+          range: boolean
+          annotations:
+            limi_tier: 3
 
   #################
   # Light sources #
@@ -248,7 +367,25 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      attenuation:
+        description: This field reports a measure of the capacity of this Light Source Coupling device to attenuate the Illumination Power of the light passing through measured at the Peak Wavelength and expressed in dB/km.
+        range: float
+        annotations:
+          limi_tier: 2
+        required: true
+      transmittance:
+        description: The maximum amount of light this Light Source Coupling device is capable of transmitting at the Peak Wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi_tier: 3
+      coupling_lens_ref:
+        description: This is a reference to a Lens positioned at the connection between this Light Source coupling element and the Microscope Stand.
+        annotations:
+          limi_tier: 2
+        inlined: false
 
   LiMiLightGuide:
     description:
@@ -258,7 +395,80 @@ classes:
       the Microscope Stand.
     is_a: LiMiLightSourceCoupling
     attributes:
-      # Arnica to fill
+      #AK has filled
+      type:
+        description: This field records the general category of Light Guide used in this case.
+        range: LiMiLightGuide
+        annotations:
+          limi_tier: 2
+        required: true
+      refractive_index:
+        description: This field records the Refractive Index of the material used to construct this Light Guide.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi_tier: 3
+      numerical_aperture:
+        description: The Numerical Aperture (NA) of this device expressed as a floating-point (real) number. NA can be calculated from the Angular Aperture (alpha) using the following formula, NA = n(sin alpha), and is a measure of how much of the incident light actually passes through this device. The larger the angular aperture, the more information this device can transmit. Expected range 0.02 - 1.5.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+        notes:
+          - AK has not added a min max constraint because this range could expand.
+      acceptance_angle:
+        description: The angle within which the light beam produced by a Light Source may be coupled with the bound modes of this Light Guide.
+        range: float
+        annotations:
+          limi_tier: 3
+      acceptance_angle_unit:
+        description: Unit associated with the value of acceptance angle of
+        the light guide
+        range: LiMiAngleUnit
+        annotations:
+          limi_tier: 3
+      geometry:
+        description: This field records the cross-section shape of this Light Guide.
+        range: LiMiLightGuideGeometry
+        annotations:
+          limi_tier: 3
+      material_name:
+        description: This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
+        range: LiMiLightGuideMaterialName
+        annotations:
+          limi_tier: 3
+        notes:
+          - Do we want to make a unified material class enum
+      single_mode:
+        description: This field records whether (True) this Light Guide is single-mode. If not (False), then the guide is assumed to be multi-modal.
+        range: boolean
+        annotations:
+          limi_tier: 3
+      waveguide_mode:
+        description: This field records the transverse mode (or superposition of such modes) that are being imposed by this light guide onto the light wave traversing it. These modes generally follow different propagation constants.
+        range: LiMiWaveguideMode
+        annotations:
+          limi_tier: 3
+      diameter:
+        description: This fields records the outer diameter of this Light Guide.
+        range: float
+        annotations:
+          limi_tier: 3
+      diameter_unit:
+        description: This fields records the unit associated with the value representing the outer diameter of this Light Guide.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      wavelength_range:
+        description:
+          This element records the Range of Wavelengths this device is designed
+          for, according to the Manufacturer. Multiple of this element may be
+          used.
+        range: LiMiWavelengthRange
+        annotations:
+          limi_tier: 3
 
   LiMiFreeBeam:
     description:
@@ -267,8 +477,22 @@ classes:
       across free space to the back of the Microscope Stand.
     is_a: LiMiLightSourceCoupling
     attributes:
-      # Arnica to fill
-
+      # Arnica has filled
+      direct_mount:
+        description: Whether light traveling via this Light Source Coupling device from the Light Source to the Microscope Stand travels via a direct mount attached to the Microscope Stand (True), or across an optical path through the air (False).
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+      mount_type:
+        description: In case the DirectMount field is True, this field records the type of Direct Mount utilized to couple the Light Source to this Microscope Stand.
+        annotations:
+          limi_tier: 3
+        required: true
+        notes:
+          - AK- We should have an enum for this but For now the model does not
+          have it.
+      
   #################
   # Optics holder #
   #################
@@ -482,8 +706,71 @@ classes:
       - id
       - name
       - object_type
+    notes:
+      - origdef This element describes a Mirror positioned in the Ligth Path for one or more Channels available for this Instrument. An Instrument may have several Mirrors of different types, such as Dichroic, Beamsplitter or Reflector. This element can be associated with an optional Optics Holder, such as a Filter Cube, Filter Turret, Filtr Wheel, or Filter Slider.
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+    optics_holder_position:
+      description: This field records the position of this Mirroring Device in a Optics Holder of any kind, such as a Slider, Turret or Wheel.
+      annotations:
+        limi_tier: 2
+    mirror_type:
+      description: This field records the general category of this Mirror.
+      range: LiMiMirrorType
+      annotations:
+        limi_tier: 3
+      required: true
+    geometry:
+      description: This field records the optimal angle of incidence (AOI) for this Mirror. The AOI is the angle between the optical axis of the incident light and the axis normal to the surface of the Mirror. In specular reflection AOI is by definition equal to the Angle Of Reflection (AOR).
+      range: LiMiMirrorGeometry
+      annotations:
+        limi_tier: 3
+    diameter:
+      description: This field describes the Diameter of this optical element.
+      range: float
+      annotations:
+        limi_tier: 3
+    diameter_unit:
+      description: Unit associated with the value representing the diameter of a mirror
+      range: LiMiLengthUnit
+      ifabsent: LiMiLengthUnit(cm)
+      annotations:
+        limi_tier: 3
+    radius_of_curvature:
+      description: The radius of curvature of this Mirror. A spherical lens or Mirror surface has a center of curvature located either along or decentered from the system local optical axis. The vertex of the lens surface is located on the local optical axis. The distance from the vertex to the center of curvature is the radius of curvature of the surface.
+      range: float
+      annotations:
+        limi_tier: 3
+    radius_of_curvature_unit:
+      description: Unit associated with the value representing the radius of curvature of a mirror
+      range: LiMiLengthUnit
+      ifabsent: LiMiLengthUnit(cm)
+      annotations:
+        limi_tier: 3
+    angle_of_incidence:
+      description: This field records the optimal angle of incidence (AOI) for this Mirror. The AOI is the angle between the optical axis of the incident light and the axis normal to the surface of the Mirror. In specular reflection AOI is by definition equal to the Angle Of Reflection (AOR).
+      range: float
+      annotations:
+        limi_tier: 3
+    angle_of_incidence_unit:
+      description: Unit associated with the value representing the optimal angle of incidence for this mirror
+      range: LiMiAngleUnit
+      ifabsent: LiMiLengthUnit(deg)
+      annotations:
+        limi_tier: 3
+    substrate_type:
+      description: This field records the type of Substrate that is used for this Mirror. It is typically a ground and polished piece of optical glass.
+      annotations:
+        limi_tier: 3
+    substrate_material:
+      description: This field records the chemical composition or the designation of the substrate of this Mirroring Device. The substrate is typically composed of a glass material with low autofluorescence, such as UV-grade fused silica or Borofloat.
+      range: LiMiOpticalMaterialName
+      annotations:
+        limi_tier: 3
+    glass_code:
+      description: If available, this field records the international Glass Code of the material that constitutes this Mirror. The Glass Code designation is based on U.S. military standard MIL-G-174, and it consists of a six-digit number specifying the glass according to its Refractive Index nd at the Fraunhofer d- (or D3-) line, and its Abbe Number Vd also taken at that line. The resulting Glass Code is the value of nd-1 rounded to three digits, followed by Vd rounded to three digits, with all decimal points ignored. For example, BK7 has nd = 1.5168 and Vd = 64.17, giving a six-digit Glass Code of 517642.
+      annotations:
+        limi_tier: 3
 
   LiMiDichroic:
     description:
@@ -1293,3 +1580,151 @@ enums:
       EBCCD:
       MicroChannelPlate:
       Other:
+
+  LiMiMicroscopeTableType:
+    description: The type of microscope table on which a microscope is set
+    #AK made this up as opposed to: The type of microscope table
+    permissible_values:
+      Air active:
+      Air passive:
+      Non-isolating Frame:
+      Simple Bench:
+      Stone:
+      Other:
+
+  LiMiEnvironmentalTemperatureControl:
+    description: The type of temperature control offered by an Environmental Control Chamber
+    #AK made this definition up, opposed to: This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
+    permissible_values:
+        None:
+        Cage-incubator enclosure:
+        Objective heater:
+        Stage-top chamber:
+        Other:
+
+  LiMiEnvironmentalHumidityControl:
+    description: The type of humidity control offered by an Environmental Control Chamber
+    #AK made this definition up, opposed to: This field captures whether this Environmental Control Device provides Humidity control and what type of control it provides. If no Humidity control is provided please enter "None".
+    permissible_values:
+      None:
+      Active:
+      Passive:
+      Mineral oil:
+      Water-bath:
+      Other:
+
+  LiMiEnvironmentalCO2Control:
+    description: The type of CO2 control offered by an Environmental Control Chamber
+    #AK made this definition up, opposed to: This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+    permissible_values:
+      None:
+      Gas mixer:
+      Pre-mixed:
+      Other:
+
+  LiMiLightGuideType:
+    description: The type of Lightguide used for light source coupling in a microscope
+    #AK made this definition up, original: This field records the general category of Light Guide used in this case.
+    permissible_values:
+      Fiber Optics:
+      Liquid:
+      Other:
+
+  LiMiLightGuideGeometry:
+    description: The cross-section shape of a light guide
+    permissible_values:
+      Diffuse Axial:
+      Backlight:
+      Line Light:
+      Ring Light:
+      Spot Light:
+      Other:
+
+  LiMiLightGuideMaterialName:
+    description: The chemical composition of the material from which a light guide is constructed
+    #AK made this def up, original This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
+    permissible_values:
+      Borosilicate:
+      Quartz:
+      Silica:
+      Other:
+
+  LiMiWaveguideMode:
+    #AK has renamed this
+    description: The modes imposed by the light guide onto the light traversing it
+    #AK has made this up
+    permissible_values:
+      Tranverse Electric:
+      Tranverse Electromagnetic:
+      Transverse Magnetic:
+      Hybrid:
+      Other:
+
+
+  LiMiMirrorType:
+    description: The general types of mirrors
+    permissible_values:
+      Convex:
+      Concave:
+      Planar:
+      Other:
+
+  LiMiMirrorGeometry:
+    description: This field records the geometrical shape of the surface(s) of this Mirror.
+    permissible_values:
+      Aspherical:
+      Cylindrical:
+      Ellipsoidal:
+      Hyperboloidal:
+      Paraboloidal:
+      Spherical:
+      Other:
+
+  LiMiOpticalMaterialName:
+    description: This field records the chemical composition or the designation of the substrate of this Mirroring Device.
+    permissible_values:
+      alpha-Barium Borate:
+      Barium Crown (BAK/N-BAK):
+      Barium Flint (BAF/N-BAF):
+      Barium Heavy Flint (BASF/N-BASF):
+      Barium Light Flint (BALF/N-BALF):
+      Borofloat:
+      Boron Crown (BK/N-BK):
+      Borosilicate:
+      Calcite:
+      Calcium:
+      Fluoride (CaF2):
+      Crown (K/N-K):
+      Crown Flint (KF/N-NK):
+      Crystal Quartz:
+      Dense Crown (SK/N-SK):
+      Dense Flint (SF/N-SF):
+      Extra Dense Crown (SSK/N-SSK):
+      Extra Light Flint (LLF):
+      Flint (F/N-F):
+      Fluorine Crown (FK/N-FK):
+      Germanium:
+      Lanthanum Crown (LAK/N-LAK):
+      Lanthanum Dense Flint (LASF/N-LASF):
+      Lanthanum Flint (LAFN/N-LAF):
+      Light Flint (LF):
+      Magnesium Fluoride (MgF2):
+      Phosphate Crown (PK/N-PK):
+      Phosphate Dense (PSK/N-PSK):
+      Polytetrafluoroethylene (PFTE):
+      Pyrex:
+      Rutile (TiO2):
+      Short Flint Special (KZFS/N-KZFS):
+      Silicon (Si):
+      UV-Grade Fused Silica (UVFS):
+      Yttrium Orthovanadate (YVO4):
+      Zerodur (Lithium Aluminum Silicon Oxide):
+      Zinc Crown (ZK/N-ZK):
+      Zinc Selenide (ZnSe):
+      Other:
+
+
+
+
+
+

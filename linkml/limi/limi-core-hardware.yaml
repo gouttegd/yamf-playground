@@ -983,6 +983,7 @@ classes:
           This field contains a reference to a Lens positioned at the Mount
           connecting this Detector to the Microscope Stand.
         range: LiMiLens
+        #AK: we do not need to have this range here, right?
         inlined: false
       wavelength_range:
         description:
