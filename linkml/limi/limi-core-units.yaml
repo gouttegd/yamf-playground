@@ -184,6 +184,10 @@ enums:
         title: zepto hertz
       yHz:
         title: yocto hertz
+      fps:
+        title: frames per second
+      pixel/s:
+        title: pixels per second
 
   LiMiTimeUnit:
     description:
@@ -441,4 +445,13 @@ enums:
         title: micro meter per second
       nm/s:
         title: nano meter per second
+      other:
+
+  LiMiElectricChargeUnit:
+    description: Available values to describe the unit of a value that represents an electric charge
+    permissible_values:
+      e-:
+        title: electrons
+      Coulombs:
+        title: Coulombs
       other:
