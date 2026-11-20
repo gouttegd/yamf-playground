@@ -184,6 +184,10 @@ enums:
         title: zepto hertz
       yHz:
         title: yocto hertz
+      fps:
+        title: frames per second
+      pixel/s:
+        title: pixels per second
 
   LiMiTimeUnit:
     description:
@@ -416,11 +420,38 @@ enums:
       yW:
         title: yocto volt
 
+  LiMiDensityUnit:
+    description: Available values to describe the unit of a value that represents a density
+    permissible_values:
+      kg/m3:
+        title: kilo gram per cube meter
+      g/ml:
+        title: gram per milli liter
+      mg/µg:
+        title: milli gram per micro gram
+        #How is this a density unit
+      µg/ng:
+        title: micro gram per nano gram
+        #How is this a density unit
 
+  LiMiVelocityUnit:
+    description: Available values to describe the unit of a value that represents a velocity, or speed
+    permissible_values:
+      m/s:
+        title: meter per second
+      mm/s:
+        title: milli meter per second
+      μm/s:
+        title: micro meter per second
+      nm/s:
+        title: nano meter per second
+      other:
 
-
-
-
-
-
-
+  LiMiElectricChargeUnit:
+    description: Available values to describe the unit of a value that represents an electric charge
+    permissible_values:
+      e-:
+        title: electrons
+      Coulombs:
+        title: Coulombs
+      other:

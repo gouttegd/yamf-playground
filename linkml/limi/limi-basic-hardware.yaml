@@ -97,9 +97,8 @@ classes:
           used to refer to the individual developer, if known.
       website:
         description:
-          The URL address of any Website where the Software can be obtained. In
-          case of open-source Softare this field should record the URL for the
-          Git repository from which to obtain the source code.
+          The URL address of any Website where the Software can be obtained. 
+          In case of open-source Software this field should record the URL for the Git repository from which to obtain the source code.
         range: uri
       primary_publication_id:
         description:
@@ -152,7 +151,7 @@ classes:
   ####################
   # Microscope table #
   ####################
-
+ # Arnica has filled
   LiMiMicroscopeTable:
     description:
       The Table used to support the Instrument during Image Acquisition.
@@ -161,7 +160,45 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      multiple_microscopes:
+        description: This field records whether (True) or not (False) multiple Microscopes share this Microscope Table. This is relevant because multiple Microscopes using the same table might affect stability and vibrations during Image Acquisition.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      type:
+        description: This field describes the type of this microscope table
+        range: LiMiMicroscopeTableType
+        annotations:
+          limi_tier: 2
+        required: true
+      table_width:
+        description: The width of this microscope table
+        range: float
+        annotations:
+          limi_tier: 3
+      table_width_unit:
+        description: Unit associated with the value representing the width of
+          the microscope table
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      table_depth:
+        description: The depth of this microscope table
+        range: float
+        annotations:
+          limi_tier: 3
+      table_depth_unit:
+        description: Unit associated with the value representing the depth of
+          the microscope table
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
 
   ################################
   # Environmental control device #
@@ -176,7 +213,90 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+       # Arnica has filled
+      temperature_control:
+        description: This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
+        range: LiMiEnvironmentalTemperatureControl
+        required: true
+      humidity_control:
+        description: This field captures whether this Environmental Control Device provides Humidity control and what type of control it provides. If no Humidity control is provided please enter "None".
+        range: LiMiEnvironmentalHumidityControl
+        required: true
+      co2_control:
+        description: This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+        range: LiMiEnvironmentalCO2Control
+        required: true
+      o2_control:
+        description: This field captures whether (True) or not (False) this Environmental Control Device provides O2 control.
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+        notes:
+            - DGG - This matches what is described by the spreadsheet, but it doesn’t make much sense in my opinion-- there’s an inherent contradiction in saying that a field belongs to the second tier and saying that it is required.
+      vibration_control:
+        description: This field captures whether (True) or not (False) this Environmental Control Device provides vibration control.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      stand_compatibility:
+        description: This field captures what Microscope Stand type this Environmental Control Chamber is compatible with.
+        range: LiMiEnvironmentalControlStandCompatibility
+        annotations:
+          limi_tier: 2
+        required: true
+      perfusion:
+        description: This field captures whether (True) or not (False) this Environmental Control Device supports sample Perfusion.
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+      lid_material:
+        description: In case this Environmental Control Device consists of a Sample Holder Chamber, this field captures the Material that constitutes the Lid of the Chamber.
+        annotations:
+          limi_tier: 2
+      max_temperature:
+        description: This field captures the Maximum Temperature that can be stably maintained by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+      max_temperature_unit:
+        description: Unit associated with the value representing the maximum temperature that can be stably maintained by this Environmental Control Device.
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+        required: true
+      min_temperature:
+        description: This field captures the Minimum Temperature that can be stably maintained by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+      min_temperature_unit:
+        description: Unit associated with the value representing the minimum temperature that can be stably maintained by this Environmental Control Device.
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+        required: true
+      temperature_accuracy:
+        description: This field captures the Temperature control Accuracy provided by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+      temperature_accuracy_unit:
+        description: Unit associated with the temperature control accuracy provided by this Environmental Control Chamber
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+      TTL:
+        description: This field captures whether (True) or not (False) this Environmental Control Device can be controlled by a TTL signal.
+        range: boolean
+        annotations:
+          limi_tier: 3
 
   #################
   # Light sources #
@@ -223,6 +343,9 @@ classes:
         annotations:
           limi_tier: 3
         range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+        notes:
+          - AK made up this default unit
       lasers:
         description: The Lasers contained in this Multi Laser Engine.
         range: LiMiLaser
@@ -248,7 +371,26 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      attenuation:
+        description: This field reports a measure of the capacity of this Light Source Coupling device to attenuate the Illumination Power of the light passing through measured at the Peak Wavelength and expressed in dB/km.
+        range: float
+        annotations:
+          limi_tier: 2
+        required: true
+      transmittance:
+        description: The maximum amount of light this Light Source Coupling device is capable of transmitting at the Peak Wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi_tier: 3
+      coupling_lens_ref:
+        description: This is a reference to a Lens positioned at the connection between this Light Source coupling element and the Microscope Stand.
+        range: LiMiLens
+        annotations:
+          limi_tier: 2
+        inlined: false
 
   LiMiLightGuide:
     description:
@@ -258,7 +400,83 @@ classes:
       the Microscope Stand.
     is_a: LiMiLightSourceCoupling
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+      type:
+        description: This field records the general category of Light Guide used in this case.
+        range: LiMiLightGuideType
+        annotations:
+          limi_tier: 2
+        required: true
+      refractive_index:
+        description: This field records the Refractive Index of the material used to construct this Light Guide.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi_tier: 3
+      numerical_aperture:
+        description: The Numerical Aperture (NA) of this device expressed as a floating-point (real) number. NA can be calculated from the Angular Aperture (alpha) using the following formula, NA = n(sin alpha), and is a measure of how much of the incident light actually passes through this device. The larger the angular aperture, the more information this device can transmit. Expected range 0.02 - 1.5.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+        notes:
+          - AK has not added a min max constraint because this range could expand.
+      acceptance_angle:
+        description: The angle within which the light beam produced by a Light Source may be coupled with the bound modes of this Light Guide.
+        range: float
+        annotations:
+          limi_tier: 3
+      acceptance_angle_unit:
+        description: Unit associated with the value of acceptance angle of the light guide
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      geometry:
+        description: This field records the cross-section shape of this Light Guide.
+        range: LiMiLightGuideGeometry
+        annotations:
+          limi_tier: 3
+      material_name:
+        description: This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
+        range: LiMiLightGuideMaterialName
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK- Do we want to make a unified material class enum
+          - DGG Possibly. Another option would be to use a “dynamic enum” using an ontology of materials. Let’s leave it like that for now.
+      single_mode:
+        description: This field records whether (True) this Light Guide is single-mode. If not (False), then the guide is assumed to be multi-modal.
+        range: boolean
+        annotations:
+          limi_tier: 3
+      waveguide_mode:
+        description: This field records the transverse mode (or superposition of such modes) that are being imposed by this light guide onto the light wave traversing it. These modes generally follow different propagation constants.
+        range: LiMiWaveguideMode
+        annotations:
+          limi_tier: 3
+      diameter:
+        description: This fields records the outer diameter of this Light Guide.
+        range: float
+        annotations:
+          limi_tier: 3
+      diameter_unit:
+        description: Unit associated with the value representing the outer diameter of this Light Guide.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      wavelength_range:
+        description:
+          This element records the Range of Wavelengths this device is designed
+          for, according to the Manufacturer. Multiple of this element may be
+          used.
+        range: LiMiWavelengthRange
+        annotations:
+          limi_tier: 3
 
   LiMiFreeBeam:
     description:
@@ -267,8 +485,21 @@ classes:
       across free space to the back of the Microscope Stand.
     is_a: LiMiLightSourceCoupling
     attributes:
-      # Arnica to fill
-
+      # Arnica has filled
+      direct_mount:
+        description: Whether light traveling via this Light Source Coupling device from the Light Source to the Microscope Stand travels via a direct mount attached to the Microscope Stand (True), or across an optical path through the air (False).
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+      mount_type:
+        description: In case the DirectMount field is True, this field records the type of Direct Mount utilized to couple the Light Source to this Microscope Stand.
+        annotations:
+          limi_tier: 3
+        required: true
+        notes:
+          - AK We should have an enum for this but for now the model does not have it.
+      
   #################
   # Optics holder #
   #################
@@ -303,6 +534,8 @@ classes:
         annotations:
           limi_tier: 3
         range: LiMiTimeUnit
+        notes:
+          - AK missing this default unit
       nr_of_slots:
         description: How many Slots this Optics Holder has.
         annotations:
@@ -382,7 +615,7 @@ classes:
         inlined: false
 
   LiMiEmissionFilterWheel:
-    description: A circular holder for multiple invidual Emission Filters.
+    description: A circular holder for multiple individual Emission Filters.
     is_a: LiMiFilterWheel
     attributes:
       emission_filters:
@@ -419,7 +652,7 @@ classes:
         inlined: false
 
   LiMiEmissionFilterSlider:
-    description: A linear holder for multiple invidual Emission Filters.
+    description: A linear holder for multiple individual Emission Filters.
     is_a: LiMiFilterSlider
     attributes:
       emission_filters:
@@ -482,12 +715,75 @@ classes:
       - id
       - name
       - object_type
+    notes:
+      - origdef This element describes a Mirror positioned in the Light Path for one or more Channels available for this Instrument. An Instrument may have several Mirrors of different types, such as Dichroic, Beamsplitter or Reflector. This element can be associated with an optional Optics Holder, such as a Filter Cube, Filter Turret, Filter Wheel, or Filter Slider.
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+      optics_holder_position:
+        description: This field records the position of this Mirroring Device in a Optics Holder of any kind, such as a Slider, Turret or Wheel.
+        annotations:
+          limi_tier: 2
+      mirror_type:
+        description: This field records the general category of this Mirror.
+        range: LiMiMirrorType
+        annotations:
+          limi_tier: 3
+        required: true
+      geometry:
+        description: This field records the optimal angle of incidence (AOI) for this Mirror. The AOI is the angle between the optical axis of the incident light and the axis normal to the surface of the Mirror. In specular reflection AOI is by definition equal to the Angle Of Reflection (AOR).
+        range: LiMiMirrorGeometry
+        annotations:
+          limi_tier: 3
+      diameter:
+        description: This field describes the Diameter of this optical element.
+        range: float
+        annotations:
+          limi_tier: 3
+      diameter_unit:
+        description: Unit associated with the value representing the diameter of a mirror
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+      radius_of_curvature:
+        description: The radius of curvature of this Mirror. A spherical lens or Mirror surface has a center of curvature located either along or decentered from the system local optical axis. The vertex of the lens surface is located on the local optical axis. The distance from the vertex to the center of curvature is the radius of curvature of the surface.
+        range: float
+        annotations:
+          limi_tier: 3
+      radius_of_curvature_unit:
+        description: Unit associated with the value representing the radius of curvature of a mirror
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        annotations:
+          limi_tier: 3
+      angle_of_incidence:
+        description: This field records the optimal angle of incidence (AOI) for this Mirror. The AOI is the angle between the optical axis of the incident light and the axis normal to the surface of the Mirror. In specular reflection AOI is by definition equal to the Angle Of Reflection (AOR).
+        range: float
+        annotations:
+          limi_tier: 3
+      angle_of_incidence_unit:
+        description: Unit associated with the value representing the optimal angle of incidence for this mirror
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+      substrate_type:
+        description: This field records the type of Substrate that is used for this Mirror. It is typically a ground and polished piece of optical glass.
+        annotations:
+          limi_tier: 3
+      substrate_material:
+        description: This field records the chemical composition or the designation of the substrate of this Mirroring Device. The substrate is typically composed of a glass material with low autofluorescence, such as UV-grade fused silica or Borofloat.
+        range: LiMiOpticalMaterial
+        annotations:
+          limi_tier: 3
+      glass_code:
+        description: If available, this field records the international Glass Code of the material that constitutes this Mirror. The Glass Code designation is based on U.S. military standard MIL-G-174, and it consists of a six-digit number specifying the glass according to its Refractive Index nd at the Fraunhofer d- (or D3-) line, and its Abbe Number Vd also taken at that line. The resulting Glass Code is the value of nd-1 rounded to three digits, followed by Vd rounded to three digits, with all decimal points ignored. For example, BK7 has nd = 1.5168 and Vd = 64.17, giving a six-digit Glass Code of 517642.
+        annotations:
+          limi_tier: 3
 
   LiMiDichroic:
     description:
-      A Mirror that spectrally separate light by transmitting and reflecting
+      A Mirror that spectrally separate light by transmitting and reflecting 
       light as a function of wavelength. In the context of fluorescence
       microscopy, they are typically used to reflect the excitation light, but
       transmit the emitted fluorescence.
@@ -496,17 +792,63 @@ classes:
         Dichromatic Mirrors or simply Dichroics.
     is_a: LiMiMirroringDevice
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      type:
+        description: This field captures the Type of Dichroic used in this case.
+        range: LiMiFilterType
+        required: true
+      coating_method:
+        description: This field records the type of Coating used in this case. An optical coating is one or more thin layers of material deposited on an optical component such as a Lens, Filter or Mirror, which alters the way in which the optic reflects and transmits light.
+        range: LiMiFilterCoatingMethod
+        required: true
+      light_path_location:
+        description: This field records the location of this component in the Microscope Light Path. The most common positions are, Infinity Space, Camera Port or Illumination Port.
+        range: LiMiFilterLightPathLocation
+        required: true
+      technology:
+        description: This field records the filtering Technology utilized for this optical element. The main types of technologies used in fluorescence analysis are Absorption (aka colored) glass, Polymer or Thin-film coating.
+        range: LiMiFilterTechnology
+        annotations:
+          limi_tier: 2
+      attenuation_method:
+        description: This field records the means by which this optical element achieves out-of-band transmission attenuation.
+        range: LiMiFilterAttenuationMethod
+        annotations:
+          limi_tier: 2
+        required: true
+      attenuation_coefficient:
+        description: This field records the Attenuation Coefficient (AC) of this optical element. The AC (aka blocking coefficient) is a material property that characterizes the degree to which light is being blocked (i.e., scattered or absorbed) by it. AC is used as a measure of the out-of-band blocking of an optical Lens, Filter, Dichroic mirror over an extended range of the spectrum. AC is often reported in units of optical density (OD), whereas OD= -log10(T), and T=Transmittance (0≤T≤1).
+        range: float
+        annotations:
+          limi_tier: 3
+      thickness:
+        description: This field describes the Thickness of this optical element.
+        range: float
+        annotations:
+          limi_tier: 3
+      thickness_unit:
+        description: Unit associated with the value representing thickness of an optical element
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      polarization:
+        description: This field records the polarization effect of this optical element. Any thin-film interference coating that is used at non-normal angles-of-incidence will cause some amount of polarization, the precise effect varying greatly with wavelength and with the particular coating design.
+        range: LiMiFilterPolarization
+        notes:
+          - Should we make a LiMiPolarization enum instead to cover also polarized illumination?
 
   LiMiStandardDichroic:
     description:
-      A Dichroic positioned in the standard Ligth Path for one or more Channels
+      A Dichroic positioned in the standard Light Path for one or more Channels
       available for an Instrument.
     is_a: LiMiDichroic
 
   LiMiAdditionalDichroic:
     description:
-      A generic Additional Dichroic positioned in the Ligth Path for one or more
+      A generic Additional Dichroic positioned in the Light Path for one or more
       Channel available for an Instrument.
     is_a: LiMiDichroic
 
@@ -528,6 +870,7 @@ classes:
       wavelength_unit:
         description: Unit associated with the Wavelength value.
         range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
       reflectance:
         description:
           The maximum amount of light this optical component is capable of
@@ -544,21 +887,60 @@ classes:
         range: float
         minimum_value: 0.0
       FWHM_bandwidth_unit:
-        description: Unit associated with the FWHM Bandwith value.
+        description: Unit associated with the FWHM Bandwidth value.
         range: LiMiLengthUnit
+      notes:
+        - AK How do we declare this class under specific optical elements?
+        - Would it not be future-proof to not restrict the definition of these ranges to any one optical element?
+
 
   LiMiBeamsplitter:
     description:
       A Mirror that reflects part of the light, regardless of Wavelength.
     is_a: LiMiMirroringDevice
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+      transmittance:
+        description: This field records the maximum amount of light a beamsplitter is capable of transmitting at the peak wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi-tier: 2
+        required: true
+      transmission_angle:
+        description: The angle at which light is transmitted by this Beamsplitter.
+        range: float
+        annotations:
+          limi_tier: 3
+      transmission_angle_unit:
+        description: Unit associated with the value representing the transmission angle of a beamsplitter
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+      reflectance:
+        description: The field records the maximum amount of light a beamsplitter is capable of reflecting at the peak Wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+        annotations:
+          limi-tier: 2
+        required: true
 
   LiMiReflectingMirror:
     description: A total reflection Mirror.
     is_a: LiMiMirroringDevice
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      reflectance:
+        description: The field records the maximum amount of light this Mirror is capable of reflecting at the peak Wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        minimum_value: 0.0
+        maximum_value: 1.0
+      annotations:
+        limi_tier: 2
+      required: true
 
   #####################
   # Optical apertures #
@@ -576,7 +958,22 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+      optics_holder_position:
+        description: This field records the position of this Optical Aperture in a Optics Turret.
+        annotations:
+          limi_tier: 2
+      outer_diameter:
+        description: This field captures the physical outer diameter of a component
+        range: float
+        annotations:
+          limi_tier: 3
+      outer_diameter_unit:
+        description: Unit associated with the value representing the outer diameter of a component
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
 
   LiMiDarkFieldStop:
     description:
@@ -608,7 +1005,33 @@ classes:
       - Also called a Phase Annulus.
     is_a: LiMiOpticalAperture
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      phasenumber:
+        description: This field captures the Phase Number used to identify the size of the annular slit of this Phase Ring. The Phase Number must match the Phase Plate found within a Phase-contrast capable Objective lens.
+        range: LiMiPhaseRingNumber
+        required: true
+      center_stop_diameter:
+        description: This filed records the physical diameter of the center-stop (i.e. opaque disk) of this Phase Ring.
+        range: float
+        annotations:
+          limi_tier: 3
+      center_stop_diameter_unit:
+        description: Unit associated with the value representing the center stop diameter of a phase ring
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      slit_width:
+        description: This field records the physical width of the annular slit of this Phase Ring.
+        range: float
+        annotations:
+          limi_tier: 3
+      slit_width_unit:
+        description: Unit associated with the width of the annular slit of this Phase Ring.
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
 
   LiMiHoffmanPlate:
     description:
@@ -629,12 +1052,28 @@ classes:
 
   LiMiIrisDiaphragm:
     description:
-      A Diaphragm, positioned trasversally to the optical axis bounded by
+      A Diaphragm, positioned transversally to the optical axis bounded by
       multiple leaves, usually metal, arranged so as to provide an opening of
       variable size, which is adjustable by means of a mechanical control.
     is_a: LiMiOpticalAperture
     attributes:
-      # Arnica to fill
+      #Arnica has filled
+      maximum_aperture_diameter:
+        description: This field records the Maximum physical Diameter of the Aperture of this Iris Diaphragm.
+        range: float
+        annotations:
+          limi_tier: 2
+      maximum_aperture_diameter_unit:
+        description: Unit associated with the maximum physical diameter of the iris diaphragm
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 2
+      shape:
+        description: This field captures the Shape of the aperture of this Iris Diaphragm.
+        range: LiMiIrisShape
+        annotations:
+          limi_tier: 3
 
   LiMiVarelRing:
     description:
@@ -649,13 +1088,61 @@ classes:
     description:
       A device that opens and closes, and that may be mechanically or
       electro-mechanically controlled. Shutters are typically used to control
-      the Light that raches the sample (i.e., to limit phototoxicity and
-      photobleaching especially in case of live specimens),  or the Detecrtor at
+      the Light that reaches the sample (i.e., to limit phototoxicity and
+      photobleaching especially in case of live specimens),  or the Detector at
       any one time. They can also be used for Excitation or Emission Wavelength
       selection.
     is_a: LiMiOpticalAperture
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      response_time:
+        description: This field (also known as Speed) records the time it takes for this Shutter to completely open and close, according to the Manufacturer.
+        range: float
+      response_time_unit:
+        description: Unit associated with the value representing the response time of the shutter to completely open and close
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit (s)
+        notes:
+          - AK made up this default unit
+      function:
+        description: This field records whether this Shutter is used for the control of illumination (especially relevant for live imaging), the selection of Excitation or Emission waveLengths or the control of the Light that reaches the Detector.
+        range: LiMiShutterFunction
+        annotations:
+          limi_tier: 2
+      operation_frequency:
+        description: This field records the Frequency of Operation of this Shutter, according to the Manufacturers.
+        range: float
+        annotations:
+          limi_tier: 2
+      operation_frequency_unit:
+        description: Unit associated with the value representing the operation frequency of the shutter
+        range: LiMiFrequencyUnit
+        ifabsent: LiMiFrequencyUnit (Hz)
+        notes:
+        - AK made up this default unit
+        annotations:
+          limi_tier: 2
+      motorized:
+        description: This field describes whether this device is Motor (True) or Manually (False) operated.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      maximum_aperture_diameter:
+        description: This field records the maximum physical diameter of the aperture of a shutter
+        range: float
+        annotations:
+          limi_tier: 2
+      maximum_aperture_diameter_unit:
+        description: Unit associated with the value representing the maximum physical diameter of the shutter aperture
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 2
+      multimode:
+        description: This field records whether (True) multiple operation modes are available for this Shutter or not (False). Typical operation modes are, Fast, Soft and Neutral Density. The Fast mode provides the quickest open and close action sequence for which the shutter is capable. The Soft mode gradually opens and closes the shutter to reduce vibration. Control of light intensity without affecting wavelength is accommodated by a Neutral Density shutter mode (for more details see https://www.microscopyu.com/applications/live-cell-imaging/the-automatic-microscope).
+        range: boolean
+        annotations:
+          limi_tier: 2
 
   ##########
   # Lenses #
@@ -681,7 +1168,138 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      magnification:
+        description: This field records the nominal Magnification provided by this Lens as specified by the Manufacturer.
+        range: float
+        required: true
+      lens_na:
+        description: This field captures the Numerical Aperture (NA) of this Lens expressed as a floating-point (real) number. NA is a number that was defined initially by Abbe to characterize Objectives and Condensers. NA can be calculated by the expression n sin alpha, where n is the Refractive Index of the medium between the Lens and the Sample, and alpha is half the Angular Aperture of the Lens. NA is a measure of how much of the illumination that leaves the specimen actually passes through the Lens. The larger the NA, the more information the lens can transmit. Expected range 0.02 - 1.5.
+        range: float
+      infinity:
+        description: This field records whether (True) or not (False) this Lens is infinity corrected. An Infinity-corrected Lens is fixed for an infinite sample to primary image distance. It needs to be used with a Tube Lens of appropriate focal length to obtain the specified magnification.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      composite:
+        description: This field records whether this Lens is Composite (True) or Simple (False).
+        range: boolean
+        annotations:
+          limi_tier: 3
+        required: true
+      shape:
+        description: This field records the shape of the profile (e.g., concave vs. convex) of this Lens. Please note that this attribute is often used to classify Lenses into categories.
+        range: LiMiLensShape
+        annotations:
+          limi_tier: 3
+        required: true
+        notes:
+          - AK this enum was originally called LensShape
+      geometry:
+        description: This field records the geometrical shape of this Lens' surface(s).
+        range: LiMiLensGeometry
+        annotations:
+          limi_tier: 3
+      coating:
+        description: An optical Coating consists of one or more thin layers of material deposited on an optical component such as a Lens or Mirror, which alters the way in which the optic reflects and transmits light. This field records the optical Coating used for this Lens.
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK- for later model revision-- add an enum with option other
+      attenuation_coefficient:
+        description: This field records the Attenuation Coefficient (AC) of this optical element. The AC (aka blocking coefficient) is a material property that characterizes the degree to which light is being blocked (i.e., scattered or absorbed) by it. AC is used as a measure of the out-of-band blocking of an optical Lens, Filter, Dichroic mirror over an extended range of the spectrum. AC is often reported in units of optical density (OD), whereas OD= -log10(T), and T=Transmittance (0≤T≤1).
+        range: float
+        annotations:
+          limi_tier: 3
+      working_distance:
+        description: This field reports the Working Distance of this Lens under normal operating conditions. The Working Distance is the distance (in air, or in the specified immersion liquid) between the front of an Objective and the surface of the cover glass or of the specimen if uncovered.
+        range: float
+        annotations:
+          limi_tier: 2
+      working_distance_unit:
+        description: Unit associated with the value representing the working distance of a lens
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 2
+      image_distance:
+        description: This field records the distance in air between the rear principal plane of this Lens and the primary Image plane.
+        range: float
+        annotations:
+          limi_tier: 3
+      image_distance_unit:
+        description: Unit associated with the value representing the image distance of a lens
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      front_focal_length:
+        description: This field records the distance (f) measured along the optical axis from the front principal plane of this Lens to the front focal plane (F).
+        range: float
+        annotations:
+          limi_tier: 3
+      front_focal_length_unit:
+        description: Unit associated with the value representing the front focal length of a lens
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      back_focal_length:
+        description: This field records the distance (f) measured along the optical axis from the front principal plane of this Lens to the front focal plane (F).
+        range: float
+        annotations:
+          limi_tier: 3
+      back_focal_length_unit:
+        description: Unit associated with the value representing the back focal length of a lens
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(mm)
+        annotations:
+          limi_tier: 3
+      radius_of_curvature:
+        description: This field records the Radius of Curvature of this Lens. A spherical Lens or Mirror surface has a center of curvature located either along or decentered from the system local optical axis. The vertex of the lens surface is located on the local optical axis. The distance from the vertex to the center of curvature is the Radius of Curvature of the surface.
+        range: float
+        annotations:
+          limi_tier: 3
+      radius_of_curvature_unit:
+        description: Unit associated with the value representing the radius of curvature of a lens
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(cm)
+        notes:
+        - AK made up this default unit
+        annotations:
+          limi_tier: 3
+      material_name:
+        description: This field records the chemical composition or designation of the Material this Lens is made of.
+        range: LiMiOpticalMaterial
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK cahanged the name of this enum
+      glass_code:
+        description: If available, this field records the international Glass Code of the material that constitutes this Lens. The Glass Code designation is based on U.S. military standard MIL-G-174, and it consists of a six-digit number specifying the glass according to its Refractive Index nd at the Fraunhofer d- (or D3-) line, and its Abbe Number Vd also taken at that line. The resulting Glass Code is the value of nd-1 rounded to three digits, followed by Vd rounded to three digits, with all decimal points ignored. For example, BK7 has nd = 1.5168 and Vd = 64.17, giving a six-digit Glass Code of 517642.
+        annotations:
+          limi_tier: 3
+      refractive_index:
+        description: This field records the Refractive Index of the material this Lens is made of, as specified by the Manufacturer. The Refractive Index is the ratio of the speed of light (more precisely, the phase velocity) in a vacuum versus that in a given medium.
+        range: float
+        annotations:
+           limi_tier: 2
+      abbe_number:
+        description: This field records the Abbe number of this Lens. The Abbe Number is a measure of the material's dispersion (variation of Refractive Index versus Wavelength), with high values indicating low dispersion.
+        range: float
+        annotations:
+          limi_tier: 3
+      density:
+        description: This field records the Density of the material this Lens is made of.
+        range: float
+        annotations:
+          limi_tier: 3
+      density_unit:
+        description: Unit associated with a value representing a material's density
+        range: LiMiDensityUnit
+        ifabsent: LiMiDensityUnit(kg/m3)
+        annotations:
+          limi_tier: 3
 
   LiMiMagnificationChanger:
     description:
@@ -697,7 +1315,7 @@ classes:
 
   LiMiGenericLens:
     description:
-      Any additional generic Lense positioned in the Light Path for a given
+      Any additional generic Lens positioned in the Light Path for a given
       Channel.
     notes:
       - DGG Should not be needed. If the exact type of lens is not known, the
@@ -727,7 +1345,7 @@ classes:
       light from the Light Source and concentrate it into a cone of light that
       illuminates the specimen. The aperture and angle of the light cone must be
       adjusted (via the size of the diaphragm) for each different objective Lens
-      with different numerical apertures. Conserser Lenses are typically housed
+      with different numerical apertures. Condenser Lenses are typically housed
       within a specific component of the Microscope called the Condenser.
     is_a: LiMiLens
 
@@ -762,7 +1380,7 @@ classes:
 
   LiMiPolarizationOptics:
     description:
-      A Polarization device positioned in the Ligth Path for an Instrument. A
+      A Polarization device positioned in the Light Path for an Instrument. A
       Polarization device is an optical filter rotatable through 360° that lets
       light waves of a specific polarization pass through while blocking light
       waves of other polarizations. This element can be associated with an
@@ -772,7 +1390,62 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      function:
+        description: This field records whether this Polarization Optics is used to generate (Polarizer) or to analyze (Analyzer) polarized light.
+        range: LiMiPolarizationOpticsFunction
+        required: true
+      cross_polarizer:
+        description: This field records whether (True) or not (False) this Polarization Optics is a combination of an Analyzer and a Polarizer positioned orthogonal to each other.
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      dic:
+        description: This field records whether (True) or not (False) this Polarization Optics is used for Differential Interference Contrast (DIC) microscopy.
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      beam_splitter:
+        description: This field records whether (True) or not (False) this is PolarizationOptics has a beam splitter function.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      faraday_isolator:
+        description: This field records whether (True) or not (False) this PolarizationOptics is a Faraday Isolator. A Faraday Isolator is an optical component which allows light to pass through in only ONE direction and therefore protects laser systems against back reflection. It uses the Faraday magneto-optical effect to turn the polarization of light between various polarizers.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      construction:
+        description: This field records the modality with which this PolarizationOptics is constructed.
+        range: LiMiPolarizationOpticsConstruction
+        annotations:
+          limi_tier: 2
+      retardation:
+        description: This field records the Phase shift that exists between the polarized light component projected along the fast axis and the part projected along the slow axis.
+        range: LiMiPolarizationOpticsRetardation
+        annotations:
+          limi_tier: 2
+      fabrication:
+        description: This field records the way in with which this PolarizationOptics is fabricated.
+        range: LiMiPolarizationOpticsFabrication
+        annotations:
+          limi_tier: 3
+      material_name:
+        description: This field records the chemical composition or designation of the Material this Polarization Optics is made of.
+        range: LiMiOpticalMaterial
+        annotations:
+          limi_tier: 3
+      glass_code:
+        description: If available, this field records the international Glass Code of the material that constitutes this Lens. The Glass Code designation is based on U.S. military standard MIL-G-174, and it consists of a six-digit number specifying the glass according to its Refractive Index nd at the Fraunhofer d- (or D3-) line, and its Abbe Number Vd also taken at that line. The resulting Glass Code is the value of nd-1 rounded to three digits, followed by Vd rounded to three digits, with all decimal points ignored. For example, BK7 has nd = 1.5168 and Vd = 64.17, giving a six-digit Glass Code of 517642.
+        annotations:
+          limi_tier: 3
+      wavelength_range:
+        description: This element records a range of Wavelengths this device is designed for, according to the Manufacturer. Multiple of this element may be used.
+        range: LiMiWavelengthRange
+        annotations:
+          limi_tier: 3
 
   ##########
   # Prisms #
@@ -801,7 +1474,116 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      dic:
+        description: This field records whether this Prism is used for Differential Interference Contrast (DIC) microscopy and, if so, what DIC-compatible type it is (i.e., deSenarmont, Nomarski or Wollaston).
+        range: LiMiDICPrismType
+      function:
+        description: This field records the function of this Prism. Beam-shaping (i.e., Anamorphic) Prism pairs are used for reshaping the profile of a laser beam. For example, the elliptical beam from a laser diode can be transformed into a beam with circular cross-section, by magnifying the elliptical beam in one dimension. They can also be used to convert a circular beam into an elliptical beam. Dispersing prisms can be employed to bend and separate light into its component wavelengths. Polarizing prisms (i.e., Glan–Thompson, Nomarski, Wollaston) are birefringent crystals, which divide incident non-polarized light into separate components polarized orthogonally to each other. Reflecting prisms are useful for redirecting (i.e., flip, invert, rotate, etc.) light beams by total internal reflection or for dividing them into two or more separate beams (i.e., beam-splitting) one.
+        range: LiMiPrismFunction
+        required: true
+        annotations:
+          limi_tier: 2
+      condenser:
+        description: This field records whether this Prism is within the Condenser (True) or the Objective (False).
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      oil_objective:
+        description: This field records whether this Prism is designed to work with oil Objectives (True) or not (False).
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      compound:
+        description: This field records whether this Prism is a Compound Prism (i.e., a set of multiple triangular prism elements placed in contact, and often cemented together to form a solid assembly; True) or a Simple Prism (False).
+        range: boolean
+        annotations:
+          limi_tier: 2
+      refractive_index:
+        description: This field records the Refractive Index of the material this Prism is made of, as specified by the Manufacturer.
+        range: float
+        annotations:
+          limi_tier: 3
+      reflectance:
+        description: This field records the maximum amount of light this Prism is capable of transmitting at peak Wavelength. It is represented as a fractional value from 0.0 to 1.0.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 3
+      angle_of_incidence:
+        description: This field records the Angle Of Incidence (AOI) is the angle between a beam of light incident on the Prism surface and the line perpendicular to the surface at the point of incidence, called the normal.
+        range: float
+        annotations:
+          limi_tier: 3
+      angle_of_incidence_unit:
+        description: Unit associated with the value representing an angle of incidence
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+      deviation_angle:
+        description: This field records the Deviation Angle of this Prism. A beam passing through an object like a prism is deflected twice- once entering, and again when exiting. The sum of these two deflections is called the deviation angle and is measured with respect to the incident ray.
+        range: float
+        annotations:
+          limi_tier: 3
+      deviation_angle_unit:
+        description: Unit associated with the value representing a deviation angle
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+      prism_angle:
+        description: This field records the Angle between two surfaces of this Prism.
+        range: float
+        annotations:
+          limi_tier: 3
+      prism_angle_unit:
+        description: Unit associated with the value representing a prism angle
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
+      design:
+        description: This field records the shape of the Prism with specific reference to the angles defined by its faces.
+        range: LiMiPrismDesign
+        annotations:
+          limi_tier: 3
+      abbe_number:
+        description: This field records the Abbe number of this Prism. The Abbe Number is a measure of the material's dispersion (variation of Refractive Index versus Wavelength), with high values indicating low dispersion.
+        range: float
+        annotations:
+          limi_tier: 3
+      material_name:
+        description: This field records the chemical composition or designation of the Material this Prism is made of.
+        range: LiMiOpticalMaterial
+        annotations:
+          limi_tier: 3
+      glass_code:
+        description: This field records the Density of the material this Prism is made of.
+        annotations:
+          limi_tier: 3
+      density:
+        description: This field records the Density of the material this Prism is made of.
+        range: float
+        annotations:
+          limi_tier: 3
+      density_unit:
+        description: Unit associated with the value representing a material's density
+        range: LiMiDensityUnit
+        ifabsent: LiMiDensityUnit(kg/m3)
+        annotations:
+          limi_tier: 3
+      wavelength_range:
+        description:
+          This element records the Range of Wavelengths this device is designed
+          for, according to the Manufacturer. Multiple of this element may be
+          used.
+        range: LiMiWavelengthRange
+        annotations:
+          limi_tier: 3
+
 
   ################
   # Stage insert #
@@ -814,7 +1596,24 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      sample_holder_type:
+        description: This field describes the type of Specimen Holder this Stage Insert is designed to hold.
+        range: LiMiSampleHolderType
+        required: true
+        annotations:
+          limi_tier: 2
+      temperature_controlled:
+        description: This field records whether this Stage Insert is Temperature Controlled (True), or not (False).
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      number_of_slots:
+        description: This field describes the number of Specimen Holder slots on this Stage Insert.
+        range: integer
+        annotations:
+          limi_tier: 2
 
   ##############################
   # Sample positioning devices #
@@ -835,7 +1634,105 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      encoded:
+        description: This field describes whether a Sample Positioning Device is equipped with a system (i.e., encoder) to monitor movement and provide automatic positional feedback for high-precision operations, and it specifies the type of encoders it has.
+        range: LiMiSamplePositioningEncoder
+        required: true
+      motorized:
+        description: This field describes whether (True) or not (False) a Sample Positioning Device is fitted with a Motorized component (i.e., ball-screw drives or rack mechanisms, sometimes equipped with precision calibration) to primarily assist in the translational movement of the sample in the X and Y or Z directions. A Motorized Stage is also often referred to as a Scanning Stage.
+        range: boolean
+        required: true
+      z_max_velocity:
+        description: This field describes the maximum Z-axis Velocity at which a Sample Positioning Device is capable of moving.
+        range: float
+      z_max_valocity_unit:
+        description: Unit associated with a value describing the Z-max velocity of the sample positioning device
+        range: LiMiVelocityUnit
+        ifabsent: LiMiVelocityUnit(nm/s)
+      z_repeatability:
+        description: This field captures the expected Accuracy with which a Sample Positioning Device is capable of returning to a previously visited Z-axis Position, as specified by the Manufacturer. This metric is important for example for Tiling.
+        range: float
+        required: true
+      z_repeatability_unit:
+        description: Unit associated with a value representing repeatability of the sample positioning device in the Z- direction
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      z_travel_range:
+        description: This field describes the total range in the Z-axis that a Sample Positioning Device can travel.
+        range: float
+      z_travel_range_unit:
+        description: Unit associated with a value representing the travel range of a sample positioning device in the Z- direction
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(µm)
+      movement_axes:
+        description: This field describes the axes or combination of axes along which a Sample Positioning Device is capable of moving.
+        range: LiMiSpatialAxes
+        annotations:
+          limi_tier: 2
+        required: true
+      built_in:
+        description: This field indicates whether a Sample Positioning Device is built into the Microscope Stand (True) or it is removable and interchangeable (False).
+        range: boolean
+        annotations:
+          limi_tier: 2
+          required: true
+      z_reproducibility:
+        description: This field captures the expected precision with which a Sample Positioning Device is capable of maintaining a given Z-axis Position over time as specified by the Manufacturer. This metric is generally referred to as Reproducibility and it might also be referred to as Focal Drift. This metric is particularly relevant for Stereology systems and for the calibration of Sample Positioning devices.
+        range: float
+        annotations:
+          limi_tier: 2
+      z_reproducibility_unit:
+        description: Unit associated with a value representing the z reproducibility or focal drift of a sample positioning system
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(µm)
+        annotations:
+          limi_tier: 2
+        notes:
+          - AK made up this default unit
+      z_settling_time:
+        description: This field describes the expected time it takes for a Sample Positioning Device to stabilize at the target Z-axis position, as specified by the Manufacturer.
+        range: float
+        annotations:
+          limi_tier: 2
+      z_settling_time_unit:
+        description: Unit associated with the value representing the time taken by a sample positioning system to stabilize at a target Z- position
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+        annotations:
+          limi_tier: 2
+      z_resolution:
+        description: This field describes the Z-axis motion Resolution of a Sample Positioning Device as specified by the Manufacturer.
+        range: float
+        annotations:
+          limi_tier: 2
+      z_resolution_unit:
+        description: Unit associated with a value representing the Z-resolution of the motion of a sample positioning device
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+        annotations:
+          limi_tier: 2
+      z_position_linearity_error:
+        description: This field describes the Z-axis positioning error (typically expressed in % error) associated with a Sample Positioning Device as specified by the Manufacturer.
+        range: float
+        annotations:
+          limi_tier: 2
+      type:
+        description: This field describes the general category of a Sample Positioning Device.
+        range: LiMiSamplePositioningDevice
+        annotations:
+          limi_tier: 3
+      rotation_angle:
+        description: The angle by which a Sample Positioning Device is capable of rotating.
+        range: float
+        annotations:
+          limi_tier: 3
+      rotation_angle_unit:
+        description: Unit associated with the value representing the rotation angle of a sample positioning device
+        range: LiMiAngleUnit
+        ifabsent: LiMiAngleUnit(deg)
+        annotations:
+          limi_tier: 3
 
   LiMiFocusingDevice:
     description:
@@ -886,7 +1783,86 @@ classes:
       rotation of the Sample in the X-, Y-, and Z-axes.
     is_a: LiMiSamplePositioningDevice
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      xy_max_velocity:
+        description: This field describes the maximum XY-axis Velocity at which a Stage is capable of moving.
+        range: float
+      xy_max_velocity_unit:
+        description: Unit associated with the maximum XY-axis velocity of a stage
+        range: LiMiVelocityUnit
+        ifabsent: LiMiVelocityUnit(nm/s)
+      xy_repeatability:
+        description: This field captures the expected accuracy with which a Stage is capable of returning to a previously visited XY-plane Position, as specified by the Manufacturer. This metric is important for example for Tiling.
+        range: float
+        required: true
+      xy_repeatability_unit:
+        description: Unit associated with a value representing repeatability of positioning of a stage in the XY- plane
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(nm)
+      x_travel_range:
+        description: This field describes the total range in the X-axis that a stage can travel.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 2
+      x_travel_range_unit:
+        description: Unit associated with a value representing the travel range of a stage in the X- direction
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(µm)
+        required: true
+        annotations:
+          limi_tier: 2
+      y_travel_range:
+        description: This field describes the total range in the Y-axis that a Stage can travel.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 2
+      y_travel_range_unit:
+        description: Unit associated with a value representing the travel range of a stage in the Y- direction
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(µm)
+        required: true
+        annotations:
+          limi_tier: 2
+      xy_reproducibility:
+        description: This field captures the expected Precision with which a Stage is capable of maintaining a given XY-plane Position over time during as specified by the Manufacturer. This metric is generally referred to as Reproducibility and it might also be referred to as Lateral Drift. This metric is particularly relevant for Stereology systems and for the calibration of Sample Positioning devices.
+        range: float
+        annotations:
+          limi_tier: 2
+      xy_reproducibility_unit:
+        description: Unit associated with a value representing the XY reproducibility of a stage
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit(µm)
+        annotations:
+          limi_tier: 2
+        xy_settling_time:
+          description: This field describes the expected time it takes for a Stage to stabilize at the target XY-plane position, as specified by the Manufacturer.
+          range: float
+          annotations:
+            limi_tier: 2
+        xy_settling_time_unit:
+          description: Unit associated with the value representing the time taken by a stage to stabilize at a target XY-plane position
+          range: LiMiTimeUnit
+          ifabsent: LiMiTimeUnit(ms)
+          annotations:
+            limi_tier: 2
+        xy_resolution:
+          description: This field describes the XY-plane motion Resolution of a Stage as specified by the Manufacturer.
+          range: float
+          annotations:
+            limi_tier: 2
+        xy_resolution_unit:
+          description: Unit associated with a value representing the XY-resolution of the motion of a stage
+          range: LiMiLengthUnit
+          ifabsent: LiMiLengthUnit(nm)
+          annotations:
+            limi_tier: 2
+        xy_position_linearity_error:
+          description: This field describes the XY-axis positioning error (typically expressed in % error) associated with a Stage as specified by the Manufacturer.
+          range: float
+          annotations:
+            limi_tier: 2
 
   LiMiMechanicalStage:
     description:
@@ -924,7 +1900,25 @@ classes:
       - id
       - name
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      mechanism:
+        description: This field refers to the mechanism employed by a Focus Stabilization Device. Software (also referred to as Image) based methods rely on the Acquisition of a Z-series of images followed by image analysis to determine the best focal position based primarily on contrast comparisons. Hardware based methods rely on an external light beam (typically infrared) that is reflected off the coverslip and whose reflection is measured to determine and correct the focal offset of the sample.
+        range: LiMiFocusStabilizationType
+        required: true
+      algorithm:
+        description: In case a Focus Stabilization Device is Software Based, this field refers to the name of the Algorithm used to maintain focus.
+      two_step:
+        description: This field records whether a Focus Stabilization Device utilizes a 2-step progressive procedure (True) or not (False).
+        range: boolean
+      wavelength:
+        description: This field refers to the Wavelength of the beam that is relevant for a Focus Stabilization Device. For example this might represent the Wavelength of the beam that is reflected against the Coverglass to obtain a measurement of the focal offset of the sample at a given time during Acquisition.This field refers to the Wavelength of the beam that is relevant for this Focus Stabilization Device. For example this might represent the Wavelength of the beam that is reflected against the Coverglass to obtain a measurement of the focal offset of the sample at a given time during Acquisition.
+        range: float
+      wavelength_range:
+        description: Unit associated with a value representing a wavelength
+        range: LiMiWavelengthRange
+        ifabsent: LiMiWavelengthRange (nm)
+        notes:
+          - AK made up this default unit
 
   ####################
   # Optical assembly #
@@ -945,7 +1939,25 @@ classes:
       - name
       - object_type
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      filter_ref:
+        description: This refers to an available Filter, which is part of this Optical Assembly.
+        range: LiMiFilter
+      lens_ref:
+        description: This refers to an available Lens, which is part of this Optical Assembly.
+        range: LiMiLens
+      mirrorring_device_ref:
+        description: This refers to an available Mirroring Device, which is part of this Optical Assembly.
+        range: LiMiMirroringDevice
+      optical_aperture_ref:
+        description: This refers to an available Optical Aperture, which is part of this Optical Assembly.
+        range: LiMiOpticalAperture
+      polarization_optics_ref:
+        description: This refers to an available Polarization Optics, which is part of this Optical Assembly.
+        range: LiMiPolarizationOptics
+      prism_ref:
+        description: This refers to an available Prism, which is part of this Optical Assembly.
+        range: LiMiPrism
 
   LiMiBeamCollimator:
     description:
@@ -1064,23 +2076,6 @@ classes:
   # Detectors #
   #############
 
-  LiMiDetector:
-    description:
-      A Detector available for an Instrument. An Instrument may have more than
-      one Detector of different types, such as a Photomultiplier, or a Camera.
-      The Detector ID can be used as a reference within the Channel element. The
-      values stored in Detector represent the fixed values, variable values
-      modified during the Acquisition go in DetectorSettings.
-    is_a: LiMiManufacturerSpecs
-    extra_slots:
-      allowed: true
-    slots:
-      - id
-      - name
-      - object_type
-    attributes:
-      # Arnica to fill
-
   LiMiCamera:
     description:
       A Camera is a device that converts optical brightness into an electrical
@@ -1090,7 +2085,92 @@ classes:
       or Analog Video.
     is_a: LiMiDetector
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      array_width:
+        description: This field records the Width of a Camera chip or sensor area, expressed in Pixel.
+        range: integer
+      array_height:
+        description: This field records the Height of a Camera chip or sensor area, expressed in Pixel.
+        range: integer
+      pixel_width:
+        description: This field records the Physical Width of each Camera Pixel.
+        range: float
+        required: true
+      pixel_width_unit:
+        description: Unit associated with the value representing the width of a camera pixel
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit (µm)
+      pixel_height:
+        description: This field records the Physical Height of each Camera Pixel.
+        range: float
+        required: true
+      pixel_height_unit:
+        description: Unit associated with the value representing the height of a camera pixel
+        range: LiMiLengthUnit
+        ifabsent: LiMiLengthUnit (µm)
+      illumination:
+        description: This field records the type of illumination the Camera chip receives.
+        range: LiMiCameraIllumination
+        required: true
+        annotations:
+          limi_tier: 2
+      manufacturer_offset:
+        description: This field reports the Camera Offset when it is pre-set by the Manufacturer. The Offset is an electronic baseline added to the output signal from the sensor to ensure that the displayed signal level is always a positive number of counts.
+        range: float
+        annotations:
+          limi_tier: 2
+      color:
+        description: This field records whether a camera is a Color Camera and what type it is.
+        range: LiMiCameraColorMode
+        annotations:
+          limi_tier: 2
+      pixel_well_capacity:
+        description: This field records the maximum amount of charge each Pixel Well can hold, measured in electron counts.
+        range: integer
+        required: true
+        annotations:
+          limi_tier: 3
+      pixel_well_capacity_unit:
+        description: Unit associated with a value representing the charge a camera pixel well can hold
+        range: LiMiElectricChargeUnit
+        ifabsent: LiMiElectricChargeUnit (e-)
+        annotations:
+          limi_tier: 3
+      maximum_frame_rate:
+        description: This field records the maximal rate at which a camera can acquire a single full-frame
+        range: float
+        required: true
+        annotations:
+          limi_tier: 2
+      maximum_frame_rate_unit:
+        description: Unit associated with a value representing the maximum frame rate associated with a camera
+        range: LiMiFrequencyUnit
+        ifabsent: LiMiFrequencyUnit (fps)
+        annotations:
+          limi_tier: 2
+      maximum_readout_rate:
+        description: This field records the maximal pixel Readout Rate allowed by a Camera.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 3
+      maximum_readout_rate_unit:
+        description: Unit associated with a value representing the maximum pixel read out rate of a camera
+        range: LiMiFrequencyUnit
+        ifabsent: LiMiFrequencyUnit (MHz)
+        annotations:
+          limi_tier: 3
+      vertical_clock_speed:
+        description: This field records the maximal speed at which each vertical column of pixels in the camera chip can be shifted down and read.
+        range: float
+        annotations:
+          limi_tier: 3
+      vertical_clock_speed_unit:
+        description: Unit associated with a value representing the vertical clock speed of a camera chip
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit (μs)
+        annotations:
+          limi_tier: 3
 
   LiMiAnalogVideoCamera:
     description: A device used to capture Analog Videos.
@@ -1144,7 +2224,55 @@ classes:
       Microscopy.
     is_a: LiMiDetector
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      coating:
+        description: This field records the Coating Material used to increase the photoelectric properties of the metallic cathode used in a Detector. The coating releases electrons much more readily than the underlying metal, allowing it to detect the low-energy photons in infrared radiation. The lens transmits the radiation from the object being viewed to a layer of coated glass. The photons strike the metal surface and transfer electrons to its rear side. The freed electrons are then collected to produce the final image.
+        required: true
+        range: LiMiCoatingMaterial
+      signal_processing:
+        description: This field describes the method employed by a device to process the output signal and convert it into a measure of incident light intensity. In Photon Counting mode the system is set in a manner in which each photon hitting the head of the detector gives either no or 1 diskrete pulse. This way by counting the pulses one is sure to be counting individual photons. In Analog mode the system is set so the mean value of all signal pulses is used as a measure of intensity.
+        range: LiMiSignalProcessingMode
+      response_time:
+        description: This field records the Time required for a Detector to respond to an optical input.
+        range: float
+        annotations:
+          limi_tier: 3
+      response_time_unit:
+        description: Unit associated with a value representing the response time of a point detector
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      dead_time:
+        description: This field records the Time required for a Detector to become responsive again after being hit by a photon.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 3
+      dead_time_unit:
+        description: Unit associated with a value representing the dead time of a point detector
+        range: LiMiTimeUnit
+        ifabsent: LiMiTimeUnit(ms)
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK made up this default unit
+      radiant_sensitivity:
+        description: This field records the Time required for a Detector to become responsive again after being hit by a photon.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 3
+      radiant_sensitivity_unit:
+        description: Unit associated with a value representing the radiant sensitivity of a point detector
+        range: LiMiPowerUnit
+        annotations:
+          limi_tier: 3
+        notes:
+          - AK could not make up this default unit
+          - AK has also found that this should be in units of A/W.
 
   LiMiPhotoMultiplier:
     description:
@@ -1159,7 +2287,34 @@ classes:
       inherent spatial information of the image.
     is_a: LiMiPointDetector
     attributes:
-      # Arnica to fill
+      # Arnica has filled
+      collection_efficiency:
+        description: This field measures the probability that photoelectrons will land on the effective area of the first dynode of the photomultiplier stage. While there might be dispersion at the second and later dynodes, this tends to have less of an effect on the total collection efficiency as the number of emitted electrons increases greatly.
+        range: float
+        required: true
+        annotations:
+          limi_tier: 2
+      multianode:
+        description: This field records whether (True) or not (False) a Photo Multiplier Tube is composed of an array of multiple
+        range: boolean
+        required: true
+        annotations:
+          limi_tier: 2
+      multianode_channel_nr:
+        description: In case a Detector is a Multianode composed of an array of multiple Photomultiplier Tubes, this field records the number of Channels it consists of.
+        range: integer
+        annotations:
+          limi_tier: 3
+      multianode_arrangement:
+        description: In case a Detector is a Multianode composed of an array of multiple Photomultiplier Tubes, this field records the number of Channels it consists of.
+        range: LiMiMultianodeArrangement
+        annotations:
+          limi_tier: 3
+      head_on:
+        description: This is True if the Photocathode is positioned at either end of the vacuum tube. This is False if the photocathode element is located on the side of the vacuum tube (side-on geometry).
+        range: boolean
+        annotations:
+          limi_tier: 3
 
   LiMiPhotoDiode:
     description:
@@ -1234,7 +2389,7 @@ enums:
       ? Chromatic and Curvature
       Coma:
       Curvature:
-      Distorsion:
+      Distortion:
       Spherical:
       Other:
 
@@ -1293,3 +2448,382 @@ enums:
       EBCCD:
       MicroChannelPlate:
       Other:
+
+  LiMiMicroscopeTableType:
+    description: The type of microscope table on which a microscope is set
+    notes:
+      - AK made this up as opposed to 'The type of microscope table'
+    permissible_values:
+      Air active:
+      Air passive:
+      Non-isolating Frame:
+      Simple Bench:
+      Stone:
+      Other:
+
+  LiMiEnvironmentalTemperatureControl:
+    description: The type of temperature control offered by an Environmental Control Chamber
+    notes:
+     - AK original def- This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
+    permissible_values:
+        None:
+        Cage-incubator enclosure:
+        Objective heater:
+        Stage-top chamber:
+        Other:
+
+  LiMiEnvironmentalHumidityControl:
+    description: The type of humidity control offered by an Environmental Control Chamber
+    notes:
+      - AK original def- This field captures whether this Environmental Control Device provides Humidity control and what type of control it provides. If no Humidity control is provided please enter "None".
+    permissible_values:
+      None:
+      Active:
+      Passive:
+      Mineral oil:
+      Water-bath:
+      Other:
+
+  LiMiEnvironmentalCO2Control:
+    description: The type of CO2 control offered by an Environmental Control Chamber
+    notes:
+      - AK original def- This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+    permissible_values:
+      None:
+      Gas mixer:
+      Pre-mixed:
+      Other:
+
+  LiMiLightGuideType:
+    description: The type of Lightguide used for light source coupling in a microscope
+    notes:
+      - AK original def- This field records the general category of Light Guide used in this case.
+    permissible_values:
+      Fiber Optics:
+      Liquid:
+      Other:
+
+  LiMiLightGuideGeometry:
+    description: The cross-section shape of a light guide
+    permissible_values:
+      Diffuse Axial:
+      Backlight:
+      Line Light:
+      Ring Light:
+      Spot Light:
+      Other:
+
+  LiMiLightGuideMaterialName:
+    description: The chemical composition of the material from which a light guide is constructed
+    notes:
+      - AK original def- This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
+    permissible_values:
+      Borosilicate:
+      Quartz:
+      Silica:
+      Other:
+
+  LiMiWaveguideMode:
+    notes:
+    - AK renamed this enum
+    - AK has made the description up
+    description: The modes imposed by the light guide onto the light traversing it
+    permissible_values:
+      Transverse Electric:
+      Transverse Electromagnetic:
+      Transverse Magnetic:
+      Hybrid:
+      Other:
+
+
+  LiMiMirrorType:
+    description: The general types of mirrors
+    permissible_values:
+      Convex:
+      Concave:
+      Planar:
+      Other:
+
+  LiMiMirrorGeometry:
+    description: This field records the geometrical shape of the surface(s) of this Mirror.
+    permissible_values:
+      Aspherical:
+      Cylindrical:
+      Ellipsoidal:
+      Hyperboloidal:
+      Paraboloidal:
+      Spherical:
+      Other:
+
+  LiMiOpticalMaterial:
+    description: This field records the chemical composition or the designation of the substrate of this Mirroring Device.
+    permissible_values:
+      alpha-Barium Borate:
+      Barium Crown (BAK/N-BAK):
+      Barium Flint (BAF/N-BAF):
+      Barium Heavy Flint (BASF/N-BASF):
+      Barium Light Flint (BALF/N-BALF):
+      Borofloat:
+      Boron Crown (BK/N-BK):
+      Borosilicate:
+      Calcite:
+      Calcium:
+      Fluoride (CaF2):
+      Crown (K/N-K):
+      Crown Flint (KF/N-NK):
+      Crystal Quartz:
+      Dense Crown (SK/N-SK):
+      Dense Flint (SF/N-SF):
+      Extra Dense Crown (SSK/N-SSK):
+      Extra Light Flint (LLF):
+      Flint (F/N-F):
+      Fluorine Crown (FK/N-FK):
+      Germanium:
+      Lanthanum Crown (LAK/N-LAK):
+      Lanthanum Dense Flint (LASF/N-LASF):
+      Lanthanum Flint (LAFN/N-LAF):
+      Light Flint (LF):
+      Magnesium Fluoride (MgF2):
+      Phosphate Crown (PK/N-PK):
+      Phosphate Dense (PSK/N-PSK):
+      Polytetrafluoroethylene (PFTE):
+      Pyrex:
+      Rutile (TiO2):
+      Short Flint Special (KZFS/N-KZFS):
+      Silicon (Si):
+      UV-Grade Fused Silica (UVFS):
+      Yttrium Orthovanadate (YVO4):
+      Zerodur (Lithium Aluminum Silicon Oxide):
+      Zinc Crown (ZK/N-ZK):
+      Zinc Selenide (ZnSe):
+      Other:
+
+  LiMiPhaseRingNumber:
+    description: This field records the phase number indicating the size of the annular slit of the phase ring
+    notes:
+    - AK made this definition up
+    permissible_values:
+      PhL:
+      Ph1:
+      Ph2:
+      Ph3:
+      Ph4:
+
+  LiMiIrisShape:
+    description: This field shape of the aperture of the iris diaphragm
+    permissible_values:
+      Diamond:
+      Round:
+      Slit:
+      Square:
+      Other:
+
+  LiMiShutterFunction:
+    description: This field records possible purposes fulfilled by the shutter
+    permissible_values:
+      Detection control:
+      Illumination control:
+      Wavelength selection:
+      Other:
+
+  LiMiLensShape:
+    description: This field records the shape of the profile of a Lens.
+    permissible_values:
+      Amici-Bertrand:
+      Biconvex:
+      Biconcave:
+      Plano Convex:
+      Plano Concave:
+      Convex Meniscus:
+      Concave Meniscus:
+      Equiconvex:
+      Other:
+
+  LiMiLensGeometry:
+    description: The geometrical shape of the lens's surface
+    permissible_values:
+      Spherical:
+      Aspherical:
+      Cylindrical:
+      Ball:
+      Hemispheric-ball:
+      Cone:
+      Drum:
+      Rod:
+      Toric:
+
+  LiMiPolarizationOpticsFunction:
+    description: This field records whether this Polarization Optics is used to generate (Polarizer) or to analyze (Analyzer) polarized light.
+    permissible_values:
+      Polarizer:
+      Analyzer:
+      Other:
+
+  LiMiPolarizationOpticsConstruction:
+    description: This field records the modality with which this PolarizationOptics is constructed.
+    permissible_values:
+      Achromatic:
+      Zero Order:
+      Multiple Order:
+      Other:
+
+  LiMiPolarizationOpticsRetardation:
+    description: This field records the Phase shift that exists between the polarized light component projected along the fast axis and the part projected along the slow axis.
+    permissible_values:
+      Full Wave:
+      Half Wave:
+      Quarter Wave:
+      Other:
+
+  LiMiPolarizationOpticsFabrication:
+    description: This field records the way in with which this Polarization Optics is fabricated.
+    permissible_values:
+      Birefringent:
+      Film:
+      Polarizing Beamsplitter:
+      Polarizing BandPass:
+      Polymer:
+      Quartz:
+      Variable:
+      Wire Grid:
+      Other:
+    notes:
+      - AK these values seem to be mixing two different concepts, example polymer, quartz are materials, while birefringence is a property and film is a coating
+
+  LiMiDICPrismType:
+    description: This field records the type of prism used in DIC microscopy
+    permissible_values:
+      deSenarmont:
+      Nomarski:
+      Wollaston:
+      None:
+
+  LiMiPrismFunction:
+    description: This field records the function of this prism.
+    permissible_values:
+      Beam-shaping:
+      Deflecting:
+      Polarizing:
+      Reflecting:
+      Refracting (or Dispersing):
+      Other:
+
+  LiMiPrismDesign:
+    description: This field records the shape of the Prism reference to the angles defined by its faces.
+    permissible_values:
+      Rhomboid:
+      Wedge:
+      Glan-Foucault:
+      Glan-Taylor:
+      Glan-Thompson:
+      Nicol:
+      Nomarski:
+      Rochon:
+      Senarmont:
+      Wollaston:
+      Abbe-Konig:
+      Amici-roof:
+      Dove:
+      Penta:
+      Porro:
+      Porro-Abbe:
+      Right-Angle:
+      Schmidt–Pechan:
+      Abbe:
+      Amici:
+      Grism:
+      Pellin–Broca:
+      Triangular:
+      Other:
+
+  LiMiSampleHolderType:
+    description: Available types of sample holders
+    permissible_values:
+      Chambered Coverslip:
+      Culture Plate:
+      Microscope Slide:
+      Multiwell Plate:
+      Petridish:
+      Other:
+
+  LiMiSamplePositioningEncoder:
+    description: Available encoder types to monitor movement of a sample positioning device and provide positional feedback
+    permissible_values:
+      None:
+      Linear:
+      Rotary:
+      Other:
+
+  LiMiSpatialAxes:
+    description: Available values to describe the unit of a value that represents a spatial axis
+    permissible_values:
+      X:
+      Y:
+      Z:
+      XY:
+      XZ:
+      YZ:
+      XYZ:
+
+  LiMiSamplePositioningDevice:
+    description: Available sample positioning devices
+    permissible_values:
+      Centering:
+      DC Servo Motor:
+      Gliding:
+      Levelling:
+      Linear:
+      Rigid Stand:
+      Stepper:
+      Translational:
+      Other:
+
+  LiMiFocusStabilizationType:
+    description: A list of focus stabilization mechanisms employed by a focus stabilization device
+    permissible_values:
+      Hardware based:
+      Software (aka Image) based:
+      Other:
+
+  LiMiCameraIllumination:
+    description: A list of types of illumination received by a camera
+    permissible_values:
+      Back:
+      Front:
+      Other:
+
+  LiMiCameraColorMode:
+    description: Available colour modes of a camera
+    permissible_values:
+      None:
+      3-Sensor:
+      Bayer:
+      CYGM:
+        title: Cyan, Yellow, Green, Magenta
+      Multilayer:
+      Other:
+
+  LiMiCoatingMaterial:
+    description: Materials possibly used to coat a point photodetector
+    permissible_values:
+      Bi-alkali:
+      Multi-alkali:
+      Gallium arsenide:
+      Gallium arsenide phosphide:
+      Other:
+
+  LiMiSignalProcessingMode:
+    description: Possible signal processing methods employed by the photodetector to convert the output signal into a measure of light intensity
+    permissible_values:
+      Analog:
+      Photon counting:
+      Other:
+
+  LiMiMultianodeArrangement:
+    description: Possible arrangements of photomultiplier tubes in a detector
+    permissible_values:
+      Linear:
+      Round:
+      Square:
+      Other:
+
