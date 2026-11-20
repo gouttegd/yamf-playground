@@ -535,7 +535,7 @@ classes:
           limi_tier: 3
         range: LiMiTimeUnit
         notes:
-          -AK missing this default unit
+          - AK missing this default unit
       nr_of_slots:
         description: How many Slots this Optics Holder has.
         annotations:
@@ -2487,7 +2487,7 @@ enums:
   LiMiEnvironmentalCO2Control:
     description: The type of CO2 control offered by an Environmental Control Chamber
     notes:
-      -AK original def- This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+      - AK original def- This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
     permissible_values:
       None:
       Gas mixer:
@@ -2497,7 +2497,7 @@ enums:
   LiMiLightGuideType:
     description: The type of Lightguide used for light source coupling in a microscope
     notes:
-      -AK original def- This field records the general category of Light Guide used in this case.
+      - AK original def- This field records the general category of Light Guide used in this case.
     permissible_values:
       Fiber Optics:
       Liquid:
@@ -2516,7 +2516,7 @@ enums:
   LiMiLightGuideMaterialName:
     description: The chemical composition of the material from which a light guide is constructed
     notes:
-      -AK original def- This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
+      - AK original def- This field records the chemical composition or the non-proprietary trade designation of the material used to construct this Light Guide.
     permissible_values:
       Borosilicate:
       Quartz:
