@@ -222,82 +222,81 @@ classes:
         description: This field captures whether this Environmental Control Device provides Humidity control and what type of control it provides. If no Humidity control is provided please enter "None".
         range: LiMiEnvironmentalHumidityControl
         required: true
-        co2_control:
-          description: This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
-          range: LiMiEnvironmentalCO2Control
-          required: true
-        o2_control:
-          description: This field captures whether (True) or not (False) this
-            Environmental Control Device provides O2 control.
-          range: boolean
-          annotations:
-            limi_tier: 2
-          required: true
-          notes:
+      co2_control:
+        description: This field captures whether this Environmental Control Device provides CO2 control and what type of control it provides. If no CO2 control is provided please enter "None".
+        range: LiMiEnvironmentalCO2Control
+        required: true
+      o2_control:
+        description: This field captures whether (True) or not (False) this Environmental Control Device provides O2 control.
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+        notes:
             - DGG - This matches what is described by the spreadsheet, but it doesn’t make much sense in my opinion-- there’s an inherent contradiction in saying that a field belongs to the second tier and saying that it is required.
-        vibration_control:
-          description: This field captures whether (True) or not (False) this Environmental Control Device provides vibration control.
-          range: boolean
-          annotations:
-            limi_tier: 2
-        stand_compatibility:
-          description: This field captures what Microscope Stand type this Environmental Control Chamber is compatible with.
-          range: LiMiEnvironmentalControlStandCompatibility
-          annotations:
-            limi_tier: 2
-          required: true
-        perfusion:
-          description: This field captures whether (True) or not (False) this Environmental Control Device supports sample Perfusion.
-          range: boolean
-          annotations:
-            limi_tier: 2
-          required: true
-        lid_material:
-          description: In case this Environmental Control Device consists of a Sample Holder Chamber, this field captures the Material that constitutes the Lid of the Chamber.
-          annotations:
-            limi_tier: 2
-        max_temperature:
-          description: This field captures the Maximum Temperature that can be stably maintained by this Environmental Control Device.
-          range: float
-          annotations:
-            limi_tier: 3
-          required: true
-        max_temperature_unit:
-          description: Unit associated with the value representing the maximum temperature that can be stably maintained by this Environmental Control Device.
-          range: LiMiTemperatureUnit
-          ifabsent: LiMiTemperatureUnit(C)
-          annotations:
-            limi_tier: 3
-          required: true
-        min_temperature:
-          description: This field captures the Minimum Temperature that can be stably maintained by this Environmental Control Device.
-          range: float
-          annotations:
-            limi_tier: 3
-          required: true
-        min_temperature_unit:
-          description: Unit associated with the value representing the minimum temperature that can be stably maintained by this Environmental Control Device.
-          range: LiMiTemperatureUnit
-          ifabsent: LiMiTemperatureUnit(C)
-          annotations:
-            limi_tier: 3
-          required: true
-        temperature_accuracy:
-          description: This field captures the Temperature control Accuracy provided by this Environmental Control Device.
-          range: float
-          annotations:
-            limi_tier: 3
-        temperature_accuracy_unit:
-          description: Unit associated with the temperature control accuracy provided by this Environmental Control Chamber
-          range: LiMiTemperatureUnit
-          ifabsent: LiMiTemperatureUnit(C)
-          annotations:
-            limi_tier: 3
-        TTL:
-          description: This field captures whether (True) or not (False) this Environmental Control Device can be controlled by a TTL signal.
-          range: boolean
-          annotations:
-            limi_tier: 3
+      vibration_control:
+        description: This field captures whether (True) or not (False) this Environmental Control Device provides vibration control.
+        range: boolean
+        annotations:
+          limi_tier: 2
+      stand_compatibility:
+        description: This field captures what Microscope Stand type this Environmental Control Chamber is compatible with.
+        range: LiMiEnvironmentalControlStandCompatibility
+        annotations:
+          limi_tier: 2
+        required: true
+      perfusion:
+        description: This field captures whether (True) or not (False) this Environmental Control Device supports sample Perfusion.
+        range: boolean
+        annotations:
+          limi_tier: 2
+        required: true
+      lid_material:
+        description: In case this Environmental Control Device consists of a Sample Holder Chamber, this field captures the Material that constitutes the Lid of the Chamber.
+        annotations:
+          limi_tier: 2
+      max_temperature:
+        description: This field captures the Maximum Temperature that can be stably maintained by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+      max_temperature_unit:
+        description: Unit associated with the value representing the maximum temperature that can be stably maintained by this Environmental Control Device.
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+        required: true
+      min_temperature:
+        description: This field captures the Minimum Temperature that can be stably maintained by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+        required: true
+      min_temperature_unit:
+        description: Unit associated with the value representing the minimum temperature that can be stably maintained by this Environmental Control Device.
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+        required: true
+      temperature_accuracy:
+        description: This field captures the Temperature control Accuracy provided by this Environmental Control Device.
+        range: float
+        annotations:
+          limi_tier: 3
+      temperature_accuracy_unit:
+        description: Unit associated with the temperature control accuracy provided by this Environmental Control Chamber
+        range: LiMiTemperatureUnit
+        ifabsent: LiMiTemperatureUnit(C)
+        annotations:
+          limi_tier: 3
+      TTL:
+        description: This field captures whether (True) or not (False) this Environmental Control Device can be controlled by a TTL signal.
+        range: boolean
+        annotations:
+          limi_tier: 3
 
   #################
   # Light sources #
@@ -404,7 +403,7 @@ classes:
       #Arnica has filled
       type:
         description: This field records the general category of Light Guide used in this case.
-        range: LiMiLightGuide
+        range: LiMiLightGuideType
         annotations:
           limi_tier: 2
         required: true
@@ -765,7 +764,7 @@ classes:
       angle_of_incidence_unit:
         description: Unit associated with the value representing the optimal angle of incidence for this mirror
         range: LiMiAngleUnit
-        ifabsent: LiMiLengthUnit(deg)
+        ifabsent: LiMiAngleUnit(deg)
         annotations:
           limi_tier: 3
       substrate_type:
@@ -2077,23 +2076,6 @@ classes:
   # Detectors #
   #############
 
-  LiMiDetector:
-    description:
-      A Detector available for an Instrument. An Instrument may have more than
-      one Detector of different types, such as a Photomultiplier, or a Camera.
-      The Detector ID can be used as a reference within the Channel element. The
-      values stored in Detector represent the fixed values, variable values
-      modified during the Acquisition go in DetectorSettings.
-    is_a: LiMiManufacturerSpecs
-    extra_slots:
-      allowed: true
-    slots:
-      - id
-      - name
-      - object_type
-    attributes:
-      # Arnica thinks this belongs to and sees it has been completed under core hardware
-
   LiMiCamera:
     description:
       A Camera is a device that converts optical brightness into an electrical
@@ -2616,74 +2598,6 @@ enums:
       Zinc Selenide (ZnSe):
       Other:
 
-  LiMiFilterType:
-    #AK copied this from core hardware
-    description: This field captures the Type of Filter used in this microscope.
-    permissible_values:
-      Bandpass:
-      BandStop:
-      Multipass:
-      Notch:
-      Longpass:
-      Shortpass:
-      Other:
-
-  LiMiFilterCoatingMethod:
-   #AK copied this from core hardware
-    description:
-      This field records the type of Coating used in the specific filter.
-    notes:
-      - AK made the description up
-    permissible_values:
-      HardCoated:
-      SoftCoated:
-      Other:
-
-  LiMiFilterLightPathLocation:
-    #AK copied this from core hardware
-    description:
-      This field records the location of this component in the Microscope Light
-      Path.
-    permissible_values:
-      ? Infinity Space
-      ? Camera Port
-      ? Illumination Port
-        Other:
-
-  LiMiFilterTechnology:
-    #AK copied this from core hardware
-    description:
-      This field records the filtering Technology utilized for this optical
-      element.
-    permissible_values:
-      ? Absorption Colored Glass
-      Metallic-coating:
-      Polymer-Based:
-      Thin-film:
-      interference-coating:
-      Other:
-
-  LiMiFilterAttenuationMethod:
-    #AK copied this from core hardware
-    description:
-      This field records the mean by which this optical element achieves
-      out-of-band transmission attenuation.
-    permissible_values:
-      Absorption:
-      Reflection:
-      Refraction:
-      Other:
-
-  LiMiFilterPolarization:
-    #AK copied this from core hardware
-    description:
-      This field records the polarization effect of this optical element.
-    permissible_values:
-      Circular:
-      Elliptical:
-      Planar:
-      Other:
-
   LiMiPhaseRingNumber:
     description: This field records the phase number indicating the size of the annular slit of the phase ring
     notes:
@@ -2737,7 +2651,6 @@ enums:
       Drum:
       Rod:
       Toric:
-
 
   LiMiPolarizationOpticsFunction:
     description: This field records whether this Polarization Optics is used to generate (Polarizer) or to analyze (Analyzer) polarized light.
@@ -2913,12 +2826,4 @@ enums:
       Round:
       Square:
       Other:
-
-
-
-
-
-
-
-
 
