@@ -97,7 +97,7 @@ classes:
           used to refer to the individual developer, if known.
       website:
         description:
-          The URL address of any Website where the Software can be obtained. 
+          The URL address of any Website where the Software can be obtained.
           In case of open-source Software this field should record the URL for the Git repository from which to obtain the source code.
         range: uri
       primary_publication_id:
@@ -106,8 +106,7 @@ classes:
           Software. Examples include, Digital Object Identifier (DOI), PubMed
           Central Identifier (PMCID), ArXiv.org ID, etc.
       open_source:
-        description:
-          Whether this Software is Open-Source (True) or Proprietary (False).
+        description: Whether this Software is Open-Source (True) or Proprietary (False).
         range: boolean
       macro:
         description:
@@ -130,8 +129,7 @@ classes:
       language:
         description: The computer language in which this Software was developed.
       modules:
-        description:
-          Software modules that were used in association with this Instrument.
+        description: Software modules that were used in association with this Instrument.
         range: LiMiSoftwareModule
         multivalued: true
         inlined: false
@@ -151,10 +149,9 @@ classes:
   ####################
   # Microscope table #
   ####################
- # Arnica has filled
+  # Arnica has filled
   LiMiMicroscopeTable:
-    description:
-      The Table used to support the Instrument during Image Acquisition.
+    description: The Table used to support the Instrument during Image Acquisition.
     is_a: LiMiManufacturerSpecs
     slots:
       - id
@@ -213,7 +210,7 @@ classes:
       - id
       - name
     attributes:
-       # Arnica has filled
+      # Arnica has filled
       temperature_control:
         description: This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
         range: LiMiEnvironmentalTemperatureControl
@@ -233,7 +230,7 @@ classes:
           limi_tier: 2
         required: true
         notes:
-            - DGG - This matches what is described by the spreadsheet, but it doesn’t make much sense in my opinion-- there’s an inherent contradiction in saying that a field belongs to the second tier and saying that it is required.
+          - DGG - This matches what is described by the spreadsheet, but it doesn’t make much sense in my opinion-- there’s an inherent contradiction in saying that a field belongs to the second tier and saying that it is required.
       vibration_control:
         description: This field captures whether (True) or not (False) this Environmental Control Device provides vibration control.
         range: boolean
@@ -316,8 +313,7 @@ classes:
           limi_tier: 2
         range: boolean
       number_of_lasers:
-        description:
-          The number of lasers lines associated with this Multi Laser Engine.
+        description: The number of lasers lines associated with this Multi Laser Engine.
         annotations:
           limi_tier: 2
         range: integer
@@ -499,7 +495,7 @@ classes:
         required: true
         notes:
           - AK We should have an enum for this but for now the model does not have it.
-      
+
   #################
   # Optics holder #
   #################
@@ -517,8 +513,7 @@ classes:
       - object_type
     attributes:
       motorized:
-        description:
-          Whether this device is Motor (true) or Manually (false) operated.
+        description: Whether this device is Motor (true) or Manually (false) operated.
         annotations:
           limi_tier: 3
         range: boolean
@@ -554,19 +549,16 @@ classes:
     is_a: LiMiOpticsHolder
     attributes:
       excitation_filter:
-        description:
-          An available Excitation Filter which is part of this Filter Cube.
+        description: An available Excitation Filter which is part of this Filter Cube.
         range: LiMiExcitationFilter
         inlined: false
       standard_dichroic:
-        description:
-          An available Dichroic Mirror which is part of this Filter Cube.
+        description: An available Dichroic Mirror which is part of this Filter Cube.
         range: LiMiDichroic
         inlined: false
         required: true
       emission_filter:
-        description:
-          An available Emission Filter which is part of this Filter Cube.
+        description: An available Emission Filter which is part of this Filter Cube.
         range: LiMiEmissionFilter
         inlined: false
       optics_holder_position:
@@ -577,8 +569,7 @@ classes:
     is_a: LiMiOpticsHolder
     attributes:
       filter_cubes:
-        description:
-          Available filter cubes which are housed in this Optics Holder.
+        description: Available filter cubes which are housed in this Optics Holder.
         notes:
           - DGG Do we really want a reference here? This means that each filter
             cube must first be listed directly under Instrument, and then
@@ -597,8 +588,7 @@ classes:
     is_a: LiMiFilterWheel
     attributes:
       excitation_filters:
-        description:
-          Available excitation filters which are part of this Optics Holder.
+        description: Available excitation filters which are part of this Optics Holder.
         range: LiMiExcitationFilter
         multivalued: true
         inlined: false
@@ -608,8 +598,7 @@ classes:
     is_a: LiMiFilterWheel
     attributes:
       standard_dichroics:
-        description:
-          Available Dichroic Mirrors which are part of this Optics Holder.
+        description: Available Dichroic Mirrors which are part of this Optics Holder.
         range: LiMiDichroic
         multivalued: true
         inlined: false
@@ -619,8 +608,7 @@ classes:
     is_a: LiMiFilterWheel
     attributes:
       emission_filters:
-        description:
-          Available emission filters which are part of this Optics Holder.
+        description: Available emission filters which are part of this Optics Holder.
         range: LiMiEmissionFilter
         multivalued: true
         inlined: false
@@ -634,8 +622,7 @@ classes:
     is_a: LiMiFilterSlider
     attributes:
       excitation_filters:
-        description:
-          Available excitation filters which are part of this Optics Holder.
+        description: Available excitation filters which are part of this Optics Holder.
         range: LiMiExcitationFilter
         multivalued: true
         inlined: false
@@ -645,8 +632,7 @@ classes:
     is_a: LiMiFilterSlider
     attributes:
       standard_dichroics:
-        description:
-          Available Dichroic Mirrors which are part of this Optics Holder.
+        description: Available Dichroic Mirrors which are part of this Optics Holder.
         range: LiMiDichroic
         multivalued: true
         inlined: false
@@ -656,8 +642,7 @@ classes:
     is_a: LiMiFilterSlider
     attributes:
       emission_filters:
-        description:
-          Available emission filters which are part of this Optics Holder.
+        description: Available emission filters which are part of this Optics Holder.
         range: LiMiEmissionFilter
         multivalued: true
         inlined: false
@@ -667,8 +652,7 @@ classes:
     is_a: LiMiOpticsHolder
     attributes:
       optical_apertures:
-        description:
-          Available optical apertures which are housed in this Optics Holder.
+        description: Available optical apertures which are housed in this Optics Holder.
         range: LiMiOpticalAperture
         multivalued: true
         inlined: false
@@ -678,8 +662,7 @@ classes:
         multivalued: true
         inlined: false
       mirroring_devices:
-        description:
-          Available mirroring devices which are housed in this Optics Holder.
+        description: Available mirroring devices which are housed in this Optics Holder.
         range: LiMiMirroringDevice
         multivalued: true
         inlined: false
@@ -694,8 +677,7 @@ classes:
         multivalued: true
         inlined: false
       polarization_optics:
-        description:
-          Available polarization optics which are housed in this Optics Holder.
+        description: Available polarization optics which are housed in this Optics Holder.
         range: LiMiPolarizationOptics
         multivalued: true
         inlined: false
@@ -783,7 +765,7 @@ classes:
 
   LiMiDichroic:
     description:
-      A Mirror that spectrally separate light by transmitting and reflecting 
+      A Mirror that spectrally separate light by transmitting and reflecting
       light as a function of wavelength. In the context of fluorescence
       microscopy, they are typically used to reflect the excitation light, but
       transmit the emitted fluorescence.
@@ -893,10 +875,8 @@ classes:
         - AK How do we declare this class under specific optical elements?
         - Would it not be future-proof to not restrict the definition of these ranges to any one optical element?
 
-
   LiMiBeamsplitter:
-    description:
-      A Mirror that reflects part of the light, regardless of Wavelength.
+    description: A Mirror that reflects part of the light, regardless of Wavelength.
     is_a: LiMiMirroringDevice
     attributes:
       #Arnica has filled
@@ -984,8 +964,7 @@ classes:
     is_a: LiMiOpticalAperture
     attributes:
       center_stop_diameter:
-        description:
-          The physical diameter of the central disk of this Dark Field Stop.
+        description: The physical diameter of the central disk of this Dark Field Stop.
         range: float
       center_stop_diameter_unit:
         description: Unit associated with the Center Stop Diameter value.
@@ -1085,8 +1064,7 @@ classes:
     is_a: LiMiOpticalAperture
 
   LiMiShutter:
-    description:
-      A device that opens and closes, and that may be mechanically or
+    description: A device that opens and closes, and that may be mechanically or
       electro-mechanically controlled. Shutters are typically used to control
       the Light that reaches the sample (i.e., to limit phototoxicity and
       photobleaching especially in case of live specimens),  or the Detector at
@@ -1119,7 +1097,7 @@ classes:
         range: LiMiFrequencyUnit
         ifabsent: LiMiFrequencyUnit (Hz)
         notes:
-        - AK made up this default unit
+          - AK made up this default unit
         annotations:
           limi_tier: 2
       motorized:
@@ -1265,7 +1243,7 @@ classes:
         range: LiMiLengthUnit
         ifabsent: LiMiLengthUnit(cm)
         notes:
-        - AK made up this default unit
+          - AK made up this default unit
         annotations:
           limi_tier: 3
       material_name:
@@ -1283,7 +1261,7 @@ classes:
         description: This field records the Refractive Index of the material this Lens is made of, as specified by the Manufacturer. The Refractive Index is the ratio of the speed of light (more precisely, the phase velocity) in a vacuum versus that in a given medium.
         range: float
         annotations:
-           limi_tier: 2
+          limi_tier: 2
       abbe_number:
         description: This field records the Abbe number of this Lens. The Abbe Number is a measure of the material's dispersion (variation of Refractive Index versus Wavelength), with high values indicating low dispersion.
         range: float
@@ -1356,8 +1334,7 @@ classes:
     is_a: LiMiLens
 
   LiMiRelayLens:
-    description:
-      A Relay Lens is often used in combination with other Lenses for
+    description: A Relay Lens is often used in combination with other Lenses for
       transferring an Image into a different optical plane. A typical example of
       Relay Lens is the Lens positioned at the mount connecting a Detector with
       the Microscope Stand.
@@ -1584,7 +1561,6 @@ classes:
         annotations:
           limi_tier: 3
 
-
   ################
   # Stage insert #
   ################
@@ -1750,8 +1726,7 @@ classes:
     is_a: LiMiFocusingDevice
 
   LiMiIndividualObjectiveFocusingDevice:
-    description:
-      An optional objective nano-Focusing Device associated with this
+    description: An optional objective nano-Focusing Device associated with this
       Instrument. These devices might be driven using piezoelectric mechanisms
       or linear motor actuators associated with crossed roller guideways. They
       typically achieve higher precision, accuracy, and speed than traditional
@@ -1759,8 +1734,7 @@ classes:
     is_a: LiMiFocusingDevice
     attributes:
       piezo_electric:
-        description:
-          Whether this device is piezoelectric driven (true) or not (false).
+        description: Whether this device is piezoelectric driven (true) or not (false).
         range: boolean
 
   LiMiZDrive:
@@ -2184,8 +2158,7 @@ classes:
         description: The type of CCD Camera.
         range: LiMiCCDType
       architecture:
-        description:
-          The architecture of this CCD Camera and its associated transfer mode.
+        description: The architecture of this CCD Camera and its associated transfer mode.
         range: LiMiCCDArchitecture
       register_well_capacity:
         description:
@@ -2324,8 +2297,7 @@ classes:
     is_a: LiMiPointDetector
     attributes:
       avalanche:
-        description:
-          Whether (true) or not (false) this is an "Avalanche" photodiode.
+        description: Whether (true) or not (false) this is an "Avalanche" photodiode.
         range: boolean
       PIN_junction:
         description:
@@ -2364,19 +2336,17 @@ classes:
 
 enums:
   LiMiHoffmanPlateSlitDesign:
-    description:
-      Available values to describe the design of the slit of an Hoffman Plate.
+    description: Available values to describe the design of the slit of an Hoffman Plate.
     permissible_values:
       Center:
       Offset:
       Other:
 
   LiMiBeamExpanderConfiguration:
-    description:
-      Available values to describe the configuration of a Beam Expander.
+    description: Available values to describe the configuration of a Beam Expander.
     permissible_values:
-      ? Galileian telescope
-      ? Keplerian telescope
+      Galileian telescope:
+      Keplerian telescope:
       Other:
 
   LiMiCondenserCorrection:
@@ -2386,7 +2356,7 @@ enums:
     permissible_values:
       Astigmatism:
       Chromatic:
-      ? Chromatic and Curvature
+      Chromatic and Curvature:
       Coma:
       Curvature:
       Distortion:
@@ -2423,9 +2393,9 @@ enums:
   LiMiCCDArchitecture:
     description: The architecture of a CCD Camera.
     permissible_values:
-      ? Frame transfer
+      Frame transfer:
       Full-frame:
-      ? Interline transfer
+      Interline transfer:
 
   LiMiCMOSType:
     description: The type of a CMOS Camera.
@@ -2464,13 +2434,13 @@ enums:
   LiMiEnvironmentalTemperatureControl:
     description: The type of temperature control offered by an Environmental Control Chamber
     notes:
-     - AK original def- This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
+      - AK original def- This field captures whether this Environmental Control Device provides Temperature control and what type of control it provides. If no Temperature control is provided please enter "None".
     permissible_values:
-        None:
-        Cage-incubator enclosure:
-        Objective heater:
-        Stage-top chamber:
-        Other:
+      None:
+      Cage-incubator enclosure:
+      Objective heater:
+      Stage-top chamber:
+      Other:
 
   LiMiEnvironmentalHumidityControl:
     description: The type of humidity control offered by an Environmental Control Chamber
@@ -2525,8 +2495,8 @@ enums:
 
   LiMiWaveguideMode:
     notes:
-    - AK renamed this enum
-    - AK has made the description up
+      - AK renamed this enum
+      - AK has made the description up
     description: The modes imposed by the light guide onto the light traversing it
     permissible_values:
       Transverse Electric:
@@ -2534,7 +2504,6 @@ enums:
       Transverse Magnetic:
       Hybrid:
       Other:
-
 
   LiMiMirrorType:
     description: The general types of mirrors
@@ -2601,7 +2570,7 @@ enums:
   LiMiPhaseRingNumber:
     description: This field records the phase number indicating the size of the annular slit of the phase ring
     notes:
-    - AK made this definition up
+      - AK made this definition up
     permissible_values:
       PhL:
       Ph1:
@@ -2826,4 +2795,3 @@ enums:
       Round:
       Square:
       Other:
-

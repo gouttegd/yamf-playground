@@ -117,8 +117,7 @@ classes:
       # Arnica to fill
 
   LiMiChannel:
-    description:
-      A Channel holds information about how an image channel was acquired.
+    description: A Channel holds information about how an image channel was acquired.
     notes:
       - The attributes for this class are described in a separate mixin because
         the entire class is defined across several LiMi modules.

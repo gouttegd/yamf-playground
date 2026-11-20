@@ -58,8 +58,7 @@ classes:
         description: The value of the entry.
 
   LiMiBinData:
-    description:
-      A blob of arbitrary binary data, serialised as a Base64-encoded string.
+    description: A blob of arbitrary binary data, serialised as a Base64-encoded string.
     is_a: LiMiObject
     attributes:
       compression:
@@ -72,8 +71,7 @@ classes:
 
 types:
   LiMiBase64Binary:
-    description:
-      A blob of arbitrary binary data, serialized as a Base64-encoded string.
+    description: A blob of arbitrary binary data, serialized as a Base64-encoded string.
     notes:
       - Ideally this type should be a builtin type in LinkML.
     see_also:
@@ -82,8 +80,7 @@ types:
     typeof: string
 
   LiMiHexBinary:
-    description:
-      A blob of arbitrary binary data, serialized as a hexadecimal
+    description: A blob of arbitrary binary data, serialized as a hexadecimal
       (Base16-encoded) string.
     notes:
       - Ideally this should be a builtin type in LinkML.

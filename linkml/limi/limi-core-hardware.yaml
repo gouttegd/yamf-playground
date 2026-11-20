@@ -19,8 +19,7 @@ default_range: string
 
 classes:
   LiMiManufacturerSpecs:
-    description:
-      This describes the Manufacturer specifications for a hardware component.
+    description: This describes the Manufacturer specifications for a hardware component.
     # This describes the Manufacturer specifications for this component (i.e., Manufacturer Name, Model designation and Catalog Number).
     notes:
       - This is the base class for most classes in this schema.
@@ -71,8 +70,7 @@ classes:
         inlined: true
         inlined_as_list: true
       additional_vendor_information:
-        description:
-          Vendor-specific additional information about this component.
+        description: Vendor-specific additional information about this component.
         annotations:
           limi_tier: 3
         comments:
@@ -84,8 +82,7 @@ classes:
         inlined: true
 
   LiMiAdditionalVendorInformation:
-    description:
-      Vendor-specific additional information about a hardware component.
+    description: Vendor-specific additional information about a hardware component.
     is_a: LiMiObject
     slots:
       - id
@@ -93,8 +90,7 @@ classes:
       vendor_name:
         description: The Name of the Vendor responsible for this Information.
       bin_data:
-        description:
-          The additional information, as a blob of arbitrary raw data.
+        description: The additional information, as a blob of arbitrary raw data.
         range: LiMiBase64Binary
 
   LiMiInstrument:
@@ -185,8 +181,7 @@ classes:
           recommended_in_methods: true
         range: LiMiMicroscopeOriginType
       eyepiece_field_number:
-        description:
-          The diaphragm size of the Microscope eyepiece expressed in mm.
+        description: The diaphragm size of the Microscope eyepiece expressed in mm.
         # The Field Number represents the diaphragm size of the Microscope eyepiece expressed in mm.
         annotations:
           limi_tier: 3
@@ -270,8 +265,7 @@ classes:
         multivalued: true
 
   LiMiLaser:
-    description:
-      A Light Source which emits coherent radiation at high spectral
+    description: A Light Source which emits coherent radiation at high spectral
       concentrations of radiance and minimal solid angles. This includes proper
       Light Amplification by Stimulated Emission of Radiation (LASER) sources
       that emit light through a process of optical amplification based on the
@@ -438,8 +432,7 @@ classes:
         range: LiMiLengthUnit
         ifabsent: LiMiLengthUnit(nm)
       wavelength_profile_file:
-        description:
-          A file containing the Wavelength profile of this hardware component.
+        description: A file containing the Wavelength profile of this hardware component.
         # This element consists of...
         range: LiMiFileAnnotation
         inlined: true
@@ -579,8 +572,7 @@ classes:
           - FIXME This should not be needed? If there is no Correction Collar,
             then the correction_collar_type attribute can simply be left unset.
       correction_collar_type:
-        description:
-          The type of Correction Collar this Objective is fitted with, if any.
+        description: The type of Correction Collar this Objective is fitted with, if any.
         # This field records the type of Correction Collar with which this Objective is fitted. In case the Objective has more than one Correction Collar please enter "Multi" and provide more details in Description.
         range: LiMiObjectiveCorrectionCollarType
       dipping_medium:
@@ -667,8 +659,7 @@ classes:
       - object_type
     attributes:
       type:
-        description:
-          This field captures the Type of Filter used in this Instrument.
+        description: This field captures the Type of Filter used in this Instrument.
         range: LiMiFilterType
         required: true
 
@@ -924,8 +915,7 @@ classes:
         annotations:
           limi_tier: 2
       detector_noise_model:
-        description:
-          This field records the Noise Model associated with this Detector.
+        description: This field records the Noise Model associated with this Detector.
         required: true
         range: LiMiDetectorNoiseModel
         annotations:
@@ -946,8 +936,7 @@ classes:
         annotations:
           limi_tier: 2
       dynamic_range:
-        description:
-          This field records the Dynamic Range for this detector in deciBel (dB)
+        description: This field records the Dynamic Range for this detector in deciBel (dB)
         range: float
         annotations:
           limi_tier: 2
@@ -1002,10 +991,10 @@ enums:
         others have values that use PascalCase.
     permissible_values:
       Compound:
-      ? Custom made
+      Custom made:
       Dissection:
       Electrophysiology:
-      ? Light sheet
+      Light sheet:
       Stereomicroscope:
       Other:
 
@@ -1021,8 +1010,7 @@ enums:
           The Microscope Stand was purchased from a Commercial vendor and
           subsequently Modified for a specialized application.
       Custom-built:
-        description:
-          The Microscope Stand was entirely Custom-built from scratch.
+        description: The Microscope Stand was entirely Custom-built from scratch.
 
   LiMiObjectiveCorrectionType:
     description:
@@ -1069,8 +1057,8 @@ enums:
       Dipping:
       Glycerol:
       Multi:
-      ? Mineral Oil
-      ? Silicone Oil
+      Mineral Oil:
+      Silicone Oil:
       Water:
       Other:
 
@@ -1103,9 +1091,9 @@ enums:
   LiMiObjectiveCorrectionCollarType:
     description: The type of Correction Collar fitted on a Objective.
     permissible_values:
-      ? Coverglass Thickness
-      ? Immersion Liquid
-      ? Numerical Aperture
+      Coverglass Thickness:
+      Immersion Liquid:
+      Numerical Aperture:
       Temperature:
       Multi:
 
@@ -1158,8 +1146,8 @@ enums:
       The position where the reported Illumination Intensity value was obtained
       as reported by the Manufacturer.
     permissible_values:
-      ? Back of the Objective
-      ? Back of the Microscope Stand
+      Back of the Objective:
+      Back of the Microscope Stand:
       Source:
       Specimen:
       Other:
@@ -1246,9 +1234,9 @@ enums:
   LiMiLaserModulation:
     description: The modulation mechanism used with a Laser.
     permissible_values:
-      ? Acousto-Optical Beam Splitter
-      ? Acousto-Optical Tunable Filter
-      ? Acousto-Optical Modulator
+      Acousto-Optical Beam Splitter:
+      Acousto-Optical Tunable Filter:
+      Acousto-Optical Modulator:
       Direct:
       None:
       Other:
@@ -1292,8 +1280,7 @@ enums:
       Other:
 
   LiMiFilterCoatingMethod:
-    description:
-      This field records the type of Coating used in the specific filter.
+    description: This field records the type of Coating used in the specific filter.
     # AK made this up because we do not want to repeat the description from class also under the associated enum
     permissible_values:
       HardCoated:
@@ -1305,9 +1292,9 @@ enums:
       This field records the location of this component in the Microscope Light
       Path.
     permissible_values:
-      ? Infinity Space
-      ? Camera Port
-      ? Illumination Port
+      Infinity Space:
+      Camera Port:
+      Illumination Port:
       Other:
 
   LiMiFilterTechnology:
@@ -1315,7 +1302,7 @@ enums:
       This field records the filtering Technology utilized for this optical
       element.
     permissible_values:
-      ? Absorption Colored Glass
+      Absorption Colored Glass:
       Metallic-coating:
       Polymer-Based:
       Thin-film:
@@ -1333,8 +1320,7 @@ enums:
       Other:
 
   LiMiFilterPolarization:
-    description:
-      This field records the polarization effect of this optical element.
+    description: This field records the polarization effect of this optical element.
     permissible_values:
       Circular:
       Elliptical:
@@ -1342,24 +1328,23 @@ enums:
       Other:
 
   LiMiDetectorMount:
-    description:
-      The type of mount used to connect this detector to the microscope stand.
+    description: The type of mount used to connect this detector to the microscope stand.
     permissible_values:
       C-mount:
-      ? D-SLR adapter
-      ? SLR adapter
+      D-SLR adapter:
+      SLR adapter:
       T-mount:
       Other:
 
   LiMiDetectorMaxBitDepth:
     description: The maximum Bit Depth provided by the Detector's ADC
     permissible_values:
-      ? 8 bit
-      ? 12 bit
-      ? 14 bit
-      ? 16 bit
-      ? 32 bit
-      ? 64 bit
+      8 bit:
+      12 bit:
+      14 bit:
+      16 bit:
+      32 bit:
+      64 bit:
 
   LiMiDetectorNoiseModel:
     description: The noise model associated with the detector.

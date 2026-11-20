@@ -33,8 +33,7 @@ classes:
       - id
     attributes:
       first_name:
-        description:
-          First name, sometimes called christian name or given name or forename.
+        description: First name, sometimes called christian name or given name or forename.
       last_name:
         description: Last name, sometimes called surname or family name.
       middle_name:
